@@ -1,0 +1,23 @@
+{
+  "source": "malecns",
+  "n_neurons": 475,
+  "n_edges": 17120,
+  "required_roles": [
+    "sugar_grn",
+    "feed_mn",
+    "loom_vpn",
+    "gf_escape"
+  ],
+  "n_required_role_edges": 16370,
+  "n_pre_nt_missing": 0,
+  "n_pre_nt_unknown": 0,
+  "n_pre_monoamine": 0,
+  "n_required_role_edges_plus": 16370,
+  "n_required_role_edges_minus": 0,
+  "fallback_sign": 1,
+  "unclear_and_monoamine": "fallback +1, not flipped per synapse",
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+}

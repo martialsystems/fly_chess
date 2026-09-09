@@ -18,6 +18,8 @@ def test_fixture_circuit_separates_mn9_and_dnp01() -> None:
     assert "not a firing-rate discovery" in payload.get("hz_note", "")
     assert payload["paint"]["loci"] is False
     assert payload["passed"]["mn9_vs_dnp01_separate"] is True
+    assert payload["kernel"]["psp"] == "voltage_jump"
+    assert payload["kernel"]["mode"] == "fixture_voltage_jump"
     sugar = payload["real"]["sugar"]
     loom = payload["real"]["loom"]
     assert sugar["feed_mn"] > payload["real"]["rest"]["feed_mn"]

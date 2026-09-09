@@ -1,0 +1,393 @@
+{
+  "source": "malecns",
+  "n_neurons": 475,
+  "default_circuit_graph": "475_identity_slice",
+  "mv_grid": [
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0,
+    16.0
+  ],
+  "pulse_grid": [
+    18.0,
+    26.0
+  ],
+  "saturate_hz": 150.0,
+  "cells": [
+    {
+      "mV_per_contact": 0.25,
+      "pulse": 18.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 0.25,
+      "pulse": 26.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 0.5,
+      "pulse": 18.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 0.5,
+      "pulse": 26.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 1.0,
+      "pulse": 18.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 1.0,
+      "pulse": 26.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 2.0,
+      "pulse": 18.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 2.0,
+      "pulse": 26.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 4.0,
+      "pulse": 18.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 4.0,
+      "pulse": 26.0,
+      "split_ok": false,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 8.0,
+      "pulse": 18.0,
+      "split_ok": true,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 12.5,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 8.0,
+      "pulse": 26.0,
+      "split_ok": true,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 37.5,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 16.0,
+      "pulse": 18.0,
+      "split_ok": true,
+      "saturate_frac": 0.0,
+      "max_hz": 75.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 75.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 75.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 75.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 75.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    },
+    {
+      "mV_per_contact": 16.0,
+      "pulse": 26.0,
+      "split_ok": true,
+      "saturate_frac": 0.0,
+      "max_hz": 125.0,
+      "rest": {
+        "feed_mn": 0.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 0.0
+      },
+      "sugar": {
+        "feed_mn": 125.0,
+        "gf_escape": 0.0,
+        "sugar_grn": 125.0,
+        "loom_vpn": 0.0
+      },
+      "loom": {
+        "feed_mn": 0.0,
+        "gf_escape": 125.0,
+        "sugar_grn": 0.0,
+        "loom_vpn": 125.0
+      },
+      "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+    }
+  ],
+  "n_winners": 4,
+  "picked_mV_per_contact": 8.0,
+  "split_held": true,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "note": "Winning Hz is the injected pulse on an intact path, not a biological firing rate."
+}

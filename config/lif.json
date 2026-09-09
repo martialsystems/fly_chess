@@ -9,5 +9,29 @@
   "gain": 1.0,
   "baseline_current_mV": 0.4,
   "psp": "voltage_jump",
-  "psp_note": "Fixture PSPs add weight * spike as an instant millivolt jump on the postsynaptic cell. Leak and injected current still go through tau_m. Current-based Shiu-like synapses were too weak to spike MN9/DNp01 on this tiny graph in 40 steps. Do not copy voltage_jump into a full MaleCNS slice without a new calibration."
+  "mV_per_contact": 1.0,
+  "saturate_hz": 150.0,
+  "default_mode": "fixture_voltage_jump",
+  "source_mode": {
+    "fixture": "fixture_voltage_jump",
+    "malecns": "malecns_current"
+  },
+  "modes": {
+    "fixture_voltage_jump": {
+      "psp": "voltage_jump",
+      "mV_per_contact": 1.0,
+      "gain": 1.0,
+      "steps_per_ply": 40,
+      "baseline_current_mV": 0.4
+    },
+    "malecns_current": {
+      "psp": "current",
+      "mV_per_contact": 8.0,
+      "gain": 1.0,
+      "steps_per_ply": 80,
+      "baseline_current_mV": 0.4,
+      "saturate_hz": 150.0
+    }
+  },
+  "psp_note": "fixture_voltage_jump: each spike adds weight millivolts on the postsynaptic cell in one step. MaleCNS weight is a synapse count, so thousands of contacts dump current and the map seizes. malecns_current: each contact injects mV_per_contact as current, then leak through tau_m. Fixture pytest stays on voltage_jump. Do not flip the global default."
 }

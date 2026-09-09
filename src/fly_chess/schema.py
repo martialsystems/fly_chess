@@ -64,6 +64,13 @@ HANGING_CAPTURE_NOTE = (
 
 FIXTURE_NOTE = CHECK_ESCAPE_NOTE + " " + HANGING_CAPTURE_NOTE
 
+MALECNS_LOCK_KEYS = (
+    "hz_note",
+    "games",
+    "elo",
+    "gate2_quoted",
+)
+
 
 def stamp_score(value: float) -> str:
     """JSON score as written, not rounded to 3 decimals."""

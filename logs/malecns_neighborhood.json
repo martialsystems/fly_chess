@@ -1,0 +1,92 @@
+{
+  "source": "malecns",
+  "hops": 3,
+  "n_cap": 8000,
+  "jump_thresh_mV": 7.0,
+  "default_circuit_graph": "475_identity_slice",
+  "arms": [
+    {
+      "seed": "LPLC2",
+      "hops": 1,
+      "n_neurons": 8000,
+      "n_cap": 8000,
+      "capped": true,
+      "n_edges": null,
+      "sum_abs_weight": null,
+      "max_incoming_abs_weight": null,
+      "would_seize_under_old_jump": true,
+      "edge_census": "skipped_gt_4000",
+      "default_circuit_graph": false
+    },
+    {
+      "seed": "LPLC2",
+      "hops": 2,
+      "n_neurons": 8000,
+      "n_cap": 8000,
+      "capped": true,
+      "n_edges": null,
+      "sum_abs_weight": null,
+      "max_incoming_abs_weight": null,
+      "would_seize_under_old_jump": true,
+      "edge_census": "skipped_gt_4000",
+      "default_circuit_graph": false
+    },
+    {
+      "seed": "LPLC2",
+      "hops": 3,
+      "n_neurons": 8000,
+      "n_cap": 8000,
+      "capped": true,
+      "n_edges": null,
+      "sum_abs_weight": null,
+      "max_incoming_abs_weight": null,
+      "would_seize_under_old_jump": true,
+      "edge_census": "skipped_gt_4000",
+      "default_circuit_graph": false
+    },
+    {
+      "seed": "MN9",
+      "hops": 1,
+      "n_neurons": 1196,
+      "n_cap": 8000,
+      "capped": false,
+      "n_edges": 20282,
+      "sum_abs_weight": 270662.0,
+      "max_incoming_abs_weight": 5107.0,
+      "would_seize_under_old_jump": true,
+      "edge_census": "full",
+      "default_circuit_graph": false
+    },
+    {
+      "seed": "MN9",
+      "hops": 2,
+      "n_neurons": 8000,
+      "n_cap": 8000,
+      "capped": true,
+      "n_edges": null,
+      "sum_abs_weight": null,
+      "max_incoming_abs_weight": null,
+      "would_seize_under_old_jump": true,
+      "edge_census": "skipped_gt_4000",
+      "default_circuit_graph": false
+    },
+    {
+      "seed": "MN9",
+      "hops": 3,
+      "n_neurons": 8000,
+      "n_cap": 8000,
+      "capped": true,
+      "n_edges": null,
+      "sum_abs_weight": null,
+      "max_incoming_abs_weight": null,
+      "would_seize_under_old_jump": true,
+      "edge_census": "skipped_gt_4000",
+      "default_circuit_graph": false
+    }
+  ],
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "note": "Outgoing BFS from LPLC2 and MN9. n_cap stops the count; hop 2 from LPLC2 is already most of the map. No play."
+}

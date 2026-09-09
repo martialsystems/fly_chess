@@ -72,6 +72,17 @@ def main(argv: list[str] | None = None) -> int:
     sh.add_argument("--seed", type=int, default=1)
     sh.add_argument("--out", type=str, default=None)
 
+    for name, help_text in (
+        ("gain-sweep", "mV/contact grid on the 475-cell slice; no games"),
+        ("neighborhood", "hop counts from LPLC2 and MN9; no play"),
+        ("hop-probe", "capped 2-hop LPLC2 saturate probe; not the circuit graph"),
+        ("signs", "transmitter audit on the 475-cell slice"),
+    ):
+        p = sub.add_parser(name, help=help_text)
+        p.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
+        p.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
+        p.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
+
     args = parser.parse_args(argv)
     refuse_online(args)
     require_clean(BANNER, source="banner")
@@ -116,6 +127,30 @@ def main(argv: list[str] | None = None) -> int:
         return _play(args)
     if args.cmd == "shuffle":
         return _shuffle(args)
+    if args.cmd == "gain-sweep":
+        from fly_chess.gain_sweep import write_gain_sweep
+
+        payload = write_gain_sweep()
+        print(json.dumps(payload, indent=2))
+        return 0 if payload["split_held"] else 2
+    if args.cmd == "neighborhood":
+        from fly_chess.neighborhood import write_neighborhood
+
+        payload = write_neighborhood()
+        print(json.dumps(payload, indent=2))
+        return 0
+    if args.cmd == "hop-probe":
+        from fly_chess.hop_probe import write_hop_probe
+
+        payload = write_hop_probe()
+        print(json.dumps(payload, indent=2))
+        return 2 if payload["aborted"] else 0
+    if args.cmd == "signs":
+        from fly_chess.signs import write_signs
+
+        payload = write_signs()
+        print(json.dumps(payload, indent=2))
+        return 0
     print(BANNER)
     return 0
 

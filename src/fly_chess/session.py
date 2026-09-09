@@ -46,7 +46,7 @@ def open_session(
     if require == "all":
         dump_ethology_map(graph, resolved)
         dump_planes_map(graph, resolved)
-    net = LifNet(graph, LifConfig.load())
+    net = LifNet(graph, LifConfig.for_source(source))
     return Session(
         graph=graph,
         resolved=resolved,
@@ -62,11 +62,12 @@ def session_from_graph(
     shuffled: bool = False,
     seed: int = 0,
     require: str = "all",
+    source: str = "fixture",
 ) -> Session:
     if shuffled:
         graph = shuffle_graph(graph, seed=seed)
     resolved = resolve_graph(graph, require=require)
-    net = LifNet(graph, LifConfig.load())
+    net = LifNet(graph, LifConfig.for_source(source))
     return Session(
         graph=graph,
         resolved=resolved,

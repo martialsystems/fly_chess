@@ -11,9 +11,9 @@
       "loom_vpn": 0.0
     },
     "sugar_on": {
-      "feed_mn": 50.0,
+      "feed_mn": 12.5,
       "gf_escape": 0.0,
-      "sugar_grn": 50.0,
+      "sugar_grn": 75.0,
       "loom_vpn": 0.0
     },
     "loom_rest": {
@@ -24,9 +24,9 @@
     },
     "loom_on": {
       "feed_mn": 0.0,
-      "gf_escape": 50.0,
+      "gf_escape": 75.0,
       "sugar_grn": 0.0,
-      "loom_vpn": 50.0
+      "loom_vpn": 75.0
     }
   },
   "shuffled": {
@@ -37,10 +37,10 @@
       "loom_vpn": 0.0
     },
     "sugar_on": {
-      "feed_mn": 25.0,
-      "gf_escape": 50.0,
-      "sugar_grn": 50.0,
-      "loom_vpn": 50.0
+      "feed_mn": 37.5,
+      "gf_escape": 75.0,
+      "sugar_grn": 77.63157894736842,
+      "loom_vpn": 75.4054054054054
     },
     "loom_rest": {
       "feed_mn": 0.0,
@@ -49,13 +49,32 @@
       "loom_vpn": 0.0
     },
     "loom_on": {
-      "feed_mn": 50.0,
-      "gf_escape": 50.0,
-      "sugar_grn": 48.78542510121458,
-      "loom_vpn": 50.0
+      "feed_mn": 137.5,
+      "gf_escape": 250.0,
+      "sugar_grn": 146.4574898785425,
+      "loom_vpn": 260.6756756756757
     }
   },
   "gate2_quoted": false,
+  "elo": null,
+  "games": 0,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "kernel": {
+    "dt_ms": 0.5,
+    "tau_m_ms": 20.0,
+    "v_rest_mV": -52.0,
+    "v_reset_mV": -52.0,
+    "v_thresh_mV": -45.0,
+    "refractory_ms": 2.0,
+    "steps_per_ply": 80,
+    "gain": 1.0,
+    "baseline_current_mV": 0.4,
+    "psp": "current",
+    "mV_per_contact": 8.0,
+    "saturate_hz": 150.0,
+    "mode": "malecns_current",
+    "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+  },
   "passed": {
     "sugar_mn9_real": true,
     "loom_gf_real": true,

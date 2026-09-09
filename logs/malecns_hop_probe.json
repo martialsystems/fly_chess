@@ -1,0 +1,42 @@
+{
+  "source": "malecns",
+  "probe": "outgoing_lplc2",
+  "hops": 2,
+  "n_cap": 2000,
+  "n_neurons": 917,
+  "n_edges": 59606,
+  "capped": true,
+  "hop_sizes": [
+    185,
+    1840
+  ],
+  "n_loom_in_graph": 185,
+  "pulse": 26.0,
+  "saturate_hz": 150.0,
+  "saturate_frac": 0.42529989094874593,
+  "max_hz": 425.0,
+  "aborted": true,
+  "default_circuit_graph": "475_identity_slice",
+  "used_as_circuit_graph": false,
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "kernel": {
+    "dt_ms": 0.5,
+    "tau_m_ms": 20.0,
+    "v_rest_mV": -52.0,
+    "v_reset_mV": -52.0,
+    "v_thresh_mV": -45.0,
+    "refractory_ms": 2.0,
+    "steps_per_ply": 80,
+    "gain": 1.0,
+    "baseline_current_mV": 0.4,
+    "psp": "current",
+    "mV_per_contact": 8.0,
+    "saturate_hz": 150.0,
+    "mode": "malecns_current",
+    "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+  },
+  "note": "Abort means a high fraction of cells hit the Hz cap. This graph is not the circuit graph and not a player."
+}

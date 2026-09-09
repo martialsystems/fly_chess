@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 
 from fly_chess.fetch import malecns_present
+from fly_chess.lif import HZ_NOTE, near_rest
 from fly_chess.paint import circuit_gains, load_paint_cfg
 from fly_chess.paths import LOGS
 from fly_chess.rates import mean_hz
@@ -32,9 +33,11 @@ def run_circuit(*, source: str, shuffle_seed: int = 1) -> dict:
         from fly_chess.import_malecns import load_identity_graph
 
         graph = load_identity_graph()
-        real = session_from_graph(graph, shuffled=False, require=require)
+        real = session_from_graph(
+            graph, shuffled=False, require=require, source="malecns"
+        )
         shuffled = session_from_graph(
-            graph, shuffled=True, seed=shuffle_seed, require=require
+            graph, shuffled=True, seed=shuffle_seed, require=require, source="malecns"
         )
     else:
         real = open_session(source=source, shuffled=False, require=require)
@@ -67,19 +70,24 @@ def run_circuit(*, source: str, shuffle_seed: int = 1) -> dict:
         "gate2_quoted": False,
         "elo": None,
         "games": 0,
-        "hz_note": (
-            "Named-cell Hz is the injected paint pulse on an intact path, "
-            "not a firing-rate discovery. Contrast is shuffle crosstalk."
-        ),
+        "hz_note": HZ_NOTE,
+        "kernel": real.net.cfg.payload(),
     }
     rs, ss = out["real"], out["shuffled"]
-    sugar_sep = rs["sugar"]["feed_mn"] > rs["rest"]["feed_mn"] and rs["sugar"]["gf_escape"] == 0.0
-    loom_sep = rs["loom"]["gf_escape"] > rs["rest"]["gf_escape"] and rs["loom"]["feed_mn"] == 0.0
+    sugar_sep = rs["sugar"]["feed_mn"] > rs["rest"]["feed_mn"] and near_rest(
+        rs["sugar"]["gf_escape"], rs["rest"]["gf_escape"]
+    )
+    loom_sep = rs["loom"]["gf_escape"] > rs["rest"]["gf_escape"] and near_rest(
+        rs["loom"]["feed_mn"], rs["rest"]["feed_mn"]
+    )
     out["passed"] = {
         "mn9_vs_dnp01_separate": bool(sugar_sep and loom_sep),
         "sugar_mn9_real": rs["sugar"]["feed_mn"] > rs["rest"]["feed_mn"],
         "loom_gf_real": rs["loom"]["gf_escape"] > rs["rest"]["gf_escape"],
-        "shuffle_crosstalk": ss["sugar"]["gf_escape"] > 0.0 or ss["loom"]["feed_mn"] > 0.0,
+        "shuffle_crosstalk": (
+            ss["sugar"]["gf_escape"] > ss["rest"]["gf_escape"] + 1.0
+            or ss["loom"]["feed_mn"] > ss["rest"]["feed_mn"] + 1.0
+        ),
     }
     return out
 

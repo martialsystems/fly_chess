@@ -6,6 +6,7 @@ from __future__ import annotations
 import json
 
 from fly_chess.fetch import malecns_present
+from fly_chess.lif import HZ_NOTE, near_rest
 from fly_chess.match import identity_stim
 from fly_chess.paths import LOGS
 from fly_chess.session import open_session
@@ -20,9 +21,11 @@ def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
         from fly_chess.session import session_from_graph
 
         graph = load_identity_graph()
-        real = session_from_graph(graph, shuffled=False, require=require)
+        real = session_from_graph(
+            graph, shuffled=False, require=require, source="malecns"
+        )
         shuffled = session_from_graph(
-            graph, shuffled=True, seed=shuffle_seed, require=require
+            graph, shuffled=True, seed=shuffle_seed, require=require, source="malecns"
         )
     else:
         real = open_session(source=source, shuffled=False, require=require)
@@ -47,6 +50,10 @@ def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
             "loom_on": identity_stim(shuffled, "loom_vpn", current=18.0),
         },
         "gate2_quoted": False,
+        "elo": None,
+        "games": 0,
+        "hz_note": HZ_NOTE,
+        "kernel": real.net.cfg.payload(),
     }
     rs, ss = out["real"], out["shuffled"]
     out["passed"] = {
@@ -59,12 +66,13 @@ def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
             ss["loom_on"]["gf_escape"], ss["loom_rest"]["gf_escape"]
         ),
     }
-    sugar_specific = (
-        rs["sugar_on"]["gf_escape"] == 0.0 and rs["sugar_on"]["loom_vpn"] == 0.0
-    )
-    loom_specific = rs["loom_on"]["feed_mn"] == 0.0
+    sugar_specific = near_rest(
+        rs["sugar_on"]["gf_escape"], rs["sugar_rest"]["gf_escape"]
+    ) and near_rest(rs["sugar_on"]["loom_vpn"], rs["sugar_rest"]["loom_vpn"])
+    loom_specific = near_rest(rs["loom_on"]["feed_mn"], rs["loom_rest"]["feed_mn"])
     shuffle_crosstalk = (
-        ss["sugar_on"]["gf_escape"] > 0.0 or ss["loom_on"]["feed_mn"] > 0.0
+        ss["sugar_on"]["gf_escape"] > ss["sugar_rest"]["gf_escape"] + 1.0
+        or ss["loom_on"]["feed_mn"] > ss["loom_rest"]["feed_mn"] + 1.0
     )
     out["passed"]["sugar_specific_real"] = sugar_specific
     out["passed"]["loom_specific_real"] = loom_specific
