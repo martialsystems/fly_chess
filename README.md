@@ -23,20 +23,22 @@ Getting out of check every time is also not a win. The paint says you are in che
 
 ## What the real fly map showed
 
-We downloaded MaleCNS v1.0 (the published male fly wiring, used here under CC BY). We did not run chess on all 166,000 cells.
+We poked sugar and looming cells on a small piece of the real fly map. The right motor cells answered. Scrambled wires did not stay specific. That is not a chess rating.
 
-We kept a 475-cell slice: sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Touch sugar, only the feeding cell lights up. Touch looming, only the escape cell lights up. That is the paint pulse on the named cell, not a new firing-rate finding. Scramble the wires, both cells light up for both touches. That contrast is the result. Those two fly circuits are in the file. It does not mean the fly can play chess. Chess stays on the 290-cell fixture until a current-based synapse kernel exists.
+We downloaded MaleCNS v1.0 (the published male fly wiring, used here under CC BY). We did not run chess on all 166,000 cells. The 475-cell slice is sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Synapses there are current-based: 8.0 current-units per contact, then leak (`docs/dynamics.md`). Touch sugar, only MN9 lights. Touch looming, only DNp01 lights. That is the paint pulse on the named cell, not a new firing-rate finding. Scramble the wires, both cells light up for both touches. Chess stays on the 290-cell fixture.
 
-A wider two-hop-from-looming slice was about 156,000 cells and the model froze. We threw that run away. It is not in the lock files.
+A capped two-hop-from-looming probe saturated (917 cells, 0.425 of them at the Hz cap). We aborted it. It is not the circuit graph.
 
 ## Numbers
 
-Copied from locked files. Scores are the JSON `score` fields.
+Copied from locked files. Scores are the JSON `score` fields. MaleCNS Hz values are the injected pulse, not a firing-rate discovery.
 
 | Test | Games | Score vs random | Same test after scrambling wires |
 |------|------:|----------------:|---------------------------------:|
 | Food/danger | 40 | 0.4875 | 0.4875 |
 | Spreadsheet board | 40 | 0.50 | 0.50 |
+
+MaleCNS 475-cell circuit (`logs/malecns_circuit.json`): games 0, elo null. Real sugar: MN9 37.5 Hz, DNp01 0. Real loom: DNp01 125 Hz, MN9 0. Shuffle crosstalks.
 
 Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_identity.json`, `logs/malecns_circuit.json`.
 
@@ -49,7 +51,7 @@ Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_id
 .venv/bin/python -m pytest
 ```
 
-Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom gains on the 475-cell slice). No chess games on that graph:
+Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom on the 475-cell slice). No chess games on that graph:
 
 ```bash
 .venv/bin/python -m pip install -e ".[malecns]"
@@ -58,6 +60,6 @@ Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom 
 .venv/bin/python -m fly_chess circuit --source malecns
 ```
 
-Why a 2-hop LPLC2 slice seizes: [docs/dynamics.md](docs/dynamics.md). That is a kernel bug, not a chess gate.
+Why voltage jumps seize, and why a 2-hop LPLC2 probe still saturates under current-based synapses: [docs/dynamics.md](docs/dynamics.md). That is a kernel note, not a chess gate.
 
 Original code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).

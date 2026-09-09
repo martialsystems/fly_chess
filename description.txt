@@ -1,0 +1,1 @@
+Two tests on a fly-style wiring diagram. One paints the board as food and danger. One feeds the board in as numbers. Neither has beaten random play yet.

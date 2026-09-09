@@ -10,7 +10,7 @@ Do not add a Lichess or chess.com client. `play.py` refuses `--lichess` / `--onl
 
 Locked numbers live in `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40. README quotes those files. Do not raise n on the fixture. `hanging_capture_real_gt_shuffled` is not a win: 774 vs 668 hanging chances.
 
-MaleCNS fetch is opt-in. Pytest stays on the 290-cell fixture. Chess stays on the fixture until a current-based synapse kernel exists (`docs/dynamics.md`). Allowed on the 475-cell slice: identity and `circuit`. Named-cell Hz is the injected pulse, not a rate discovery; contrast is shuffle crosstalk. No games, no Elo. Do not quote Gate 2. No `play --source malecns`. No 166k ply loop.
+MaleCNS fetch is opt-in. Pytest stays on the 290-cell fixture. Chess stays on the fixture. MaleCNS identity and circuit use `malecns_current` in `config/lif.json` (8.0 current-units per contact, leak through tau_m). Fixture games stay on `fixture_voltage_jump`. Named-cell Hz is the injected pulse, not a rate discovery; contrast is shuffle crosstalk. A capped 2-hop LPLC2 probe saturates; do not expand the graph. No games, no Elo. Do not quote Gate 2. No `play --source malecns`. No 166k ply loop.
 
 ## Verify
 

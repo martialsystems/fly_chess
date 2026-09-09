@@ -45,6 +45,15 @@ def test_readme_opens_with_the_question() -> None:
     assert "not Gate 2" in dyn
     assert "not a new firing-rate finding" in text
     assert "Chess stays on the 290-cell fixture" in text
+    assert "We poked sugar and looming cells" in text
+    assert "That is not a chess rating" in text
+    assert "37.5" in text
+    assert "125" in text
+    assert circuit["kernel"]["psp"] == "current"
+    assert circuit["kernel"]["mV_per_contact"] == 8.0
+    assert ident["games"] == 0
+    assert ident["elo"] is None
+    assert "not a firing-rate discovery" in ident["hz_note"]
     assert "the wiring is not doing the chess work" in text
     assert "What it is not" not in text
     assert "—" not in text

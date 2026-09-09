@@ -19,6 +19,12 @@ def test_banner_is_clean() -> None:
     require_clean(BANNER, source="banner")
 
 
+PLAIN_HOOK = (
+    "Two tests on a fly-style wiring diagram. One paints the board as food and danger. "
+    "One feeds the board in as numbers. Neither has beaten random play yet."
+)
+
+
 def test_readme_and_cli_help_are_clean() -> None:
     require_clean((REPO / "README.md").read_text(encoding="utf-8"), source="README.md")
     buf = io.StringIO()
@@ -26,6 +32,12 @@ def test_readme_and_cli_help_are_clean() -> None:
         with pytest.raises(SystemExit):
             main(["--help"])
     require_clean(buf.getvalue(), source="cli-help")
+    require_clean((REPO / "AGENTS.md").read_text(encoding="utf-8"), source="AGENTS.md")
+    for path in (REPO / "docs").glob("*.md"):
+        require_clean(path.read_text(encoding="utf-8"), source=str(path.relative_to(REPO)))
+    desc = (REPO / "description.txt").read_text(encoding="utf-8").strip()
+    assert desc == PLAIN_HOOK
+    require_clean(desc, source="description.txt")
 
 
 def test_banned_tokens_fail() -> None:

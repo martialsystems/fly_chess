@@ -1,41 +1,50 @@
-# Dynamics: why 2-hop LPLC2 seizes
+# Dynamics: current-based kernel on the 475-cell slice
 
-This is a kernel note. It is not a chess gate and not a MaleCNS Elo.
+This is a kernel note. It is not a chess gate and not a MaleCNS Elo. That work is dynamics. It is not Gate 2.
 
-## What we measured
+Named-cell Hz is the injected pulse on an intact path, not a firing-rate discovery. The useful contrast is shuffle crosstalk.
 
-MaleCNS v1.0 annotations (local fetch, hash-locked):
+## Config
 
-- LPLC2: 185 cells
-- DNp01 (giant fiber): 2 cells
-- Direct LPLC2 → DNp01: 185 edges, 4,862 synaptic contacts
-- Sugar GRNs in our alias set: 247 cells
-- MN9: 2 cells
-- Direct sugar → MN9: 0 edges
-- Disynaptic sugar → X → MN9 bridges: 39 cells
+`config/lif.json` has two named modes. Source selects the mode. The global default stays `fixture_voltage_jump`.
 
-The locked identity graph is those seeds plus the 39 bridges: 475 cells. `logs/malecns_identity.json`. Circuit paint on the same slice: `logs/malecns_circuit.json`. Named-cell Hz (50 Hz identity, 100 Hz paint) is the injected pulse on an intact path, not a firing-rate discovery. The useful contrast is shuffle crosstalk.
+| Mode | PSP | Who uses it |
+|------|-----|-------------|
+| `fixture_voltage_jump` | instant millivolt jump equal to `weight` | 290-cell pytest and fixture games |
+| `malecns_current` | current `mV_per_contact` per synaptic contact, then leak through `tau_m` | MaleCNS identity and circuit only |
 
-## Why two hops from LPLC2 is ~156k
+Shared membrane: `dt_ms` 0.5, `tau_m_ms` 20.0, `v_rest_mV` -52, `v_thresh_mV` -45, `refractory_ms` 2.0.
 
-LPLC2 is a visual-projection type with 185 members. One hop already fans into a large visual and central set. A second hop from that set covers most of the retained nervous system. A run that took the 2-hop neighborhood of the identity seeds produced 155,728 cells (almost the MaleCNS neuron table). That run is discarded. It is not a lock file.
+`malecns_current` after the gain sweep (`logs/malecns_gain_sweep.json`): `mV_per_contact` 8.0, `steps_per_ply` 80 (40 ms). One spike delivers `8.0 * dt / tau_m` = 0.20 mV per contact, then leak. 4.0 did not reach MN9. 8.0 is the smallest grid value that kept the sugar/loom split with `max_hz` under 150. Those Hz values are the injected pulse on the path, not a biological firing rate.
 
-## Why full-graph LIF with these gains seizes
+## Why voltage_jump seizes
 
-`config/lif.json` uses `psp: voltage_jump`: each spike adds `weight` millivolts on the postsynaptic cell in one step. MaleCNS `weight` is a synapse count. On LPLC2 → DNp01 that count is thousands. One volley drives the postsynaptic cell through threshold and, with a dense 2-hop graph, the rest of the map. In the discarded 155,728-cell run, rest rates were 0 and a sugar or loom pulse put MN9, giant fiber, and LPLC2 all near 250 to 300 Hz, including after a degree-and-sign shuffle. That is seizure, not a circuit.
+MaleCNS `weight` is a synapse count. LPLC2 → DNp01 is 185 edges and 4,862 contacts. One DNp01 cell takes about 2,220 of those. `voltage_jump` adds that count as millivolts in one step. A 2-hop neighborhood of the identity seeds was 155,728 cells; rest 0, stim about 250 to 300 Hz on real and shuffle. Discarded. Not a lock file.
 
-The fixture (290 cells, hand-set weights) still uses voltage jumps so everyday tests stay cheap. Do not copy that PSP into a 166k ply loop.
+## 475-cell current-based result
 
-## Next kernel (not this slice)
+Locked identity graph: sugar GRNs (247) + MN9 (2) + LPLC2 (185) + DNp01 (2) + 39 sugar→MN9 bridges = 475 cells. Direct sugar → MN9: 0 edges. Direct LPLC2 → DNp01: 185 edges.
 
-Current-based synapses: a small millivolt per contact, then leak through `tau_m`. Run that kernel on the 475-cell slice first.
+`logs/malecns_identity.json` and `logs/malecns_circuit.json` (writer restamp, kernel `malecns_current`, 8.0 mV/contact):
 
-- If the 475-cell slice still seizes, the gain is wrong.
-- If it stays specific (sugar → MN9 only, loom → DNp01 only) and a 2-hop loom neighborhood no longer saturates, then a larger graph is in play.
+- Real sugar: MN9 up, DNp01 at rest
+- Real loom: DNp01 up, MN9 at rest
+- Degree-and-sign shuffle: crosstalk
+- games 0, elo null, gate2_quoted false
 
-That work is dynamics. It is not Gate 2. Chess stays on the 290-cell fixture until this kernel exists.
+Identity pulse 18: named sensory cells 75 Hz, MN9 12.5 Hz on sugar, DNp01 75 Hz on loom. Circuit pulse 26: sensory 125 Hz, MN9 37.5 Hz on sugar, DNp01 125 Hz on loom. Those numbers are the paint pulse on an intact path.
 
-Until then:
+## 2-hop LPLC2 probe (aborted)
+
+Default circuit graph stays 475. A capped outgoing 2-hop from LPLC2 (`n_cap` 2000) built 917 retained cells, 59,606 edges, `saturate_frac` 0.425, `max_hz` 425. Aborted. `logs/malecns_hop_probe.json`. That graph is not the circuit graph and not a player.
+
+Do not expand the graph while a capped loom neighborhood saturates.
+
+Outgoing hop counts (`logs/malecns_neighborhood.json`, `n_cap` 8000): LPLC2 hop 1 already hits the cap. MN9 hop 1 is 1,196 cells, 20,282 edges, max incoming |weight| 5,107, which would seize under voltage_jump. Default circuit graph stays 475.
+
+Transmitter audit on the 475-cell slice (`logs/malecns_signs.json`): 16,370 edges with a required-role presynaptic cell, 0 missing NT, 0 unknown, 0 monoamine. Fallback +1 was not used. Unclear and monoamine stay at fallback; they are not flipped per synapse.
+
+## Until a larger graph is allowed
 
 - no `play --source malecns` as a player
 - no Gate 2 quoted on MaleCNS
