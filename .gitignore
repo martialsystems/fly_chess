@@ -13,4 +13,6 @@ logs/*.json
 !logs/ethology_gate.json
 !logs/planes_gate.json
 !logs/malecns_identity.json
+!logs/malecns_circuit.json
+!logs/fixture_circuit.json
 .DS_Store

@@ -38,7 +38,7 @@ Copied from locked files. Scores are the JSON `score` fields.
 | Food/danger | 40 | 0.4875 | 0.4875 |
 | Spreadsheet board | 40 | 0.50 | 0.50 |
 
-Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_identity.json`.
+Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_identity.json`, `logs/malecns_circuit.json`.
 
 ## Run it
 
@@ -49,12 +49,15 @@ Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_id
 .venv/bin/python -m pytest
 ```
 
-Real MaleCNS files are optional and large. Identity only, no chess games on that graph yet:
+Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom gains on the 475-cell slice). No chess games on that graph:
 
 ```bash
 .venv/bin/python -m pip install -e ".[malecns]"
 .venv/bin/python -m fly_chess fetch
 .venv/bin/python -m fly_chess identity --source malecns
+.venv/bin/python -m fly_chess circuit --source malecns
 ```
+
+Why a 2-hop LPLC2 slice seizes: [docs/dynamics.md](docs/dynamics.md). That is a kernel bug, not a chess gate.
 
 Original code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).

@@ -1,0 +1,62 @@
+{
+  "source": "malecns",
+  "n_neurons": 475,
+  "shuffle_seed": 1,
+  "paint": {
+    "sugar_global_gain": 8.0,
+    "loom_global_gain": 8.0,
+    "appetitive_locus_current": 18.0,
+    "aversive_locus_current": 18.0,
+    "loci": false,
+    "games": false
+  },
+  "real": {
+    "rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "sugar": {
+      "feed_mn": 100.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 100.0,
+      "loom_vpn": 0.0
+    },
+    "loom": {
+      "feed_mn": 0.0,
+      "gf_escape": 100.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 100.0
+    }
+  },
+  "shuffled": {
+    "rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "sugar": {
+      "feed_mn": 50.0,
+      "gf_escape": 100.0,
+      "sugar_grn": 100.0,
+      "loom_vpn": 100.0
+    },
+    "loom": {
+      "feed_mn": 100.0,
+      "gf_escape": 100.0,
+      "sugar_grn": 97.77327935222672,
+      "loom_vpn": 100.0
+    }
+  },
+  "gate2_quoted": false,
+  "elo": null,
+  "games": 0,
+  "passed": {
+    "mn9_vs_dnp01_separate": true,
+    "sugar_mn9_real": true,
+    "loom_gf_real": true,
+    "shuffle_crosstalk": true
+  }
+}

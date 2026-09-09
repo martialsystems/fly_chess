@@ -60,6 +60,32 @@ def _locus_table(graph: Graph, resolved: Resolved, type_name: str) -> list[dict]
     return rows
 
 
+def circuit_gains(
+    graph: Graph,
+    resolved: Resolved,
+    channel: str,
+    cfg: dict | None = None,
+) -> np.ndarray:
+    """Experiment 1 food/danger channels, no chessboard.
+
+    Global gain plus one food or loom pulse. The pulse is the locus current
+    applied to the whole sensory class, because this check has no squares.
+    """
+    cfg = cfg or load_paint_cfg()
+    i_ext = np.zeros(graph.n, dtype=np.float64)
+    if channel == "sugar":
+        amp = cfg["sugar_global_gain"] + cfg["appetitive_locus_current"]
+        _add_ids(i_ext, resolved.roles.get("sugar_grn") or [], amp)
+    elif channel == "loom":
+        amp = cfg["loom_global_gain"] + cfg["aversive_locus_current"]
+        _add_ids(i_ext, resolved.roles.get("loom_vpn") or [], amp)
+    elif channel == "rest":
+        pass
+    else:
+        raise ValueError(f"unknown circuit channel {channel}")
+    return i_ext
+
+
 def currents(
     board: chess.Board,
     graph: Graph,

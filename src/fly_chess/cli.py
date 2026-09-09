@@ -41,6 +41,14 @@ def main(argv: list[str] | None = None) -> int:
     ident.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
     ident.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     ident.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
+    circ = sub.add_parser(
+        "circuit",
+        help="paint sugar/loom global gains on the identity subgraph; no games",
+    )
+    circ.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
+    circ.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
+    circ.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
+    circ.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
     sub.add_parser("resolve", help="write fixture maps and resolved types")
 
     play = sub.add_parser("play", help="run ethology or planes on the fixture")
@@ -81,6 +89,12 @@ def main(argv: list[str] | None = None) -> int:
         payload = write_identity(source=args.source)
         print(json.dumps(payload, indent=2))
         return 0 if payload["passed"]["identity"] else 2
+    if args.cmd == "circuit":
+        from fly_chess.circuit import write_circuit
+
+        payload = write_circuit(source=args.source)
+        print(json.dumps(payload, indent=2))
+        return 0 if payload["passed"]["mn9_vs_dnp01_separate"] else 2
     if args.cmd == "resolve":
         write_fixture()
         session = open_session()
@@ -125,8 +139,8 @@ def _play(args) -> int:
     source = getattr(args, "source", "fixture")
     if source == "malecns":
         raise SystemExit(
-            "use `python -m fly_chess identity --source malecns`. "
-            "Do not quote Gate 2 until identity passes and check_escape_same_n is true."
+            "MaleCNS is identity/circuit only. "
+            "Do not quote Gate 2. No play --source malecns."
         )
     if args.exp == "ethology":
         n = int(args.n if args.n is not None else gates["ethology_n"])

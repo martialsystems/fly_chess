@@ -31,6 +31,14 @@ def test_readme_opens_with_the_question() -> None:
     assert "logs/ethology_gate.json" in text
     assert "logs/planes_gate.json" in text
     assert "logs/malecns_identity.json" in text
+    assert "logs/malecns_circuit.json" in text
+    assert "docs/dynamics.md" in text
+    circuit = json.loads((REPO / "logs" / "malecns_circuit.json").read_text(encoding="utf-8"))
+    assert circuit["games"] == 0
+    assert circuit["elo"] is None
+    assert circuit["gate2_quoted"] is False
+    assert circuit["passed"]["mn9_vs_dnp01_separate"] is True
+    assert circuit["n_neurons"] == 475
     assert "the wiring is not doing the chess work" in text
     assert "What it is not" not in text
     assert "—" not in text
