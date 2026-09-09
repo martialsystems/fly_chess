@@ -1,0 +1,13 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+data/malecns/
+data/resolved_types.json
+data/ethology_map.json
+data/planes_map.json
+logs/*.json
+.DS_Store

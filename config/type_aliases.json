@@ -1,0 +1,97 @@
+{
+  "required_roles": [
+    "sugar_grn",
+    "aversive_grn",
+    "loom_vpn",
+    "gf_escape",
+    "walk_fwd",
+    "walk_back",
+    "steer_l",
+    "steer_r",
+    "halt",
+    "feed_mn",
+    "reserved_input_pool"
+  ],
+  "roles": {
+    "sugar_grn": {
+      "required": true,
+      "aliases": ["LB3b", "LB3c", "PhG1a", "PhG1b", "PhG1c", "LgLG3", "LgLG4"]
+    },
+    "aversive_grn": {
+      "required": true,
+      "aliases": ["AV_GRN", "bitter", "Gr66a", "LABN1", "aversive_grn"]
+    },
+    "loom_vpn": {
+      "required": true,
+      "aliases": ["LPLC2", "LPLC2-like"]
+    },
+    "gf_escape": {
+      "required": true,
+      "aliases": ["DNp01", "GF", "giant_fiber", "giant fibre"]
+    },
+    "walk_fwd": {
+      "required": true,
+      "aliases": ["DNp09", "oDN1", "BDN2"]
+    },
+    "walk_back": {
+      "required": true,
+      "aliases": ["MDN", "moonwalker", "DNp50"]
+    },
+    "steer_l": {
+      "required": true,
+      "aliases": ["DNa02", "DNg13"]
+    },
+    "steer_r": {
+      "required": true,
+      "aliases": ["DNa02", "DNg13"]
+    },
+    "halt": {
+      "required": true,
+      "aliases": ["BB", "Bluebell", "bluebird", "FG", "Foxglove"]
+    },
+    "halt_groom": {
+      "required": false,
+      "aliases": ["BRK", "brake", "aDN1", "aDN2"]
+    },
+    "feed_mn": {
+      "required": true,
+      "aliases": ["MN9"]
+    },
+    "feed_mn_optional": {
+      "required": false,
+      "aliases": ["MN8", "MN6", "MN4a"]
+    },
+    "feed_partners_optional": {
+      "required": false,
+      "aliases": [
+        "Dandelion",
+        "AN13B002",
+        "Fdg",
+        "GNG588",
+        "Bract",
+        "DNg67",
+        "Fudog",
+        "GNG232"
+      ]
+    },
+    "arousal": {
+      "required": false,
+      "aliases": ["PAM", "PPL", "PPL101", "PAM01"]
+    },
+    "reserved_input_pool": {
+      "required": true,
+      "aliases": ["APP_LOCUS", "AV_LOCUS", "PLANE_SQ", "RESERVED"]
+    },
+    "readout_pool": {
+      "required": false,
+      "aliases": ["HIDDEN", "readout"]
+    }
+  },
+  "notes": {
+    "sugar": "LB3b/LB3c labellar sweet; PhG1a-c pharyngeal; LgLG3 and LgLG4 sugar-leg. LgLG4 is the gustatory-paper path toward MN9. Capture readout is MN9 (MN8/MN6 if present). DNg67/Fudog/GNG232 are optional partners, not required.",
+    "halt": "Quiet verb reads BB and FG (feeding-context halt). Alias Bluebell to BB. BRK is a grooming brake and is not the quiet decoder. Do not bind DNp09 to halt.",
+    "walk_back": "MDN is the literature name. DNp50 is an alias until neuPrint says so.",
+    "gf_escape": "DNp01, GF, giant_fiber.",
+    "loci": "Sugar GRNs are not an 8x8 retina. Spatial identity is synthetic APP_LOCUS / AV_LOCUS cells. Real GRNs and LPLC2 get a global gain."
+  }
+}

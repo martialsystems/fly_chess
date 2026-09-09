@@ -1,0 +1,6 @@
+{
+  "excitatory": ["acetylcholine", "glutamate", "ACh", "Glu", "unknown", "monoamine", "dopamine", "serotonin", "octopamine"],
+  "inhibitory": ["GABA", "glycine", "GluCl"],
+  "fallback": 1,
+  "note": "Unclear and monoamine default to +1. Logged, not silently flipped per synapse."
+}

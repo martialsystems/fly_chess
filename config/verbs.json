@@ -1,0 +1,13 @@
+{
+  "priority": [
+    "flee",
+    "capture",
+    "reject",
+    "retreat",
+    "advance",
+    "quiet"
+  ],
+  "steer_is_tiebreak": true,
+  "quiet_uses": ["BB", "FG"],
+  "quiet_does_not_use": ["BRK", "DNp09"]
+}

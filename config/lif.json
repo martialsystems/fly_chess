@@ -1,0 +1,11 @@
+{
+  "dt_ms": 0.5,
+  "tau_m_ms": 20.0,
+  "v_rest_mV": -52.0,
+  "v_reset_mV": -52.0,
+  "v_thresh_mV": -45.0,
+  "refractory_ms": 2.0,
+  "steps_per_ply": 40,
+  "gain": 1.0,
+  "baseline_current_mV": 0.4
+}

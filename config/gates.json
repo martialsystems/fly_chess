@@ -1,0 +1,25 @@
+{
+  "time_control": {
+    "base_s": 1.0,
+    "inc_s": 0.1,
+    "note": "Clock for random opponents. Do not attach Stockfish Elo meaning to 1+0.1."
+  },
+  "flee_metric": "us_to_move_in_check",
+  "flee_metric_definition": "Among positions where we are to move and in check and at least one legal escape exists, the fraction where the chosen move is legal and leaves us not in check.",
+  "ethology_n": 40,
+  "ethology_hanging_capture_vs_random": "logged; Experiment 1 may lose to random if the shuffled control is logged",
+  "gate0": {
+    "n_positions": 32,
+    "illegal_rate": 0.0
+  },
+  "gate1": {
+    "n_train": 48,
+    "n_eval": 24,
+    "min_accuracy": 0.5
+  },
+  "gate2": {
+    "n_games": 24,
+    "min_score": 0.5
+  },
+  "shuffle_n": 8
+}

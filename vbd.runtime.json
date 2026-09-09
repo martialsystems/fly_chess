@@ -1,0 +1,16 @@
+{
+  "runtime_checks": [
+    {
+      "id": "unit-tests",
+      "argv": [".venv/bin/python", "-m", "pytest", "tests/", "-q"],
+      "timeout_s": 180,
+      "paths": ["src/**", "tests/**", "config/**", "requirements.txt", "vbd.runtime.json", "README.md"]
+    },
+    {
+      "id": "ethology-smoke",
+      "argv": [".venv/bin/python", "-m", "fly_chess", "play", "--exp", "ethology", "--opponent", "random", "--n", "4", "--out", "logs/ethology_smoke.json"],
+      "timeout_s": 120,
+      "paths": ["src/**", "tests/**", "config/**"]
+    }
+  ]
+}

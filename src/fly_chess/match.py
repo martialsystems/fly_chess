@@ -1,0 +1,295 @@
+# Copyright (c) 2026 Martial Systems LLC
+from __future__ import annotations
+
+import json
+import random
+from dataclasses import dataclass, field
+
+import chess
+import numpy as np
+
+from fly_chess import ALLOWED_ETHOLOGY, ALLOWED_PLANES
+from fly_chess.board_feats import hanging_enemy_squares
+from fly_chess.head import LinearHead
+from fly_chess.mask import escapes_check, legal_moves
+from fly_chess.paint import currents as paint_currents
+from fly_chess.paths import CONFIG
+from fly_chess.planes import currents as plane_currents
+from fly_chess.planes import readout_vector
+from fly_chess.puzzles import labeled_positions
+from fly_chess.session import Session, open_session, ply_rates, require_ethology
+from fly_chess.verbs import choose_move
+
+
+def load_gates() -> dict:
+    return json.loads((CONFIG / "gates.json").read_text(encoding="utf-8"))
+
+
+def refuse_online(args) -> None:
+    for name in ("lichess", "chesscom", "chess_com", "online"):
+        if getattr(args, name, False):
+            raise SystemExit("no Lichess or chess.com client in this slice")
+
+
+def random_move(board: chess.Board, rng: random.Random) -> chess.Move:
+    legal = legal_moves(board)
+    return rng.choice(legal)
+
+
+def capture_preferring_move(board: chess.Board, rng: random.Random) -> chess.Move:
+    legal = legal_moves(board)
+    caps = [m for m in legal if board.is_capture(m)]
+    return rng.choice(caps or legal)
+
+
+@dataclass
+class GameStats:
+    n_games: int = 0
+    score: float = 0.0
+    illegal: int = 0
+    ply: int = 0
+    hanging_chances: int = 0
+    hanging_taken: int = 0
+    check_chances: int = 0
+    check_escaped: int = 0
+    verbs: dict[str, int] = field(default_factory=dict)
+
+
+def ethology_move(session: Session, board: chess.Board) -> tuple[chess.Move, str]:
+    require_ethology(session)
+    i_ext = paint_currents(board, session.graph, session.resolved)
+    hz = ply_rates(session, i_ext)
+    return choose_move(board, session.graph, session.resolved, hz)
+
+
+def planes_move(session: Session, board: chess.Board, head: LinearHead) -> chess.Move:
+    i_ext = plane_currents(board, session.graph, session.resolved)
+    hz = ply_rates(session, i_ext)
+    feat = readout_vector(hz, session.resolved)
+    return head.pick(board, feat)
+
+
+def play_ethology(
+    *,
+    n: int,
+    opponent: str,
+    seed: int = 0,
+    shuffled: bool = False,
+) -> dict:
+    rng = random.Random(seed)
+    session = open_session(shuffled=shuffled, seed=seed)
+    stats = GameStats()
+    for g in range(n):
+        board = chess.Board()
+        us_white = g % 2 == 0
+        result = _play_one(
+            board,
+            us_white=us_white,
+            session=session,
+            opponent=opponent,
+            rng=rng,
+            stats=stats,
+            mode="ethology",
+            head=None,
+        )
+        stats.n_games += 1
+        stats.score += result
+    return _ethology_report(stats, shuffled=shuffled, seed=seed)
+
+
+def _play_one(
+    board: chess.Board,
+    *,
+    us_white: bool,
+    session: Session,
+    opponent: str,
+    rng: random.Random,
+    stats: GameStats,
+    mode: str,
+    head: LinearHead | None,
+    max_ply: int = 80,
+) -> float:
+    us = chess.WHITE if us_white else chess.BLACK
+    while not board.is_game_over() and board.ply() < max_ply:
+        if board.turn == us:
+            if board.is_check() and any(escapes_check(board, m) for m in legal_moves(board)):
+                stats.check_chances += 1
+            hanging = hanging_enemy_squares(board, us)
+            hanging_caps = [
+                m
+                for m in legal_moves(board)
+                if board.is_capture(m) and m.to_square in hanging
+            ]
+            if hanging_caps:
+                stats.hanging_chances += 1
+            if mode == "ethology":
+                move, verb = ethology_move(session, board)
+                stats.verbs[verb] = stats.verbs.get(verb, 0) + 1
+            else:
+                assert head is not None
+                move = planes_move(session, board, head)
+                verb = "head"
+            if move not in board.legal_moves:
+                stats.illegal += 1
+                move = random_move(board, rng)
+            if hanging_caps and move in hanging_caps:
+                stats.hanging_taken += 1
+            if board.is_check() and escapes_check(board, move):
+                stats.check_escaped += 1
+            board.push(move)
+            stats.ply += 1
+        else:
+            if opponent == "capture":
+                board.push(capture_preferring_move(board, rng))
+            else:
+                board.push(random_move(board, rng))
+            stats.ply += 1
+    if board.is_checkmate():
+        winner = not board.turn
+        if winner == us:
+            return 1.0
+        return 0.0
+    if board.is_stalemate() or board.is_insufficient_material() or board.can_claim_draw():
+        return 0.5
+    return 0.5
+
+
+def _ethology_report(stats: GameStats, *, shuffled: bool, seed: int) -> dict:
+    score = stats.score / max(stats.n_games, 1)
+    hang = stats.hanging_taken / max(stats.hanging_chances, 1)
+    flee = stats.check_escaped / max(stats.check_chances, 1)
+    claim = ALLOWED_ETHOLOGY.format(score=f"{score:.3f}", shuffled=f"{shuffled}")
+    return {
+        "experiment": "ethology",
+        "claim": claim,
+        "n_games": stats.n_games,
+        "score": score,
+        "illegal": stats.illegal,
+        "hanging_capture_rate": hang,
+        "hanging_chances": stats.hanging_chances,
+        "flee_metric": "us_to_move_in_check",
+        "check_escape_rate": flee,
+        "check_chances": stats.check_chances,
+        "verbs": stats.verbs,
+        "shuffled": shuffled,
+        "shuffle_seed": seed if shuffled else None,
+        "time_control": "1+0.1 random opponents; no Stockfish Elo",
+    }
+
+
+def play_planes_gate0(*, n: int = 32, seed: int = 0) -> dict:
+    session = open_session(shuffled=False, seed=seed)
+    feat0 = readout_vector(np.zeros(session.graph.n), session.resolved)
+    head = LinearHead.zeros(len(feat0))
+    illegal = 0
+    rng = random.Random(seed)
+    for i in range(n):
+        board = chess.Board()
+        for _ in range(rng.randint(0, 6)):
+            if board.is_game_over():
+                break
+            board.push(random_move(board, rng))
+        if board.is_game_over():
+            continue
+        move = planes_move(session, board, head)
+        if move not in board.legal_moves:
+            illegal += 1
+    claim = ALLOWED_PLANES.format(gate=0, shuffled="logged")
+    return {
+        "experiment": "planes",
+        "gate": 0,
+        "claim": claim,
+        "n_positions": n,
+        "illegal_rate": illegal / max(n, 1),
+        "illegal": illegal,
+    }
+
+
+def train_planes_head(session: Session, *, n_train: int, seed: int = 0) -> LinearHead:
+    puzzles = labeled_positions()
+    feat0 = readout_vector(np.zeros(session.graph.n), session.resolved)
+    head = LinearHead.zeros(len(feat0))
+    epochs = max(4, n_train // max(len(puzzles), 1))
+    for _ in range(epochs):
+        for board, target, _ in puzzles:
+            b = board.copy()
+            i_ext = plane_currents(b, session.graph, session.resolved)
+            hz = ply_rates(session, i_ext)
+            feat = readout_vector(hz, session.resolved)
+            head.train_step(feat, target, b, lr=0.08)
+    return head
+
+
+def play_planes_gate1(*, seed: int = 0) -> dict:
+    gates = load_gates()
+    session = open_session(shuffled=False, seed=seed)
+    head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
+    puzzles = labeled_positions()
+    n_eval = int(gates["gate1"]["n_eval"])
+    correct = 0
+    for i, (board, target, _) in enumerate(puzzles[:n_eval]):
+        move = planes_move(session, board.copy(), head)
+        if move == target:
+            correct += 1
+    acc = correct / max(n_eval, 1)
+    return {
+        "experiment": "planes",
+        "gate": 1,
+        "claim": ALLOWED_PLANES.format(gate=1, shuffled="logged"),
+        "accuracy": acc,
+        "n_eval": n_eval,
+        "correct": correct,
+        "min_accuracy": gates["gate1"]["min_accuracy"],
+        "passed": acc >= gates["gate1"]["min_accuracy"],
+    }
+
+
+def play_planes_gate2(*, n: int | None = None, seed: int = 0, shuffled: bool = False) -> dict:
+    gates = load_gates()
+    n = int(n if n is not None else gates["gate2"]["n_games"])
+    session = open_session(shuffled=shuffled, seed=seed)
+    head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
+    rng = random.Random(seed + 1)
+    stats = GameStats()
+    for g in range(n):
+        board = chess.Board()
+        result = _play_one(
+            board,
+            us_white=g % 2 == 0,
+            session=session,
+            opponent="random",
+            rng=rng,
+            stats=stats,
+            mode="planes",
+            head=head,
+        )
+        stats.n_games += 1
+        stats.score += result
+    score = stats.score / max(stats.n_games, 1)
+    return {
+        "experiment": "planes",
+        "gate": 2,
+        "claim": ALLOWED_PLANES.format(gate=2, shuffled=str(shuffled)),
+        "n_games": stats.n_games,
+        "score": score,
+        "illegal": stats.illegal,
+        "min_score": gates["gate2"]["min_score"],
+        "passed": score >= gates["gate2"]["min_score"] or shuffled,
+        "shuffled": shuffled,
+        "shuffle_seed": seed if shuffled else None,
+    }
+
+
+def identity_stim(session: Session, role: str, current: float = 18.0) -> dict[str, float]:
+    i_ext = np.zeros(session.graph.n, dtype=np.float64)
+    for i in session.resolved.roles[role]:
+        i_ext[i] = current
+    hz = ply_rates(session, i_ext)
+    from fly_chess.rates import mean_hz
+
+    return {
+        "feed_mn": mean_hz(hz, session.resolved.roles["feed_mn"]),
+        "gf_escape": mean_hz(hz, session.resolved.roles["gf_escape"]),
+        "sugar_grn": mean_hz(hz, session.resolved.roles["sugar_grn"]),
+        "loom_vpn": mean_hz(hz, session.resolved.roles["loom_vpn"]),
+    }
