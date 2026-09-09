@@ -1,49 +1,55 @@
 # fly_chess
 
-Does a frozen fly-style graph take hanging pieces and flee check when the board is painted as food and looming?
+Can you point a fruit-fly wiring diagram at a chessboard and get legal moves out?
 
-Fixture harness. Score 0.4875 vs random, shuffled 0.4875. Gate 2 not passed. Wiring is not an encoder on this graph. Not MaleCNS v1.0.
+Short answer: we can get legal moves. We cannot honestly say the wiring is playing chess.
 
-Locked from `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40, both colors, 1+0.1, game seed 0, fixture hash `06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce`. Scores copy the JSON `score` field. Interval 0.3326 to 0.6424 still contains 0.5.
+## What this is
 
-Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875.
+A fly's brain map says which cells talk to which. We run a small stand-in of that map (290 cells for everyday tests; a 475-cell slice of the real MaleCNS map for one circuit check). Chess never falls out of a fly looking for food. We built two translators:
 
-Piece-plane encoding plus a trained legal-move readout, Gate 0-2, shuffled control.
+- Food and danger: hanging enemy pieces count as food. Check counts as something looming. Named fly cells vote capture, flee, or sit still. Illegal votes are thrown away.
+- Spreadsheet board: each square and piece type turns on reserved input cells. A tiny extra layer picks a legal move. The fly wiring stays frozen.
 
-Experiment 1 is a legal-move mask plus a check detector. Real score 0.4875, shuffled 0.4875. `hanging_capture_real_gt_shuffled` is true (0.177 vs 0.159) but the arms saw 774 vs 668 hanging chances (`hanging_capture_same_n` is false), so it is not the same test set. Do not promote that bit. Check-escape is 1.0 on both wirings because paint marks in-check and the mask keeps legal king-safe moves. The runs saw 41 vs 31 check positions (`check_escape_same_n` is false). That 1.0 is not evidence the graph flees. Real fled 19 times and captured 124; shuffled fled once and captured 37; both scored 0.4875 vs random. Different twitch, same chess.
+Both play only against a random legal opponent, on this computer. Not chess.com. Not Lichess.
 
-Experiment 2: Gate 0 illegal rate 0. Gate 1 31/32 vs 30/32. Gate 2 0.5 vs 0.5. `load_bearing.gate2_score_real_gt_shuffled` is false. `load_bearing.wiring_is_encoder` is false.
+## What happened
 
-Labellar sugar cells are a global "there is food" gain. Square identity sits on synthetic `APP_LOCUS` / `AV_LOCUS` afferents. Capture readout is `MN9`. Quiet halt is `BB` / `FG`. Full MaleCNS v1.0 is CC BY 4.0 (Berg et al., *Cell* 2026). See `THIRD_PARTY.md`.
+On the small test map, both translators score like coin flips (0.4875 and 0.50 in 40 games). If we scramble the wires and keep the same translator, the score does not drop. So on that map the wiring is not doing the chess work. The rulebook mask and the extra layer are.
 
-## Fixture rates (n=40)
+One number looks like a win if you squint (taking hanging pieces 0.177 vs 0.159). It is not a win. The two tests did not even see the same chances (774 vs 668). We do not advertise it.
 
-Same game seed for real vs shuffled wiring.
+Getting out of check every time is also not a win. The paint says you are in check and the rulebook only allows safe king moves. A scrambled map does the same thing.
 
-| Slice | n | Score | Illegal |
-|-------|--:|------:|--------:|
-| Ethology real | 40 | 0.4875 | 0 |
-| Ethology shuffled | 40 | 0.4875 | 0 |
-| Planes Gate 2 real | 40 | 0.5 | 0 |
-| Planes Gate 2 shuffled | 40 | 0.5 | 0 |
+## What the real fly map showed
 
-1+0.1 is a clock for random opponents.
+We downloaded MaleCNS v1.0 (the published male fly wiring, used here under CC BY). We did not run chess on all 166,000 cells.
 
-## How the board enters the graph
+We kept a 475-cell slice: sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Touch sugar, only the feeding cell lights up. Touch looming, only the escape cell lights up. Scramble the wires, both cells light up for both touches. That means those two fly circuits are really in the file. It does not mean the fly can play chess.
 
-Hanging enemy pieces raise a global sugar current and the reserved appetitive locus for that square. Checks raise a global LPLC2 current and the reserved aversive locus. The verb table then the legal-move mask. Experiment 2 injects piece-planes into `PLANE_SQ` cells and trains only a linear head. Graph weights stay frozen. Fixture PSPs are instant voltage jumps (`config/lif.json`).
+A wider two-hop-from-looming slice was about 156,000 cells and the model froze. We threw that run away. It is not in the lock files.
 
-## How to run
+## Numbers
+
+Copied from locked files. Scores are the JSON `score` fields.
+
+| Test | Games | Score vs random | Same test after scrambling wires |
+|------|------:|----------------:|---------------------------------:|
+| Food/danger | 40 | 0.4875 | 0.4875 |
+| Spreadsheet board | 40 | 0.50 | 0.50 |
+
+Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_identity.json`.
+
+## Run it
 
 ```bash
 /opt/homebrew/bin/python3.12 -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
 .venv/bin/python -m fly_chess
-.venv/bin/python -m fly_chess resolve
 .venv/bin/python -m pytest
 ```
 
-Do not use stock `/usr/bin/python3 -m pytest`. Fixture stays the pytest default. MaleCNS v1.0 is opt-in:
+Real MaleCNS files are optional and large. Identity only, no chess games on that graph yet:
 
 ```bash
 .venv/bin/python -m pip install -e ".[malecns]"
@@ -51,22 +57,4 @@ Do not use stock `/usr/bin/python3 -m pytest`. Fixture stays the pytest default.
 .venv/bin/python -m fly_chess identity --source malecns
 ```
 
-MaleCNS identity (475 cells: sugar GRNs, MN9, LPLC2, DNp01, and 39 sugar→MN9 bridges), locked in `logs/malecns_identity.json`: sugar stim raises MN9 to 50 Hz and leaves giant fiber at 0; LPLC2 stim raises DNp01 to 50 Hz and leaves MN9 at 0. The same stims on a degree-and-sign shuffle drive both readouts and the other pathway. Identity passes. Shuffle crosstalk is true. `check_escape_same_n` is still false on the fixture lock, so Gate 2 is not quoted.
-
-Do not quote Gate 2 on MaleCNS until identity passes and `check_escape_same_n` is true. Do not raise n to pass Gate 2 on the 290-cell fixture.
-
-| File | Role |
-|------|------|
-| [AGENTS.md](AGENTS.md) | Agent rules |
-| `config/type_aliases.json` | Paper nicknames to types |
-| `config/lif.json` | LIF; voltage-jump PSP note |
-| `data/fixtures/graph.json` | 290-neuron fixture |
-| `logs/ethology_gate.json` | Locked Experiment 1 |
-| `logs/planes_gate.json` | Locked Experiment 2 |
-| `logs/malecns_identity.json` | Sugar→MN9 and LPLC2→DNp01 on fetched weights |
-| `config/datasets.json` | MaleCNS file URLs |
-| `data-provenance/malecns_v1/source.lock.json` | Doomfly-style sha256 lock |
-| `scripts/fetch_malecns.py` | Opt-in download |
-| `tests/test_claims.py` | Banned-token scan |
-
-Original code is MIT.
+Original code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).

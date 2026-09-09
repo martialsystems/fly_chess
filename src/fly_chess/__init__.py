@@ -6,8 +6,7 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 QUESTION = (
-    "Does a frozen fly-style graph take hanging pieces and flee check "
-    "when the board is painted as food and looming?"
+    "Can you point a fruit-fly wiring diagram at a chessboard and get legal moves out?"
 )
 
 ALLOWED_ETHOLOGY = (
