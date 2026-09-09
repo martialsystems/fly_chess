@@ -15,6 +15,7 @@ def test_fixture_circuit_separates_mn9_and_dnp01() -> None:
     assert payload["games"] == 0
     assert payload["elo"] is None
     assert payload["gate2_quoted"] is False
+    assert "not a firing-rate discovery" in payload.get("hz_note", "")
     assert payload["paint"]["loci"] is False
     assert payload["passed"]["mn9_vs_dnp01_separate"] is True
     sugar = payload["real"]["sugar"]

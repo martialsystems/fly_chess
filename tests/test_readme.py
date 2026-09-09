@@ -39,6 +39,12 @@ def test_readme_opens_with_the_question() -> None:
     assert circuit["gate2_quoted"] is False
     assert circuit["passed"]["mn9_vs_dnp01_separate"] is True
     assert circuit["n_neurons"] == 475
+    assert "not a firing-rate discovery" in circuit["hz_note"]
+    dyn = (REPO / "docs" / "dynamics.md").read_text(encoding="utf-8")
+    assert "current-based" in dyn.lower()
+    assert "not Gate 2" in dyn
+    assert "not a new firing-rate finding" in text
+    assert "Chess stays on the 290-cell fixture" in text
     assert "the wiring is not doing the chess work" in text
     assert "What it is not" not in text
     assert "—" not in text

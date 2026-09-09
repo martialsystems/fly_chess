@@ -53,6 +53,7 @@
   "gate2_quoted": false,
   "elo": null,
   "games": 0,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
   "passed": {
     "mn9_vs_dnp01_separate": true,
     "sugar_mn9_real": true,

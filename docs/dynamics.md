@@ -14,7 +14,7 @@ MaleCNS v1.0 annotations (local fetch, hash-locked):
 - Direct sugar → MN9: 0 edges
 - Disynaptic sugar → X → MN9 bridges: 39 cells
 
-The locked identity graph is those seeds plus the 39 bridges: 475 cells. `logs/malecns_identity.json`.
+The locked identity graph is those seeds plus the 39 bridges: 475 cells. `logs/malecns_identity.json`. Circuit paint on the same slice: `logs/malecns_circuit.json`. Named-cell Hz (50 Hz identity, 100 Hz paint) is the injected pulse on an intact path, not a firing-rate discovery. The useful contrast is shuffle crosstalk.
 
 ## Why two hops from LPLC2 is ~156k
 
@@ -28,7 +28,14 @@ The fixture (290 cells, hand-set weights) still uses voltage jumps so everyday t
 
 ## Next kernel (not this slice)
 
-A current-based synapse (Shiu-style: small mV per contact, leak through `tau_m`) is the dynamics fix. It is not a chess gate. Until that kernel exists:
+Current-based synapses: a small millivolt per contact, then leak through `tau_m`. Run that kernel on the 475-cell slice first.
+
+- If the 475-cell slice still seizes, the gain is wrong.
+- If it stays specific (sugar → MN9 only, loom → DNp01 only) and a 2-hop loom neighborhood no longer saturates, then a larger graph is in play.
+
+That work is dynamics. It is not Gate 2. Chess stays on the 290-cell fixture until this kernel exists.
+
+Until then:
 
 - no `play --source malecns` as a player
 - no Gate 2 quoted on MaleCNS

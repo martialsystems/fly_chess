@@ -25,7 +25,7 @@ Getting out of check every time is also not a win. The paint says you are in che
 
 We downloaded MaleCNS v1.0 (the published male fly wiring, used here under CC BY). We did not run chess on all 166,000 cells.
 
-We kept a 475-cell slice: sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Touch sugar, only the feeding cell lights up. Touch looming, only the escape cell lights up. Scramble the wires, both cells light up for both touches. That means those two fly circuits are really in the file. It does not mean the fly can play chess.
+We kept a 475-cell slice: sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Touch sugar, only the feeding cell lights up. Touch looming, only the escape cell lights up. That is the paint pulse on the named cell, not a new firing-rate finding. Scramble the wires, both cells light up for both touches. That contrast is the result. Those two fly circuits are in the file. It does not mean the fly can play chess. Chess stays on the 290-cell fixture until a current-based synapse kernel exists.
 
 A wider two-hop-from-looming slice was about 156,000 cells and the model froze. We threw that run away. It is not in the lock files.
 

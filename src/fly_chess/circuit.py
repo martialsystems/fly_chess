@@ -67,6 +67,10 @@ def run_circuit(*, source: str, shuffle_seed: int = 1) -> dict:
         "gate2_quoted": False,
         "elo": None,
         "games": 0,
+        "hz_note": (
+            "Named-cell Hz is the injected paint pulse on an intact path, "
+            "not a firing-rate discovery. Contrast is shuffle crosstalk."
+        ),
     }
     rs, ss = out["real"], out["shuffled"]
     sugar_sep = rs["sugar"]["feed_mn"] > rs["rest"]["feed_mn"] and rs["sugar"]["gf_escape"] == 0.0
