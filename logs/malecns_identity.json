@@ -1,0 +1,69 @@
+{
+  "source": "malecns",
+  "n_neurons_real": 475,
+  "n_neurons_shuffled": 475,
+  "shuffle_seed": 1,
+  "real": {
+    "sugar_rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "sugar_on": {
+      "feed_mn": 50.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 50.0,
+      "loom_vpn": 0.0
+    },
+    "loom_rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "loom_on": {
+      "feed_mn": 0.0,
+      "gf_escape": 50.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 50.0
+    }
+  },
+  "shuffled": {
+    "sugar_rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "sugar_on": {
+      "feed_mn": 25.0,
+      "gf_escape": 50.0,
+      "sugar_grn": 50.0,
+      "loom_vpn": 50.0
+    },
+    "loom_rest": {
+      "feed_mn": 0.0,
+      "gf_escape": 0.0,
+      "sugar_grn": 0.0,
+      "loom_vpn": 0.0
+    },
+    "loom_on": {
+      "feed_mn": 50.0,
+      "gf_escape": 50.0,
+      "sugar_grn": 48.78542510121458,
+      "loom_vpn": 50.0
+    }
+  },
+  "gate2_quoted": false,
+  "passed": {
+    "sugar_mn9_real": true,
+    "loom_gf_real": true,
+    "sugar_mn9_shuffled": true,
+    "loom_gf_shuffled": true,
+    "sugar_specific_real": true,
+    "loom_specific_real": true,
+    "shuffle_crosstalk": true,
+    "identity": true
+  }
+}

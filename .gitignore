@@ -12,4 +12,5 @@ data/planes_map.json
 logs/*.json
 !logs/ethology_gate.json
 !logs/planes_gate.json
+!logs/malecns_identity.json
 .DS_Store

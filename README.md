@@ -51,6 +51,8 @@ Do not use stock `/usr/bin/python3 -m pytest`. Fixture stays the pytest default.
 .venv/bin/python -m fly_chess identity --source malecns
 ```
 
+MaleCNS identity (475 cells: sugar GRNs, MN9, LPLC2, DNp01, and 39 sugar→MN9 bridges), locked in `logs/malecns_identity.json`: sugar stim raises MN9 to 50 Hz and leaves giant fiber at 0; LPLC2 stim raises DNp01 to 50 Hz and leaves MN9 at 0. The same stims on a degree-and-sign shuffle drive both readouts and the other pathway. Identity passes. Shuffle crosstalk is true. `check_escape_same_n` is still false on the fixture lock, so Gate 2 is not quoted.
+
 Do not quote Gate 2 on MaleCNS until identity passes and `check_escape_same_n` is true. Do not raise n to pass Gate 2 on the 290-cell fixture.
 
 | File | Role |
@@ -61,6 +63,7 @@ Do not quote Gate 2 on MaleCNS until identity passes and `check_escape_same_n` i
 | `data/fixtures/graph.json` | 290-neuron fixture |
 | `logs/ethology_gate.json` | Locked Experiment 1 |
 | `logs/planes_gate.json` | Locked Experiment 2 |
+| `logs/malecns_identity.json` | Sugar→MN9 and LPLC2→DNp01 on fetched weights |
 | `config/datasets.json` | MaleCNS file URLs |
 | `data-provenance/malecns_v1/source.lock.json` | Doomfly-style sha256 lock |
 | `scripts/fetch_malecns.py` | Opt-in download |

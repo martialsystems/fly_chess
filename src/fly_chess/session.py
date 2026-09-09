@@ -23,16 +23,49 @@ class Session:
     shuffle_seed: int | None
 
 
-def open_session(*, shuffled: bool = False, seed: int = 0, source: str = "fixture") -> Session:
+def open_session(
+    *,
+    shuffled: bool = False,
+    seed: int = 0,
+    source: str = "fixture",
+    require: str = "all",
+) -> Session:
     if source == "fixture":
         write_fixture()
-    graph = load_graph(source=source)
+        graph = load_graph(source="fixture")
+    elif source == "malecns":
+        from fly_chess.import_malecns import load_identity_graph
+
+        graph = load_identity_graph()
+    else:
+        graph = load_graph(source=source)
     if shuffled:
         graph = shuffle_graph(graph, seed=seed)
-    resolved = resolve_graph(graph)
+    resolved = resolve_graph(graph, require=require)
     write_resolved(resolved)
-    dump_ethology_map(graph, resolved)
-    dump_planes_map(graph, resolved)
+    if require == "all":
+        dump_ethology_map(graph, resolved)
+        dump_planes_map(graph, resolved)
+    net = LifNet(graph, LifConfig.load())
+    return Session(
+        graph=graph,
+        resolved=resolved,
+        net=net,
+        shuffled=shuffled,
+        shuffle_seed=seed if shuffled else None,
+    )
+
+
+def session_from_graph(
+    graph: Graph,
+    *,
+    shuffled: bool = False,
+    seed: int = 0,
+    require: str = "all",
+) -> Session:
+    if shuffled:
+        graph = shuffle_graph(graph, seed=seed)
+    resolved = resolve_graph(graph, require=require)
     net = LifNet(graph, LifConfig.load())
     return Session(
         graph=graph,

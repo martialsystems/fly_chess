@@ -41,5 +41,11 @@ def test_readme_opens_with_the_question() -> None:
     assert planes["n_games"] == 40
     assert eth["n_games"] == 40
     assert "31/32" in text
+    ident = json.loads((REPO / "logs" / "malecns_identity.json").read_text(encoding="utf-8"))
+    assert ident["n_neurons_real"] == 475
+    assert ident["passed"]["identity"] is True
+    assert ident["passed"]["shuffle_crosstalk"] is True
+    assert ident["gate2_quoted"] is False
+    assert "475" in text
     assert planes["load_bearing"]["wiring_is_encoder"] is False
     assert eth["load_bearing"]["wiring_is_encoder"] is False

@@ -14,8 +14,21 @@ from fly_chess.session import open_session
 def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
     if source == "malecns" and not malecns_present():
         raise FileNotFoundError("MaleCNS files missing; run python -m fly_chess fetch")
-    real = open_session(source=source, shuffled=False)
-    shuffled = open_session(source=source, shuffled=True, seed=shuffle_seed)
+    require = "identity" if source == "malecns" else "all"
+    if source == "malecns":
+        from fly_chess.import_malecns import load_identity_graph
+        from fly_chess.session import session_from_graph
+
+        graph = load_identity_graph()
+        real = session_from_graph(graph, shuffled=False, require=require)
+        shuffled = session_from_graph(
+            graph, shuffled=True, seed=shuffle_seed, require=require
+        )
+    else:
+        real = open_session(source=source, shuffled=False, require=require)
+        shuffled = open_session(
+            source=source, shuffled=True, seed=shuffle_seed, require=require
+        )
     out = {
         "source": source,
         "n_neurons_real": real.graph.n,
@@ -46,9 +59,23 @@ def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
             ss["loom_on"]["gf_escape"], ss["loom_rest"]["gf_escape"]
         ),
     }
-    out["passed"]["identity"] = bool(
-        out["passed"]["sugar_mn9_real"] and out["passed"]["loom_gf_real"]
+    sugar_specific = (
+        rs["sugar_on"]["gf_escape"] == 0.0 and rs["sugar_on"]["loom_vpn"] == 0.0
     )
+    loom_specific = rs["loom_on"]["feed_mn"] == 0.0
+    shuffle_crosstalk = (
+        ss["sugar_on"]["gf_escape"] > 0.0 or ss["loom_on"]["feed_mn"] > 0.0
+    )
+    out["passed"]["sugar_specific_real"] = sugar_specific
+    out["passed"]["loom_specific_real"] = loom_specific
+    out["passed"]["shuffle_crosstalk"] = shuffle_crosstalk
+    out["passed"]["identity"] = bool(
+        out["passed"]["sugar_mn9_real"]
+        and out["passed"]["loom_gf_real"]
+        and sugar_specific
+        and loom_specific
+    )
+    out["gate2_quoted"] = False
     return out
 
 

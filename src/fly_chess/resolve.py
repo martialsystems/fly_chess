@@ -44,7 +44,15 @@ def _match(neuron_type: str, spec: RoleSpec) -> bool:
     return normalize(neuron_type) in alias_index(spec)
 
 
-def resolve_graph(graph: Graph, table: dict | None = None) -> Resolved:
+IDENTITY_ROLES = ("sugar_grn", "feed_mn", "loom_vpn", "gf_escape")
+
+
+def resolve_graph(
+    graph: Graph,
+    table: dict | None = None,
+    *,
+    require: str = "all",
+) -> Resolved:
     table = table or load_alias_table()
     specs = {s.name: s for s in role_specs(table)}
     roles: dict[str, list[int]] = {name: [] for name in specs}
@@ -83,11 +91,12 @@ def resolve_graph(graph: Graph, table: dict | None = None) -> Resolved:
         if not roles[spec.name]:
             missing_optional[spec.name] = list(spec.aliases)
 
-    for name in required_role_names(table):
+    needed = IDENTITY_ROLES if require == "identity" else required_role_names(table)
+    for name in needed:
         if not roles.get(name):
             raise ResolveError(f"required role {name} has zero bodyIds")
 
-    if not roles["feed_mn"]:
+    if require != "identity" and not roles["feed_mn"]:
         raise ResolveError("MN9 missing: Experiment 1 does not start")
 
     return Resolved(roles=roles, missing_optional=missing_optional, source=graph.source)

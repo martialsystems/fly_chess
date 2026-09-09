@@ -18,6 +18,22 @@ def test_fixture_resolves_all_required_roles() -> None:
     assert "feed_partners_optional" in resolved.missing_optional
 
 
+def test_identity_require_skips_chess_loci() -> None:
+    from fly_chess.import_malecns import graph_from_records
+
+    bodies = [
+        {"bodyId": 1, "type": "LB3c", "superclass": "sensory", "status": "Traced"},
+        {"bodyId": 2, "type": "MN9", "superclass": "motor", "status": "Traced"},
+        {"bodyId": 3, "type": "LPLC2", "superclass": "visual", "status": "Traced"},
+        {"bodyId": 4, "type": "DNp01", "superclass": "descending", "status": "Traced"},
+        {"bodyId": 5, "type": "AV_GRN", "superclass": "sensory", "status": "Traced"},
+    ]
+    graph = graph_from_records(bodies, [(1, 2, 4.0), (3, 4, 4.0)])
+    resolved = resolve_graph(graph, require="identity")
+    assert resolved.roles["feed_mn"]
+    assert resolved.roles["sugar_grn"]
+
+
 def test_mn9_missing_fails_closed() -> None:
     graph = build_fixture()
     neurons = [n for n in graph.neurons if n.type != "MN9"]
