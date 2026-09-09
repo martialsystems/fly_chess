@@ -16,6 +16,7 @@ from fly_chess.match import (
     play_planes_gate1,
     play_planes_gate2,
     refuse_online,
+    write_locked_gates,
 )
 from fly_chess.paths import LOGS, RESOLVED
 from fly_chess.session import open_session
@@ -48,6 +49,8 @@ def main(argv: list[str] | None = None) -> int:
     play.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     play.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
 
+    sub.add_parser("lock", help="write logs/ethology_gate.json and logs/planes_gate.json at locked n")
+
     sh = sub.add_parser("shuffle", help="ethology or planes shuffled-wiring control")
     sh.add_argument("--exp", choices=["ethology", "planes"], required=True)
     sh.add_argument("--n", type=int, default=None)
@@ -72,6 +75,14 @@ def main(argv: list[str] | None = None) -> int:
         print(f"wrote {write_resolved}")
         if session.resolved.missing_optional:
             print("optional missing:", json.dumps(session.resolved.missing_optional))
+        return 0
+    if args.cmd == "lock":
+        p1, p2 = write_locked_gates()
+        for path in (p1, p2):
+            payload = json.loads(path.read_text(encoding="utf-8"))
+            require_clean(payload.get("claim") or "", source=str(path))
+            print(path)
+            print(json.dumps(payload, indent=2))
         return 0
     if args.cmd == "play":
         return _play(args)

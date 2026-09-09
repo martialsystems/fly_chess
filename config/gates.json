@@ -7,19 +7,22 @@
   "flee_metric": "us_to_move_in_check",
   "flee_metric_definition": "Among positions where we are to move and in check and at least one legal escape exists, the fraction where the chosen move is legal and leaves us not in check.",
   "ethology_n": 40,
-  "ethology_hanging_capture_vs_random": "logged; Experiment 1 may lose to random if the shuffled control is logged",
+  "gate2": {
+    "n_games": 40,
+    "min_score": 0.5,
+    "pass_rule": "lower bound of a 95 percent normal interval on score is above 0.5"
+  },
   "gate0": {
     "n_positions": 32,
     "illegal_rate": 0.0
   },
   "gate1": {
-    "n_train": 48,
-    "n_eval": 24,
+    "n_train": 96,
+    "n_eval": 32,
     "min_accuracy": 0.5
   },
-  "gate2": {
-    "n_games": 24,
-    "min_score": 0.5
-  },
-  "shuffle_n": 8
+  "shuffle_n": 40,
+  "game_seed": 0,
+  "shuffle_seed": 1,
+  "note": "n=40 is the smallest number written down. n=8 is smoke only."
 }

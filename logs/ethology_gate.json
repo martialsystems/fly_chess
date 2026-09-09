@@ -1,0 +1,52 @@
+{
+  "experiment": "ethology",
+  "claim": "Approach/avoid controller, local score 0.487 vs random, shuffled wiring 0.487.",
+  "fixture_sha256": "06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce",
+  "n_games": 40,
+  "game_seed": 0,
+  "shuffle_seed": 1,
+  "time_control": "1+0.1 random opponents; no Stockfish Elo",
+  "flee_metric": "us_to_move_in_check",
+  "real": {
+    "n_games": 40,
+    "score": 0.4875,
+    "score_lo": 0.3325968245967824,
+    "score_hi": 0.6424031754032176,
+    "illegal": 0,
+    "hanging_capture_rate": 0.17700258397932817,
+    "hanging_chances": 774,
+    "check_escape_rate": 1.0,
+    "check_chances": 41,
+    "verbs": {
+      "quiet": 1442,
+      "capture": 124,
+      "flee": 19
+    },
+    "game_seed": 0,
+    "shuffle_seed": null
+  },
+  "shuffled": {
+    "n_games": 40,
+    "score": 0.4875,
+    "score_lo": 0.3325968245967824,
+    "score_hi": 0.6424031754032176,
+    "illegal": 0,
+    "hanging_capture_rate": 0.15868263473053892,
+    "hanging_chances": 668,
+    "check_escape_rate": 1.0,
+    "check_chances": 31,
+    "verbs": {
+      "quiet": 1484,
+      "reject": 61,
+      "capture": 37,
+      "flee": 1
+    },
+    "game_seed": 0,
+    "shuffle_seed": 1
+  },
+  "load_bearing": {
+    "hanging_capture_real_gt_shuffled": true,
+    "check_escape_real_ge_shuffled": true
+  },
+  "graph": "fixture, not MaleCNS v1.0"
+}

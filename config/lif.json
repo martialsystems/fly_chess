@@ -7,5 +7,7 @@
   "refractory_ms": 2.0,
   "steps_per_ply": 40,
   "gain": 1.0,
-  "baseline_current_mV": 0.4
+  "baseline_current_mV": 0.4,
+  "psp": "voltage_jump",
+  "psp_note": "Fixture PSPs add weight * spike as an instant millivolt jump on the postsynaptic cell. Leak and injected current still go through tau_m. Current-based Shiu-like synapses were too weak to spike MN9/DNp01 on this tiny graph in 40 steps. Do not copy voltage_jump into a full MaleCNS slice without a new calibration."
 }

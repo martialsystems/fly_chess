@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import random
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import chess
 import numpy as np
@@ -13,7 +14,7 @@ from fly_chess.board_feats import hanging_enemy_squares
 from fly_chess.head import LinearHead
 from fly_chess.mask import escapes_check, legal_moves
 from fly_chess.paint import currents as paint_currents
-from fly_chess.paths import CONFIG
+from fly_chess.paths import CONFIG, LOGS, PROVENANCE
 from fly_chess.planes import currents as plane_currents
 from fly_chess.planes import readout_vector
 from fly_chess.puzzles import labeled_positions
@@ -75,9 +76,10 @@ def play_ethology(
     opponent: str,
     seed: int = 0,
     shuffled: bool = False,
+    shuffle_seed: int = 1,
 ) -> dict:
     rng = random.Random(seed)
-    session = open_session(shuffled=shuffled, seed=seed)
+    session = open_session(shuffled=shuffled, seed=shuffle_seed if shuffled else 0)
     stats = GameStats()
     for g in range(n):
         board = chess.Board()
@@ -94,7 +96,12 @@ def play_ethology(
         )
         stats.n_games += 1
         stats.score += result
-    return _ethology_report(stats, shuffled=shuffled, seed=seed)
+    return _ethology_report(
+        stats,
+        shuffled=shuffled,
+        game_seed=seed,
+        shuffle_seed=shuffle_seed if shuffled else None,
+    )
 
 
 def _play_one(
@@ -154,16 +161,25 @@ def _play_one(
     return 0.5
 
 
-def _ethology_report(stats: GameStats, *, shuffled: bool, seed: int) -> dict:
+def _ethology_report(
+    stats: GameStats,
+    *,
+    shuffled: bool,
+    game_seed: int,
+    shuffle_seed: int | None,
+) -> dict:
     score = stats.score / max(stats.n_games, 1)
     hang = stats.hanging_taken / max(stats.hanging_chances, 1)
     flee = stats.check_escaped / max(stats.check_chances, 1)
+    lo, hi = mean_interval(score, stats.n_games)
     claim = ALLOWED_ETHOLOGY.format(score=f"{score:.3f}", shuffled=f"{shuffled}")
     return {
         "experiment": "ethology",
         "claim": claim,
         "n_games": stats.n_games,
         "score": score,
+        "score_lo": lo,
+        "score_hi": hi,
         "illegal": stats.illegal,
         "hanging_capture_rate": hang,
         "hanging_chances": stats.hanging_chances,
@@ -172,9 +188,22 @@ def _ethology_report(stats: GameStats, *, shuffled: bool, seed: int) -> dict:
         "check_chances": stats.check_chances,
         "verbs": stats.verbs,
         "shuffled": shuffled,
-        "shuffle_seed": seed if shuffled else None,
+        "game_seed": game_seed,
+        "shuffle_seed": shuffle_seed,
         "time_control": "1+0.1 random opponents; no Stockfish Elo",
     }
+
+
+def mean_interval(score: float, n: int, z: float = 1.96) -> tuple[float, float]:
+    if n <= 0:
+        return 0.0, 1.0
+    se = (max(score, 0.0) * max(1.0 - score, 0.0) / n) ** 0.5
+    return score - z * se, score + z * se
+
+
+def fixture_sha256() -> str:
+    lock = json.loads((PROVENANCE / "fixture.lock.json").read_text(encoding="utf-8"))
+    return str(lock["sha256"])
 
 
 def play_planes_gate0(*, n: int = 32, seed: int = 0) -> dict:
@@ -225,9 +254,9 @@ def play_planes_gate1(*, seed: int = 0) -> dict:
     session = open_session(shuffled=False, seed=seed)
     head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
     puzzles = labeled_positions()
-    n_eval = int(gates["gate1"]["n_eval"])
+    n_eval = min(int(gates["gate1"]["n_eval"]), len(puzzles))
     correct = 0
-    for i, (board, target, _) in enumerate(puzzles[:n_eval]):
+    for board, target, _ in puzzles[:n_eval]:
         move = planes_move(session, board.copy(), head)
         if move == target:
             correct += 1
@@ -244,12 +273,18 @@ def play_planes_gate1(*, seed: int = 0) -> dict:
     }
 
 
-def play_planes_gate2(*, n: int | None = None, seed: int = 0, shuffled: bool = False) -> dict:
+def play_planes_gate2(
+    *,
+    n: int | None = None,
+    seed: int = 0,
+    shuffled: bool = False,
+    shuffle_seed: int = 1,
+) -> dict:
     gates = load_gates()
     n = int(n if n is not None else gates["gate2"]["n_games"])
-    session = open_session(shuffled=shuffled, seed=seed)
+    session = open_session(shuffled=shuffled, seed=shuffle_seed if shuffled else 0)
     head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
-    rng = random.Random(seed + 1)
+    rng = random.Random(seed)
     stats = GameStats()
     for g in range(n):
         board = chess.Board()
@@ -266,18 +301,162 @@ def play_planes_gate2(*, n: int | None = None, seed: int = 0, shuffled: bool = F
         stats.n_games += 1
         stats.score += result
     score = stats.score / max(stats.n_games, 1)
+    lo, hi = mean_interval(score, stats.n_games)
+    passed = (not shuffled) and lo > float(gates["gate2"]["min_score"]) and stats.illegal == 0
     return {
         "experiment": "planes",
         "gate": 2,
         "claim": ALLOWED_PLANES.format(gate=2, shuffled=str(shuffled)),
         "n_games": stats.n_games,
         "score": score,
+        "score_lo": lo,
+        "score_hi": hi,
         "illegal": stats.illegal,
         "min_score": gates["gate2"]["min_score"],
-        "passed": score >= gates["gate2"]["min_score"] or shuffled,
+        "passed": passed,
         "shuffled": shuffled,
-        "shuffle_seed": seed if shuffled else None,
+        "game_seed": seed,
+        "shuffle_seed": shuffle_seed if shuffled else None,
     }
+
+
+def _row(payload: dict) -> dict:
+    keys = (
+        "n_games",
+        "score",
+        "score_lo",
+        "score_hi",
+        "illegal",
+        "hanging_capture_rate",
+        "hanging_chances",
+        "check_escape_rate",
+        "check_chances",
+        "verbs",
+        "accuracy",
+        "n_eval",
+        "correct",
+        "passed",
+        "illegal_rate",
+        "n_positions",
+        "game_seed",
+        "shuffle_seed",
+    )
+    return {k: payload[k] for k in keys if k in payload}
+
+
+def lock_ethology() -> dict:
+    gates = load_gates()
+    n = int(gates["ethology_n"])
+    game_seed = int(gates["game_seed"])
+    shuffle_seed = int(gates["shuffle_seed"])
+    real = play_ethology(
+        n=n, opponent="random", seed=game_seed, shuffled=False
+    )
+    shuffled = play_ethology(
+        n=n,
+        opponent="random",
+        seed=game_seed,
+        shuffled=True,
+        shuffle_seed=shuffle_seed,
+    )
+    hang_real = float(real["hanging_capture_rate"])
+    hang_shuf = float(shuffled["hanging_capture_rate"])
+    flee_real = float(real["check_escape_rate"])
+    flee_shuf = float(shuffled["check_escape_rate"])
+    claim = ALLOWED_ETHOLOGY.format(
+        score=f"{real['score']:.3f}",
+        shuffled=f"{shuffled['score']:.3f}",
+    )
+    return {
+        "experiment": "ethology",
+        "claim": claim,
+        "fixture_sha256": fixture_sha256(),
+        "n_games": n,
+        "game_seed": game_seed,
+        "shuffle_seed": shuffle_seed,
+        "time_control": real["time_control"],
+        "flee_metric": "us_to_move_in_check",
+        "real": _row(real),
+        "shuffled": _row(shuffled),
+        "load_bearing": {
+            "hanging_capture_real_gt_shuffled": hang_real > hang_shuf,
+            "check_escape_real_ge_shuffled": flee_real >= flee_shuf,
+        },
+        "graph": "fixture, not MaleCNS v1.0",
+    }
+
+
+def lock_planes() -> dict:
+    gates = load_gates()
+    game_seed = int(gates["game_seed"])
+    shuffle_seed = int(gates["shuffle_seed"])
+    n = int(gates["gate2"]["n_games"])
+    g0 = play_planes_gate0(n=int(gates["gate0"]["n_positions"]), seed=game_seed)
+    g1_real = play_planes_gate1(seed=game_seed)
+    g2_real = play_planes_gate2(n=n, seed=game_seed, shuffled=False)
+    g1_shuf = play_planes_gate1_on_shuffle(seed=game_seed, shuffle_seed=shuffle_seed)
+    g2_shuf = play_planes_gate2(
+        n=n, seed=game_seed, shuffled=True, shuffle_seed=shuffle_seed
+    )
+    claim = ALLOWED_PLANES.format(gate="0-2", shuffled="logged")
+    return {
+        "experiment": "planes",
+        "claim": claim,
+        "fixture_sha256": fixture_sha256(),
+        "n_games": n,
+        "game_seed": game_seed,
+        "shuffle_seed": shuffle_seed,
+        "gate0": _row(g0),
+        "gate1_real": _row(g1_real),
+        "gate1_shuffled": _row(g1_shuf),
+        "gate2_real": _row(g2_real),
+        "gate2_shuffled": _row(g2_shuf),
+        "load_bearing": {
+            "gate2_score_real_gt_shuffled": float(g2_real["score"])
+            > float(g2_shuf["score"]),
+            "gate1_accuracy_real_gt_shuffled": float(g1_real["accuracy"])
+            > float(g1_shuf["accuracy"]),
+        },
+        "gate2_passed": bool(g2_real["passed"]),
+        "graph": "fixture, not MaleCNS v1.0",
+        "note": "If shuffled head matches real, the wiring is not an encoder.",
+    }
+
+
+def play_planes_gate1_on_shuffle(*, seed: int, shuffle_seed: int) -> dict:
+    gates = load_gates()
+    session = open_session(shuffled=True, seed=shuffle_seed)
+    head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
+    puzzles = labeled_positions()
+    n_eval = min(int(gates["gate1"]["n_eval"]), len(puzzles))
+    correct = 0
+    for board, target, _ in puzzles[:n_eval]:
+        move = planes_move(session, board.copy(), head)
+        if move == target:
+            correct += 1
+    acc = correct / max(n_eval, 1)
+    return {
+        "experiment": "planes",
+        "gate": 1,
+        "accuracy": acc,
+        "n_eval": n_eval,
+        "correct": correct,
+        "min_accuracy": gates["gate1"]["min_accuracy"],
+        "passed": acc >= gates["gate1"]["min_accuracy"],
+        "shuffled": True,
+        "shuffle_seed": shuffle_seed,
+    }
+
+
+def write_locked_gates() -> tuple[Path, Path]:
+    LOGS.mkdir(parents=True, exist_ok=True)
+    eth = lock_ethology()
+    planes = lock_planes()
+    p1 = LOGS / "ethology_gate.json"
+    p2 = LOGS / "planes_gate.json"
+    p1.write_text(json.dumps(eth, indent=2) + "\n", encoding="utf-8")
+    p2.write_text(json.dumps(planes, indent=2) + "\n", encoding="utf-8")
+    return p1, p2
 
 
 def identity_stim(session: Session, role: str, current: float = 18.0) -> dict[str, float]:

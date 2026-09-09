@@ -8,6 +8,8 @@ Capture readout is MN9. Halt quiet is BB/FG. Spatial sugar identity is synthetic
 
 Do not add a Lichess or chess.com client. `play.py` refuses `--lichess` / `--online`.
 
+Locked numbers live in `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40. README quotes those files. `python -m fly_chess lock` rewrites them. Gate 2 is not passed until the score interval sits above 0.5. If shuffled matches real, do not call the wiring an encoder.
+
 ## Verify
 
 `python3 ~/agent_laws_verify_before_done/vbd_gate.py check --app-root . --claim-done`

@@ -10,4 +10,6 @@ data/resolved_types.json
 data/ethology_map.json
 data/planes_map.json
 logs/*.json
+!logs/ethology_gate.json
+!logs/planes_gate.json
 .DS_Store

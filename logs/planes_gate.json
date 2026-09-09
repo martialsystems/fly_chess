@@ -1,0 +1,53 @@
+{
+  "experiment": "planes",
+  "claim": "Piece-plane encoding plus a trained legal-move readout, Gate 0-2, shuffled control.",
+  "fixture_sha256": "06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce",
+  "n_games": 40,
+  "game_seed": 0,
+  "shuffle_seed": 1,
+  "gate0": {
+    "illegal": 0,
+    "illegal_rate": 0.0,
+    "n_positions": 32
+  },
+  "gate1_real": {
+    "accuracy": 0.96875,
+    "n_eval": 32,
+    "correct": 31,
+    "passed": true
+  },
+  "gate1_shuffled": {
+    "accuracy": 0.9375,
+    "n_eval": 32,
+    "correct": 30,
+    "passed": true,
+    "shuffle_seed": 1
+  },
+  "gate2_real": {
+    "n_games": 40,
+    "score": 0.5,
+    "score_lo": 0.3450483946517494,
+    "score_hi": 0.6549516053482506,
+    "illegal": 0,
+    "passed": false,
+    "game_seed": 0,
+    "shuffle_seed": null
+  },
+  "gate2_shuffled": {
+    "n_games": 40,
+    "score": 0.5,
+    "score_lo": 0.3450483946517494,
+    "score_hi": 0.6549516053482506,
+    "illegal": 0,
+    "passed": false,
+    "game_seed": 0,
+    "shuffle_seed": 1
+  },
+  "load_bearing": {
+    "gate2_score_real_gt_shuffled": false,
+    "gate1_accuracy_real_gt_shuffled": true
+  },
+  "gate2_passed": false,
+  "graph": "fixture, not MaleCNS v1.0",
+  "note": "If shuffled head matches real, the wiring is not an encoder."
+}

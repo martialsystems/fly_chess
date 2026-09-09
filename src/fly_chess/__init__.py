@@ -5,6 +5,11 @@ from __future__ import annotations
 
 __version__ = "0.1.0"
 
+QUESTION = (
+    "Does a frozen fly-style graph take hanging pieces and flee check "
+    "when the board is painted as food and looming?"
+)
+
 ALLOWED_ETHOLOGY = (
     "Approach/avoid controller, local score {score} vs random, shuffled wiring {shuffled}."
 )
