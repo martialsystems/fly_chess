@@ -8,7 +8,9 @@ Capture readout is MN9. Halt quiet is BB/FG. Spatial sugar identity is synthetic
 
 Do not add a Lichess or chess.com client. `play.py` refuses `--lichess` / `--online`.
 
-Locked numbers live in `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40. README quotes those files. `python -m fly_chess lock` rewrites them. Gate 2 is not passed until the score interval sits above 0.5. If shuffled matches real, do not call the wiring an encoder.
+Locked numbers live in `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40. README quotes those files. Do not raise n on the fixture. `hanging_capture_real_gt_shuffled` is not a win: 774 vs 668 hanging chances.
+
+MaleCNS fetch is opt-in (`python -m fly_chess fetch`). Pytest stays on the 290-cell fixture. Identity on fetched weights: sugar→MN9 and LPLC2→DNp01, real and shuffled. Do not quote Gate 2 until identity passes and `check_escape_same_n` is true.
 
 ## Verify
 

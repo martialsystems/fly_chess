@@ -22,6 +22,8 @@ def test_readme_opens_with_the_question() -> None:
     assert "wiring is not an encoder" in text.lower()
     assert "it flees check when it can" not in text
     assert "not evidence the graph flees" in text
+    assert "774 vs 668" in text
+    assert "do not promote" in text.lower()
     assert eth["fixture_sha256"] in text
     assert "290" in text
     assert "Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875." in text

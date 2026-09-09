@@ -23,9 +23,10 @@ class Session:
     shuffle_seed: int | None
 
 
-def open_session(*, shuffled: bool = False, seed: int = 0) -> Session:
-    write_fixture()
-    graph = load_graph(source="fixture")
+def open_session(*, shuffled: bool = False, seed: int = 0, source: str = "fixture") -> Session:
+    if source == "fixture":
+        write_fixture()
+    graph = load_graph(source=source)
     if shuffled:
         graph = shuffle_graph(graph, seed=seed)
     resolved = resolve_graph(graph)

@@ -34,7 +34,13 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="cmd")
 
     sub.add_parser("banner", help="print the allowed banner")
-    sub.add_parser("fetch", help="refuses: MaleCNS fetch is not this slice")
+    fetch_p = sub.add_parser("fetch", help="download MaleCNS v1.0 into data/malecns (opt-in, hash-locked)")
+    fetch_p.add_argument("--force", action="store_true")
+    ident = sub.add_parser("identity", help="sugar→MN9 and LPLC2→DNp01 on fixture or fetched MaleCNS")
+    ident.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
+    ident.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
+    ident.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
+    ident.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
     sub.add_parser("resolve", help="write fixture maps and resolved types")
 
     play = sub.add_parser("play", help="run ethology or planes on the fixture")
@@ -48,6 +54,7 @@ def main(argv: list[str] | None = None) -> int:
     play.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
     play.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     play.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
+    play.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
 
     sub.add_parser("lock", help="write logs/ethology_gate.json and logs/planes_gate.json at locked n")
 
@@ -65,8 +72,15 @@ def main(argv: list[str] | None = None) -> int:
         print(BANNER)
         return 0
     if args.cmd == "fetch":
-        fetch_malecns()
-        return 1
+        report = fetch_malecns(force=bool(getattr(args, "force", False)))
+        print(json.dumps(report, indent=2))
+        return 0
+    if args.cmd == "identity":
+        from fly_chess.identity import write_identity
+
+        payload = write_identity(source=args.source)
+        print(json.dumps(payload, indent=2))
+        return 0 if payload["passed"]["identity"] else 2
     if args.cmd == "resolve":
         write_fixture()
         session = open_session()
@@ -108,6 +122,12 @@ def _write(payload: dict, out: str | None) -> None:
 
 def _play(args) -> int:
     gates = load_gates()
+    source = getattr(args, "source", "fixture")
+    if source == "malecns":
+        raise SystemExit(
+            "use `python -m fly_chess identity --source malecns`. "
+            "Do not quote Gate 2 until identity passes and check_escape_same_n is true."
+        )
     if args.exp == "ethology":
         n = int(args.n if args.n is not None else gates["ethology_n"])
         payload = play_ethology(

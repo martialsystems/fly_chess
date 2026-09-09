@@ -14,6 +14,10 @@ Credit: FlyEM at HHMI Janelia, the University of Cambridge Department of Zoology
 
 Used for boards, legal moves, and PGN-free FEN handling. GPL-3.0 with a linking exception as published by the python-chess project. See the installed package license.
 
+## MaleCNS file hashes
+
+`data-provenance/malecns_v1/source.lock.json` copies the sha256/size/URL triple published by doomfly for the same three Janelia GCS objects. Re-hash after fetch. The graph itself remains CC BY 4.0.
+
 ## Named circuit literature (aliases only)
 
 Descending and feeding names in `config/type_aliases.json` follow published Drosophila types (Namiki DN catalog; MN9 / sugar GRNs; LPLC2; MDN; DNa02 / DNg13; BB / FG halt). They are aliases until neuPrint resolves bodyIds on a live MaleCNS import.

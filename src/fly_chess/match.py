@@ -325,7 +325,7 @@ def play_planes_gate2(
 
 
 def lock_ethology() -> dict:
-    from fly_chess.schema import CHECK_ESCAPE_NOTE, document, stamp_score
+    from fly_chess.schema import FIXTURE_NOTE, document, stamp_score
 
     gates = load_gates()
     n = int(gates["ethology_n"])
@@ -364,6 +364,8 @@ def lock_ethology() -> dict:
         load_bearing={
             "score_real_gt_shuffled": score_real > score_shuf,
             "hanging_capture_real_gt_shuffled": hang_real > hang_shuf,
+            "hanging_capture_same_n": int(real["hanging_chances"])
+            == int(shuffled["hanging_chances"]),
             "check_escape_real_ge_shuffled": flee_real >= flee_shuf,
             "check_escape_same_n": int(real["check_chances"])
             == int(shuffled["check_chances"]),
@@ -372,7 +374,7 @@ def lock_ethology() -> dict:
             "wiring_is_encoder": False,
         },
         graph="fixture, not MaleCNS v1.0",
-        note=CHECK_ESCAPE_NOTE,
+        note=FIXTURE_NOTE,
         gate2_passed=None,
     )
 
@@ -409,6 +411,7 @@ def lock_planes() -> dict:
         load_bearing={
             "score_real_gt_shuffled": score_real > score_shuf,
             "hanging_capture_real_gt_shuffled": None,
+            "hanging_capture_same_n": None,
             "check_escape_real_ge_shuffled": None,
             "check_escape_same_n": None,
             "gate1_accuracy_real_gt_shuffled": float(g1_real["accuracy"])

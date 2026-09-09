@@ -41,6 +41,7 @@ ARM_KEYS = (
 LOAD_BEARING_KEYS = (
     "score_real_gt_shuffled",
     "hanging_capture_real_gt_shuffled",
+    "hanging_capture_same_n",
     "check_escape_real_ge_shuffled",
     "check_escape_same_n",
     "gate1_accuracy_real_gt_shuffled",
@@ -53,6 +54,15 @@ CHECK_ESCAPE_NOTE = (
     "paint marks in-check. Real and shuffled saw different check counts, so "
     "they are not the same position set. Do not read 1.0 as graph skill."
 )
+
+HANGING_CAPTURE_NOTE = (
+    "hanging_capture_real_gt_shuffled is true (0.177 vs 0.159) but the arms "
+    "saw 774 vs 668 hanging chances, so it is not the same test set. Score "
+    "is identical. Do not promote the hanging-capture bit. wiring_is_encoder "
+    "stays false."
+)
+
+FIXTURE_NOTE = CHECK_ESCAPE_NOTE + " " + HANGING_CAPTURE_NOTE
 
 
 def stamp_score(value: float) -> str:

@@ -29,6 +29,8 @@ def test_lock_files_share_schema() -> None:
     assert eth["real"]["check_chances"] == 41
     assert eth["shuffled"]["check_chances"] == 31
     assert eth["load_bearing"]["check_escape_same_n"] is False
+    assert eth["load_bearing"]["hanging_capture_same_n"] is False
+    assert eth["load_bearing"]["hanging_capture_real_gt_shuffled"] is True
     assert eth["load_bearing"]["wiring_is_encoder"] is False
     assert planes["load_bearing"]["wiring_is_encoder"] is False
     assert planes["load_bearing"]["gate2_score_real_gt_shuffled"] is False

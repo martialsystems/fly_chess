@@ -53,6 +53,7 @@
   "load_bearing": {
     "score_real_gt_shuffled": false,
     "hanging_capture_real_gt_shuffled": true,
+    "hanging_capture_same_n": false,
     "check_escape_real_ge_shuffled": true,
     "check_escape_same_n": false,
     "gate1_accuracy_real_gt_shuffled": null,
@@ -60,6 +61,6 @@
     "wiring_is_encoder": false
   },
   "graph": "fixture, not MaleCNS v1.0",
-  "note": "Check-escape 1.0 is the legal-move mask keeping king-safe moves after paint marks in-check. Real and shuffled saw different check counts, so they are not the same position set. Do not read 1.0 as graph skill.",
+  "note": "Check-escape 1.0 is the legal-move mask keeping king-safe moves after paint marks in-check. Real and shuffled saw different check counts, so they are not the same position set. Do not read 1.0 as graph skill. hanging_capture_real_gt_shuffled is true (0.177 vs 0.159) but the arms saw 774 vs 668 hanging chances, so it is not the same test set. Score is identical. Do not promote the hanging-capture bit. wiring_is_encoder stays false.",
   "gate2_passed": null
 }

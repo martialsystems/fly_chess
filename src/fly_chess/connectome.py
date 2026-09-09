@@ -6,9 +6,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from fly_chess.fetch import fetch_malecns
 from fly_chess.fixture import build_fixture
 from fly_chess.graph import Graph
-from fly_chess.paths import DATA, FIXTURE, PROVENANCE
+from fly_chess.paths import FIXTURE, PROVENANCE
 
 
 def write_fixture(path: Path | None = None) -> Graph:
@@ -20,6 +21,10 @@ def write_fixture(path: Path | None = None) -> Graph:
 
 
 def load_graph(path: Path | None = None, *, source: str = "fixture") -> Graph:
+    if source == "malecns":
+        from fly_chess.import_malecns import load_malecns_graph
+
+        return load_malecns_graph()
     if source == "fixture" and path is None:
         if FIXTURE.is_file():
             raw = json.loads(FIXTURE.read_text(encoding="utf-8"))
@@ -35,9 +40,4 @@ def malecns_lock_path() -> Path:
     return PROVENANCE / "malecns_v1" / "source.lock.json"
 
 
-def fetch_malecns() -> None:
-    """Full MaleCNS download is opt-in. This slice plays on the fixture."""
-    raise RuntimeError(
-        "MaleCNS fetch is not in this slice. Use the fixture graph "
-        f"at {FIXTURE}. Hash-lock files would live at {malecns_lock_path()}."
-    )
+__all__ = ["write_fixture", "load_graph", "fetch_malecns", "malecns_lock_path"]

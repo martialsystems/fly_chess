@@ -13,6 +13,7 @@ class Neuron:
     side: str = ""
     sign: int = 1
     square: int | None = None
+    body_id: int | None = None
 
 
 @dataclass
@@ -45,19 +46,22 @@ class Graph:
         return [n.type for n in self.neurons]
 
     def to_dict(self) -> dict:
+        def neuron_dict(n: Neuron) -> dict:
+            row = {
+                "id": n.id,
+                "type": n.type,
+                "side": n.side,
+                "sign": n.sign,
+                "square": n.square,
+            }
+            if n.body_id is not None:
+                row["body_id"] = n.body_id
+            return row
+
         return {
             "version": 1,
             "source": self.source,
-            "neurons": [
-                {
-                    "id": n.id,
-                    "type": n.type,
-                    "side": n.side,
-                    "sign": n.sign,
-                    "square": n.square,
-                }
-                for n in self.neurons
-            ],
+            "neurons": [neuron_dict(n) for n in self.neurons],
             "edges": [
                 {"pre": int(a), "post": int(b), "weight": float(w)}
                 for a, b, w in zip(self.pre.tolist(), self.post.tolist(), self.weight.tolist())
@@ -73,6 +77,7 @@ class Graph:
                 side=str(n.get("side") or ""),
                 sign=int(n.get("sign") or 1),
                 square=n.get("square"),
+                body_id=n.get("body_id"),
             )
             for n in raw["neurons"]
         ]

@@ -73,6 +73,7 @@
   "load_bearing": {
     "score_real_gt_shuffled": false,
     "hanging_capture_real_gt_shuffled": null,
+    "hanging_capture_same_n": null,
     "check_escape_real_ge_shuffled": null,
     "check_escape_same_n": null,
     "gate1_accuracy_real_gt_shuffled": true,

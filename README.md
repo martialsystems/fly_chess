@@ -10,7 +10,7 @@ Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875.
 
 Piece-plane encoding plus a trained legal-move readout, Gate 0-2, shuffled control.
 
-Experiment 1 is a legal-move mask plus a check detector. Real score 0.4875, shuffled 0.4875. Hanging-capture 0.17700258397932817 vs 0.15868263473053892 is one extra capture in a noisy bin. Check-escape is 1.0 on both wirings because paint marks in-check and the mask keeps legal king-safe moves. The runs saw 41 vs 31 check positions (`load_bearing.check_escape_same_n` is false). That 1.0 is not evidence the graph flees.
+Experiment 1 is a legal-move mask plus a check detector. Real score 0.4875, shuffled 0.4875. `hanging_capture_real_gt_shuffled` is true (0.177 vs 0.159) but the arms saw 774 vs 668 hanging chances (`hanging_capture_same_n` is false), so it is not the same test set. Do not promote that bit. Check-escape is 1.0 on both wirings because paint marks in-check and the mask keeps legal king-safe moves. The runs saw 41 vs 31 check positions (`check_escape_same_n` is false). That 1.0 is not evidence the graph flees. Real fled 19 times and captured 124; shuffled fled once and captured 37; both scored 0.4875 vs random. Different twitch, same chess.
 
 Experiment 2: Gate 0 illegal rate 0. Gate 1 31/32 vs 30/32. Gate 2 0.5 vs 0.5. `load_bearing.gate2_score_real_gt_shuffled` is false. `load_bearing.wiring_is_encoder` is false.
 
@@ -43,7 +43,15 @@ Hanging enemy pieces raise a global sugar current and the reserved appetitive lo
 .venv/bin/python -m pytest
 ```
 
-Do not use stock `/usr/bin/python3 -m pytest`. `lock` rewrites the JSON at n=40; this slice keeps the committed numbers. Do not raise n to pass Gate 2 on the 290-cell fixture.
+Do not use stock `/usr/bin/python3 -m pytest`. Fixture stays the pytest default. MaleCNS v1.0 is opt-in:
+
+```bash
+.venv/bin/python -m pip install -e ".[malecns]"
+.venv/bin/python -m fly_chess fetch
+.venv/bin/python -m fly_chess identity --source malecns
+```
+
+Do not quote Gate 2 on MaleCNS until identity passes and `check_escape_same_n` is true. Do not raise n to pass Gate 2 on the 290-cell fixture.
 
 | File | Role |
 |------|------|
@@ -53,6 +61,9 @@ Do not use stock `/usr/bin/python3 -m pytest`. `lock` rewrites the JSON at n=40;
 | `data/fixtures/graph.json` | 290-neuron fixture |
 | `logs/ethology_gate.json` | Locked Experiment 1 |
 | `logs/planes_gate.json` | Locked Experiment 2 |
+| `config/datasets.json` | MaleCNS file URLs |
+| `data-provenance/malecns_v1/source.lock.json` | Doomfly-style sha256 lock |
+| `scripts/fetch_malecns.py` | Opt-in download |
 | `tests/test_claims.py` | Banned-token scan |
 
 Original code is MIT.

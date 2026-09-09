@@ -38,3 +38,9 @@ def test_banned_tokens_fail() -> None:
 def test_cli_refuses_lichess() -> None:
     with pytest.raises(SystemExit):
         main(["play", "--exp", "ethology", "--lichess"])
+
+
+def test_cli_refuses_malecns_gate2() -> None:
+    with pytest.raises(SystemExit) as err:
+        main(["play", "--exp", "planes", "--gate", "2", "--source", "malecns"])
+    assert "identity" in str(err.value).lower() or "Gate 2" in str(err.value)
