@@ -172,7 +172,11 @@ def _ethology_report(
     hang = stats.hanging_taken / max(stats.hanging_chances, 1)
     flee = stats.check_escaped / max(stats.check_chances, 1)
     lo, hi = mean_interval(score, stats.n_games)
-    claim = ALLOWED_ETHOLOGY.format(score=f"{score:.3f}", shuffled=f"{shuffled}")
+    from fly_chess.schema import stamp_score
+
+    claim = ALLOWED_ETHOLOGY.format(
+        score=stamp_score(score), shuffled=str(shuffled).lower()
+    )
     return {
         "experiment": "ethology",
         "claim": claim,
@@ -320,31 +324,9 @@ def play_planes_gate2(
     }
 
 
-def _row(payload: dict) -> dict:
-    keys = (
-        "n_games",
-        "score",
-        "score_lo",
-        "score_hi",
-        "illegal",
-        "hanging_capture_rate",
-        "hanging_chances",
-        "check_escape_rate",
-        "check_chances",
-        "verbs",
-        "accuracy",
-        "n_eval",
-        "correct",
-        "passed",
-        "illegal_rate",
-        "n_positions",
-        "game_seed",
-        "shuffle_seed",
-    )
-    return {k: payload[k] for k in keys if k in payload}
-
-
 def lock_ethology() -> dict:
+    from fly_chess.schema import CHECK_ESCAPE_NOTE, document, stamp_score
+
     gates = load_gates()
     n = int(gates["ethology_n"])
     game_seed = int(gates["game_seed"])
@@ -363,30 +345,41 @@ def lock_ethology() -> dict:
     hang_shuf = float(shuffled["hanging_capture_rate"])
     flee_real = float(real["check_escape_rate"])
     flee_shuf = float(shuffled["check_escape_rate"])
+    score_real = float(real["score"])
+    score_shuf = float(shuffled["score"])
     claim = ALLOWED_ETHOLOGY.format(
-        score=f"{real['score']:.3f}",
-        shuffled=f"{shuffled['score']:.3f}",
+        score=stamp_score(score_real),
+        shuffled=stamp_score(score_shuf),
     )
-    return {
-        "experiment": "ethology",
-        "claim": claim,
-        "fixture_sha256": fixture_sha256(),
-        "n_games": n,
-        "game_seed": game_seed,
-        "shuffle_seed": shuffle_seed,
-        "time_control": real["time_control"],
-        "flee_metric": "us_to_move_in_check",
-        "real": _row(real),
-        "shuffled": _row(shuffled),
-        "load_bearing": {
+    return document(
+        experiment="ethology",
+        claim=claim,
+        fixture_sha256=fixture_sha256(),
+        n_games=n,
+        game_seed=game_seed,
+        shuffle_seed=shuffle_seed,
+        time_control=real["time_control"],
+        real=real,
+        shuffled=shuffled,
+        load_bearing={
+            "score_real_gt_shuffled": score_real > score_shuf,
             "hanging_capture_real_gt_shuffled": hang_real > hang_shuf,
             "check_escape_real_ge_shuffled": flee_real >= flee_shuf,
+            "check_escape_same_n": int(real["check_chances"])
+            == int(shuffled["check_chances"]),
+            "gate1_accuracy_real_gt_shuffled": None,
+            "gate2_score_real_gt_shuffled": None,
+            "wiring_is_encoder": False,
         },
-        "graph": "fixture, not MaleCNS v1.0",
-    }
+        graph="fixture, not MaleCNS v1.0",
+        note=CHECK_ESCAPE_NOTE,
+        gate2_passed=None,
+    )
 
 
 def lock_planes() -> dict:
+    from fly_chess.schema import document
+
     gates = load_gates()
     game_seed = int(gates["game_seed"])
     shuffle_seed = int(gates["shuffle_seed"])
@@ -399,28 +392,34 @@ def lock_planes() -> dict:
         n=n, seed=game_seed, shuffled=True, shuffle_seed=shuffle_seed
     )
     claim = ALLOWED_PLANES.format(gate="0-2", shuffled="logged")
-    return {
-        "experiment": "planes",
-        "claim": claim,
-        "fixture_sha256": fixture_sha256(),
-        "n_games": n,
-        "game_seed": game_seed,
-        "shuffle_seed": shuffle_seed,
-        "gate0": _row(g0),
-        "gate1_real": _row(g1_real),
-        "gate1_shuffled": _row(g1_shuf),
-        "gate2_real": _row(g2_real),
-        "gate2_shuffled": _row(g2_shuf),
-        "load_bearing": {
-            "gate2_score_real_gt_shuffled": float(g2_real["score"])
-            > float(g2_shuf["score"]),
+    real_arm = {**g2_real, "gate0": g0, "gate1": g1_real, "gate2": g2_real}
+    shuf_arm = {**g2_shuf, "gate0": None, "gate1": g1_shuf, "gate2": g2_shuf}
+    score_real = float(g2_real["score"])
+    score_shuf = float(g2_shuf["score"])
+    return document(
+        experiment="planes",
+        claim=claim,
+        fixture_sha256=fixture_sha256(),
+        n_games=n,
+        game_seed=game_seed,
+        shuffle_seed=shuffle_seed,
+        time_control="1+0.1 random opponents; no Stockfish Elo",
+        real=real_arm,
+        shuffled=shuf_arm,
+        load_bearing={
+            "score_real_gt_shuffled": score_real > score_shuf,
+            "hanging_capture_real_gt_shuffled": None,
+            "check_escape_real_ge_shuffled": None,
+            "check_escape_same_n": None,
             "gate1_accuracy_real_gt_shuffled": float(g1_real["accuracy"])
             > float(g1_shuf["accuracy"]),
+            "gate2_score_real_gt_shuffled": score_real > score_shuf,
+            "wiring_is_encoder": False,
         },
-        "gate2_passed": bool(g2_real["passed"]),
-        "graph": "fixture, not MaleCNS v1.0",
-        "note": "If shuffled head matches real, the wiring is not an encoder.",
-    }
+        graph="fixture, not MaleCNS v1.0",
+        note="Wiring is not an encoder on this graph. Gate 2 real matches shuffled.",
+        gate2_passed=bool(g2_real["passed"]),
+    )
 
 
 def play_planes_gate1_on_shuffle(*, seed: int, shuffle_seed: int) -> dict:

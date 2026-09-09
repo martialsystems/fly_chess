@@ -2,32 +2,36 @@
 
 Does a frozen fly-style graph take hanging pieces and flee check when the board is painted as food and looming?
 
-On the 290-neuron fixture it flees check when it can, and it takes some hanging pieces. It does not beat a random legal mover. Locked from `logs/ethology_gate.json` at n=40, both colors, 1+0.1, game seed 0. Score 0.487 vs random (interval 0.333 to 0.642). Hanging-capture 0.177 vs shuffled 0.159. Check-escape 1.0 on 41 us-to-move-in-check positions (shuffled 1.0 on 31). Illegal 0. Fixture hash `06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce`.
+Fixture harness. Score 0.4875 vs random, shuffled 0.4875. Gate 2 not passed. Wiring is not an encoder on this graph. Not MaleCNS v1.0.
 
-Approach/avoid controller, local score 0.487 vs random, shuffled wiring 0.487.
+Locked from `logs/ethology_gate.json` and `logs/planes_gate.json` at n=40, both colors, 1+0.1, game seed 0, fixture hash `06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce`. Scores copy the JSON `score` field. Interval 0.3326 to 0.6424 still contains 0.5.
+
+Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875.
 
 Piece-plane encoding plus a trained legal-move readout, Gate 0-2, shuffled control.
 
-This is a fixture harness. Labellar sugar cells are a global "there is food" gain. Square identity sits on synthetic `APP_LOCUS` / `AV_LOCUS` afferents. Capture readout is `MN9`. Flee is `DNp01`. Quiet halt is `BB` / `FG`. Fudog / `DNg67` / `GNG232` are optional and missing here. Full MaleCNS v1.0 is CC BY 4.0 (Berg et al., *Cell* 2026); it is not in this tree. See `THIRD_PARTY.md`.
+Experiment 1 is a legal-move mask plus a check detector. Real score 0.4875, shuffled 0.4875. Hanging-capture 0.17700258397932817 vs 0.15868263473053892 is one extra capture in a noisy bin. Check-escape is 1.0 on both wirings because paint marks in-check and the mask keeps legal king-safe moves. The runs saw 41 vs 31 check positions (`load_bearing.check_escape_same_n` is false). That 1.0 is not evidence the graph flees.
+
+Experiment 2: Gate 0 illegal rate 0. Gate 1 31/32 vs 30/32. Gate 2 0.5 vs 0.5. `load_bearing.gate2_score_real_gt_shuffled` is false. `load_bearing.wiring_is_encoder` is false.
+
+Labellar sugar cells are a global "there is food" gain. Square identity sits on synthetic `APP_LOCUS` / `AV_LOCUS` afferents. Capture readout is `MN9`. Quiet halt is `BB` / `FG`. Full MaleCNS v1.0 is CC BY 4.0 (Berg et al., *Cell* 2026). See `THIRD_PARTY.md`.
 
 ## Fixture rates (n=40)
 
-Locked from `logs/ethology_gate.json` and `logs/planes_gate.json`. Same game seed for real vs shuffled wiring.
+Same game seed for real vs shuffled wiring.
 
-| Slice | n | Score | Hanging capture | Check-escape | Illegal |
-|-------|--:|------:|----------------:|-------------:|--------:|
-| Ethology real | 40 | 0.487 | 0.177 | 1.0 (41) | 0 |
-| Ethology shuffled | 40 | 0.487 | 0.159 | 1.0 (31) | 0 |
-| Planes Gate 2 real | 40 | 0.50 |  |  | 0 |
-| Planes Gate 2 shuffled | 40 | 0.50 |  |  | 0 |
+| Slice | n | Score | Illegal |
+|-------|--:|------:|--------:|
+| Ethology real | 40 | 0.4875 | 0 |
+| Ethology shuffled | 40 | 0.4875 | 0 |
+| Planes Gate 2 real | 40 | 0.5 | 0 |
+| Planes Gate 2 shuffled | 40 | 0.5 | 0 |
 
-Planes Gate 0: illegal rate 0 on 32 positions. Gate 1: 0.969 real vs 0.938 shuffled on 32 mate-in-1 and hanging-piece puzzles. Gate 2 score interval includes 0.5, so Gate 2 is not passed. Shuffled Gate 2 matches real: the wiring is not an encoder on this fixture.
-
-1+0.1 is a clock for random opponents. It is not a Stockfish Elo.
+1+0.1 is a clock for random opponents.
 
 ## How the board enters the graph
 
-Hanging enemy pieces raise a global sugar current and the reserved appetitive locus for that square. Checks and hanging own pieces raise a global LPLC2 current and the reserved aversive locus. The verb table reads `MN9`, `DNp01`, walk/steer/halt clusters, then the legal-move mask. Experiment 2 injects piece-planes into `PLANE_SQ` cells and trains only a linear head. Graph weights stay frozen. Fixture PSPs are instant voltage jumps (`config/lif.json`); that is a fixture calibration, not a Shiu full-brain synapse.
+Hanging enemy pieces raise a global sugar current and the reserved appetitive locus for that square. Checks raise a global LPLC2 current and the reserved aversive locus. The verb table then the legal-move mask. Experiment 2 injects piece-planes into `PLANE_SQ` cells and trains only a linear head. Graph weights stay frozen. Fixture PSPs are instant voltage jumps (`config/lif.json`).
 
 ## How to run
 
@@ -36,11 +40,10 @@ Hanging enemy pieces raise a global sugar current and the reserved appetitive lo
 .venv/bin/python -m pip install -e ".[dev]"
 .venv/bin/python -m fly_chess
 .venv/bin/python -m fly_chess resolve
-.venv/bin/python -m fly_chess lock
 .venv/bin/python -m pytest
 ```
 
-Do not use stock `/usr/bin/python3 -m pytest`. `lock` rewrites the two JSON files at n=40; restamp the README from those files if the numbers move.
+Do not use stock `/usr/bin/python3 -m pytest`. `lock` rewrites the JSON at n=40; this slice keeps the committed numbers. Do not raise n to pass Gate 2 on the 290-cell fixture.
 
 | File | Role |
 |------|------|

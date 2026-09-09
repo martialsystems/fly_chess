@@ -1,6 +1,6 @@
 {
   "experiment": "ethology",
-  "claim": "Approach/avoid controller, local score 0.487 vs random, shuffled wiring 0.487.",
+  "claim": "Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875.",
   "fixture_sha256": "06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce",
   "n_games": 40,
   "game_seed": 0,
@@ -22,6 +22,9 @@
       "capture": 124,
       "flee": 19
     },
+    "gate0": null,
+    "gate1": null,
+    "gate2": null,
     "game_seed": 0,
     "shuffle_seed": null
   },
@@ -41,12 +44,22 @@
       "capture": 37,
       "flee": 1
     },
+    "gate0": null,
+    "gate1": null,
+    "gate2": null,
     "game_seed": 0,
     "shuffle_seed": 1
   },
   "load_bearing": {
+    "score_real_gt_shuffled": false,
     "hanging_capture_real_gt_shuffled": true,
-    "check_escape_real_ge_shuffled": true
+    "check_escape_real_ge_shuffled": true,
+    "check_escape_same_n": false,
+    "gate1_accuracy_real_gt_shuffled": null,
+    "gate2_score_real_gt_shuffled": null,
+    "wiring_is_encoder": false
   },
-  "graph": "fixture, not MaleCNS v1.0"
+  "graph": "fixture, not MaleCNS v1.0",
+  "note": "Check-escape 1.0 is the legal-move mask keeping king-safe moves after paint marks in-check. Real and shuffled saw different check counts, so they are not the same position set. Do not read 1.0 as graph skill.",
+  "gate2_passed": null
 }

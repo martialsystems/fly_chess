@@ -5,49 +5,81 @@
   "n_games": 40,
   "game_seed": 0,
   "shuffle_seed": 1,
-  "gate0": {
-    "illegal": 0,
-    "illegal_rate": 0.0,
-    "n_positions": 32
-  },
-  "gate1_real": {
-    "accuracy": 0.96875,
-    "n_eval": 32,
-    "correct": 31,
-    "passed": true
-  },
-  "gate1_shuffled": {
-    "accuracy": 0.9375,
-    "n_eval": 32,
-    "correct": 30,
-    "passed": true,
-    "shuffle_seed": 1
-  },
-  "gate2_real": {
+  "time_control": "1+0.1 random opponents; no Stockfish Elo",
+  "flee_metric": "us_to_move_in_check",
+  "real": {
     "n_games": 40,
     "score": 0.5,
     "score_lo": 0.3450483946517494,
     "score_hi": 0.6549516053482506,
     "illegal": 0,
-    "passed": false,
+    "hanging_capture_rate": null,
+    "hanging_chances": null,
+    "check_escape_rate": null,
+    "check_chances": null,
+    "verbs": null,
+    "gate0": {
+      "illegal": 0,
+      "illegal_rate": 0.0,
+      "n_positions": 32
+    },
+    "gate1": {
+      "accuracy": 0.96875,
+      "n_eval": 32,
+      "correct": 31,
+      "passed": true
+    },
+    "gate2": {
+      "n_games": 40,
+      "score": 0.5,
+      "score_lo": 0.3450483946517494,
+      "score_hi": 0.6549516053482506,
+      "illegal": 0,
+      "passed": false
+    },
     "game_seed": 0,
     "shuffle_seed": null
   },
-  "gate2_shuffled": {
+  "shuffled": {
     "n_games": 40,
     "score": 0.5,
     "score_lo": 0.3450483946517494,
     "score_hi": 0.6549516053482506,
     "illegal": 0,
-    "passed": false,
+    "hanging_capture_rate": null,
+    "hanging_chances": null,
+    "check_escape_rate": null,
+    "check_chances": null,
+    "verbs": null,
+    "gate0": null,
+    "gate1": {
+      "accuracy": 0.9375,
+      "n_eval": 32,
+      "correct": 30,
+      "passed": true,
+      "shuffle_seed": 1
+    },
+    "gate2": {
+      "n_games": 40,
+      "score": 0.5,
+      "score_lo": 0.3450483946517494,
+      "score_hi": 0.6549516053482506,
+      "illegal": 0,
+      "passed": false
+    },
     "game_seed": 0,
     "shuffle_seed": 1
   },
   "load_bearing": {
+    "score_real_gt_shuffled": false,
+    "hanging_capture_real_gt_shuffled": null,
+    "check_escape_real_ge_shuffled": null,
+    "check_escape_same_n": null,
+    "gate1_accuracy_real_gt_shuffled": true,
     "gate2_score_real_gt_shuffled": false,
-    "gate1_accuracy_real_gt_shuffled": true
+    "wiring_is_encoder": false
   },
-  "gate2_passed": false,
   "graph": "fixture, not MaleCNS v1.0",
-  "note": "If shuffled head matches real, the wiring is not an encoder."
+  "note": "Wiring is not an encoder on this graph. Gate 2 real matches shuffled.",
+  "gate2_passed": false
 }
