@@ -20,8 +20,9 @@ def test_banner_is_clean() -> None:
 
 
 PLAIN_HOOK = (
-    "Two tests on a fly-style wiring diagram. One paints the board as food and danger. "
-    "One feeds the board in as numbers. Neither has beaten random play yet."
+    "Closed measurement: fly-shaped LIF plus a legal-move mask. "
+    "Wiring changes hidden geometry. "
+    "It does not make a labeled move linearly easier than a shuffle."
 )
 
 
