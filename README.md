@@ -6,6 +6,10 @@ Closed. A shuffle-controlled measurement on a fly-shaped LIF graph, not a chess 
 
 **Answer.** No. Mix 0 is a typed occupancy register (factored head reads hanging / teacher). Mix ≥ 1 erases those labels on both arms. At mix 3, teacher Δ includes 0. Cosine still splits real from shuffle. The wires do something; they do not do this.
 
+**Translation** We write the chessboard into some input cells, run the fly map as a simple neuron model, and only allow legal moves out. So the question is, **does the real wiring make the intended move easier to read than a copy of the same map with the same cells and the same number of connections, just attached to the wrong partners?**
+
+**Answer. No.** At the inputs you can still see the board: a small readout can spot a hanging piece or “get out of check.” After the signal passes through the network once, that information is gone on the real map and on the rewired copy. The real wiring still leaves a fingerprint in the activity pattern. It does not decide the move. If the rewired copy does as well, the fly’s specific partners were not what picked it.
+
 Write-up: [docs/planes_note.md](docs/planes_note.md). Three sentences. The plots are the argument.
 
 1. Reserved pools reconstruct occupancy; a factored from-to head reads a hanging/teacher label from that register.
