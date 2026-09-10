@@ -1,17 +1,33 @@
 # Copyright (c) 2026 Martial Systems LLC
-"""Deterministic few-hundred-neuron graph covering every required role."""
+"""Deterministic fixture covering every required role plus typed plane pools."""
 
 from __future__ import annotations
 
 from fly_chess.graph import Graph, Neuron
 
+PLANE_TYPES = (
+    "PLANE_WP",
+    "PLANE_WN",
+    "PLANE_WB",
+    "PLANE_WR",
+    "PLANE_WQ",
+    "PLANE_WK",
+    "PLANE_BP",
+    "PLANE_BN",
+    "PLANE_BB",
+    "PLANE_BR",
+    "PLANE_BQ",
+    "PLANE_BK",
+)
+CASTLE_TYPES = ("CASTLE_H1", "CASTLE_A1", "CASTLE_H8", "CASTLE_A8")
+
 
 def build_fixture(*, seed: int = 0) -> Graph:
     """Identity paths: sugar GRNs drive MN9; LPLC2 drives DNp01.
 
-    Spatial chess identity lives on APP_LOCUS / AV_LOCUS / PLANE_SQ cells, not
-    on labellar GRN geometry. Each appetitive locus synapses onto the sugar
-    class as a copy; global sugar current still means "there is food."
+    Spatial chess identity lives on APP_LOCUS / AV_LOCUS cells, not labellar
+    GRN geometry. Planes use twelve reserved pools (one cell per square per
+    piece type), plus STM, castling, and EP-file cells.
     """
     neurons: list[Neuron] = []
     pre: list[int] = []
@@ -45,10 +61,14 @@ def build_fixture(*, seed: int = 0) -> Graph:
     halt_groom = [add("BRK")]
     arousal = [add("PAM"), add("PPL101")]
     hidden = [add("HIDDEN", square=i) for i in range(64)]
-
     app_loci = [add("APP_LOCUS", square=sq) for sq in range(64)]
     av_loci = [add("AV_LOCUS", square=sq) for sq in range(64)]
-    plane_sq = [add("PLANE_SQ", square=sq) for sq in range(64)]
+    plane_pool = {
+        typ: [add(typ, square=sq) for sq in range(64)] for typ in PLANE_TYPES
+    }
+    stm = add("STM")
+    castle = [add(typ) for typ in CASTLE_TYPES]
+    ep_file = [add("EP_FILE", square=f) for f in range(8)]
 
     def edge(a: int, b: int, w: float) -> None:
         pre.append(a)
@@ -76,8 +96,27 @@ def build_fixture(*, seed: int = 0) -> Graph:
     for a in aversive:
         for m in mn9:
             edge(a, m, -1.5)
-    for loc, h in zip(plane_sq, hidden):
-        edge(loc, h, 4.0)
+    for typ in PLANE_TYPES:
+        for sq, loc in enumerate(plane_pool[typ]):
+            edge(loc, hidden[sq], 4.0)
+            file_ = sq % 8
+            rank = sq // 8
+            if file_ > 0:
+                edge(loc, hidden[sq - 1], 0.6)
+            if file_ < 7:
+                edge(loc, hidden[sq + 1], 0.6)
+            if rank > 0:
+                edge(loc, hidden[sq - 8], 0.6)
+            if rank < 7:
+                edge(loc, hidden[sq + 8], 0.6)
+    for h_id in hidden:
+        edge(stm, h_id, 0.8)
+    for c in castle:
+        for h_id in hidden:
+            edge(c, h_id, 0.4)
+    for f, cell in enumerate(ep_file):
+        for rank in range(8):
+            edge(cell, hidden[rank * 8 + f], 1.2)
     for w_id in walk:
         for s in sugar[:2]:
             edge(s, w_id, 0.8)
@@ -92,7 +131,6 @@ def build_fixture(*, seed: int = 0) -> Graph:
     for a in arousal:
         edge(sugar[0], a, 0.5)
 
-    # touch seed so the builder stays deterministic if we add RNG later
     _ = seed
     return Graph(
         neurons=neurons,

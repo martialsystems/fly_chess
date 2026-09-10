@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from pathlib import Path
 
 import chess
 import numpy as np
@@ -75,3 +76,22 @@ class LinearHead:
         grad[move_index(target)] -= 1.0
         self.w -= lr * np.outer(grad, feat)
         self.b -= lr * grad
+
+    def rank(self, board: chess.Board, feat: np.ndarray, target: chess.Move) -> int:
+        legal = legal_moves(board)
+        log = self.logits(feat)
+        scored = sorted(legal, key=lambda m: float(log[move_index(m)]), reverse=True)
+        try:
+            return scored.index(target) + 1
+        except ValueError:
+            return len(scored) + 1
+
+    def save(self, path: Path) -> None:
+        path = Path(path)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        np.savez(path, w=self.w, b=self.b)
+
+    @classmethod
+    def load(cls, path: Path) -> "LinearHead":
+        blob = np.load(path)
+        return cls(w=np.asarray(blob["w"], dtype=np.float64), b=np.asarray(blob["b"], dtype=np.float64))

@@ -16,4 +16,5 @@ def test_ethology_and_planes_maps_dump() -> None:
     assert len(eth["appetitive_loci"]) == 64
     assert len(eth["aversive_loci"]) == 64
     assert planes["photoreceptors"] == "off"
-    assert len(planes["squares"]) == 64
+    assert len(planes["pools"]) == 12
+    assert all(p["n"] == 64 for p in planes["pools"])

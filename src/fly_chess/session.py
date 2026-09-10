@@ -85,3 +85,12 @@ def require_ethology(session: Session) -> None:
 def ply_rates(session: Session, i_ext: np.ndarray) -> np.ndarray:
     session.net.reset()
     return session.net.run_ply(i_ext)
+
+
+def mix_rates(session: Session, i_ext: np.ndarray, *, n_plies: int) -> np.ndarray:
+    """Reset once, then run n_plies so the hidden pool can mix. Last ply snapshot."""
+    session.net.reset()
+    hz = np.zeros(session.graph.n, dtype=np.float64)
+    for _ in range(max(1, int(n_plies))):
+        hz = session.net.run_ply(i_ext)
+    return hz

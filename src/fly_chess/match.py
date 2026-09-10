@@ -16,9 +16,9 @@ from fly_chess.mask import escapes_check, legal_moves
 from fly_chess.paint import currents as paint_currents
 from fly_chess.paths import CONFIG, LOGS, PROVENANCE
 from fly_chess.planes import currents as plane_currents
-from fly_chess.planes import readout_vector
-from fly_chess.puzzles import labeled_positions
-from fly_chess.session import Session, open_session, ply_rates, require_ethology
+from fly_chess.planes import load_planes_cfg, readout_vector
+from fly_chess.puzzles import split_positions
+from fly_chess.session import Session, mix_rates, open_session, ply_rates, require_ethology
 from fly_chess.verbs import choose_move
 
 
@@ -64,8 +64,9 @@ def ethology_move(session: Session, board: chess.Board) -> tuple[chess.Move, str
 
 
 def planes_move(session: Session, board: chess.Board, head: LinearHead) -> chess.Move:
+    cfg = load_planes_cfg()
     i_ext = plane_currents(board, session.graph, session.resolved)
-    hz = ply_rates(session, i_ext)
+    hz = mix_rates(session, i_ext, n_plies=int(cfg["mix_plies"]))
     feat = readout_vector(hz, session.resolved)
     return head.pick(board, feat)
 
@@ -239,41 +240,39 @@ def play_planes_gate0(*, n: int = 32, seed: int = 0) -> dict:
 
 
 def train_planes_head(session: Session, *, n_train: int, seed: int = 0) -> LinearHead:
-    puzzles = labeled_positions()
-    feat0 = readout_vector(np.zeros(session.graph.n), session.resolved)
-    head = LinearHead.zeros(len(feat0))
+    from fly_chess.train_planes import train_head
+
+    cfg = load_planes_cfg()
+    puzzles = split_positions(arm="train")
     epochs = max(4, n_train // max(len(puzzles), 1))
-    for _ in range(epochs):
-        for board, target, _ in puzzles:
-            b = board.copy()
-            i_ext = plane_currents(b, session.graph, session.resolved)
-            hz = ply_rates(session, i_ext)
-            feat = readout_vector(hz, session.resolved)
-            head.train_step(feat, target, b, lr=0.08)
-    return head
+    return train_head(
+        session,
+        epochs=epochs,
+        lr=0.08,
+        mix_plies=int(cfg["mix_plies"]),
+        seed=seed,
+    )
 
 
 def play_planes_gate1(*, seed: int = 0) -> dict:
+    from fly_chess.train_planes import eval_head
+
     gates = load_gates()
+    cfg = load_planes_cfg()
     session = open_session(shuffled=False, seed=seed)
     head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
-    puzzles = labeled_positions()
-    n_eval = min(int(gates["gate1"]["n_eval"]), len(puzzles))
-    correct = 0
-    for board, target, _ in puzzles[:n_eval]:
-        move = planes_move(session, board.copy(), head)
-        if move == target:
-            correct += 1
-    acc = correct / max(n_eval, 1)
+    ev = eval_head(session, head, mix_plies=int(cfg["mix_plies"]), arm="eval")
+    acc = float(ev["accuracy"])
     return {
         "experiment": "planes",
         "gate": 1,
         "claim": ALLOWED_PLANES.format(gate=1, shuffled="logged"),
         "accuracy": acc,
-        "n_eval": n_eval,
-        "correct": correct,
+        "n_eval": ev["n"],
+        "correct": ev["correct"],
         "min_accuracy": gates["gate1"]["min_accuracy"],
         "passed": acc >= gates["gate1"]["min_accuracy"],
+        "split": "held-out FEN",
     }
 
 
@@ -426,27 +425,25 @@ def lock_planes() -> dict:
 
 
 def play_planes_gate1_on_shuffle(*, seed: int, shuffle_seed: int) -> dict:
+    from fly_chess.train_planes import eval_head
+
     gates = load_gates()
+    cfg = load_planes_cfg()
     session = open_session(shuffled=True, seed=shuffle_seed)
     head = train_planes_head(session, n_train=int(gates["gate1"]["n_train"]), seed=seed)
-    puzzles = labeled_positions()
-    n_eval = min(int(gates["gate1"]["n_eval"]), len(puzzles))
-    correct = 0
-    for board, target, _ in puzzles[:n_eval]:
-        move = planes_move(session, board.copy(), head)
-        if move == target:
-            correct += 1
-    acc = correct / max(n_eval, 1)
+    ev = eval_head(session, head, mix_plies=int(cfg["mix_plies"]), arm="eval")
+    acc = float(ev["accuracy"])
     return {
         "experiment": "planes",
         "gate": 1,
         "accuracy": acc,
-        "n_eval": n_eval,
-        "correct": correct,
+        "n_eval": ev["n"],
+        "correct": ev["correct"],
         "min_accuracy": gates["gate1"]["min_accuracy"],
         "passed": acc >= gates["gate1"]["min_accuracy"],
         "shuffled": True,
         "shuffle_seed": shuffle_seed,
+        "split": "held-out FEN",
     }
 
 

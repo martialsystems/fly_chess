@@ -28,7 +28,7 @@ def test_readme_is_a_methods_page_with_locked_numbers() -> None:
     assert str(eth["n_games"]) in text
     assert "774 vs 668" in text
     assert "41 vs 31" in text
-    assert "290" in text
+    assert "1,007" in text or "1007" in text
     assert "475" in text
     assert "MaleCNS" in text
     assert "CC BY" in text
@@ -37,6 +37,8 @@ def test_readme_is_a_methods_page_with_locked_numbers() -> None:
     assert "logs/planes_gate.json" in text
     assert "logs/malecns_identity.json" in text
     assert "logs/malecns_circuit.json" in text
+    assert "logs/planes_head.json" in text
+    assert "0.7" in text
     assert "logs/malecns_hop_probe.json" in text
     assert "docs/dynamics.md" in text
     assert circuit["games"] == 0

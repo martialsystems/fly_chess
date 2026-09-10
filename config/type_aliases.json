@@ -80,11 +80,43 @@
     },
     "reserved_input_pool": {
       "required": true,
-      "aliases": ["APP_LOCUS", "AV_LOCUS", "PLANE_SQ", "RESERVED"]
+      "aliases": [
+        "APP_LOCUS",
+        "AV_LOCUS",
+        "PLANE_SQ",
+        "PLANE_WP",
+        "PLANE_WN",
+        "PLANE_WB",
+        "PLANE_WR",
+        "PLANE_WQ",
+        "PLANE_WK",
+        "PLANE_BP",
+        "PLANE_BN",
+        "PLANE_BB",
+        "PLANE_BR",
+        "PLANE_BQ",
+        "PLANE_BK",
+        "STM",
+        "CASTLE_H1",
+        "CASTLE_A1",
+        "CASTLE_H8",
+        "CASTLE_A8",
+        "EP_FILE",
+        "RESERVED"
+      ]
     },
     "readout_pool": {
       "required": false,
-      "aliases": ["HIDDEN", "readout"]
+      "aliases": [
+        "HIDDEN",
+        "readout",
+        "STM",
+        "CASTLE_H1",
+        "CASTLE_A1",
+        "CASTLE_H8",
+        "CASTLE_A8",
+        "EP_FILE"
+      ]
     }
   },
   "notes": {

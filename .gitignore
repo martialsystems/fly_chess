@@ -19,4 +19,7 @@ logs/*.json
 !logs/malecns_hop_probe.json
 !logs/malecns_signs.json
 !logs/fixture_circuit.json
+!logs/planes_head.json
+!logs/planes_diagnose.json
+logs/planes_head.npz
 .DS_Store

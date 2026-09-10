@@ -1,7 +1,23 @@
 {
   "piece_order": ["P", "N", "B", "R", "Q", "K", "p", "n", "b", "r", "q", "k"],
+  "plane_types": [
+    "PLANE_WP",
+    "PLANE_WN",
+    "PLANE_WB",
+    "PLANE_WR",
+    "PLANE_WQ",
+    "PLANE_WK",
+    "PLANE_BP",
+    "PLANE_BN",
+    "PLANE_BB",
+    "PLANE_BR",
+    "PLANE_BQ",
+    "PLANE_BK"
+  ],
   "occupancy_current": 12.0,
   "side_to_move_current": 4.0,
   "castling_current": 3.0,
-  "en_passant_current": 3.0
+  "en_passant_current": 3.0,
+  "mix_plies": 3,
+  "encoding": "12 reserved pools, one cell per square per piece type; STM, castling, EP-file are their own cells"
 }

@@ -1,7 +1,7 @@
 {
   "experiment": "ethology",
   "claim": "Approach/avoid controller, local score 0.4875 vs random, shuffled wiring 0.4875.",
-  "fixture_sha256": "06d030bbf88ab6ba549022db4536d8d51221025417f03d2e8aa265869b74f0ce",
+  "fixture_sha256": "1924ff3b0c6e23b286ea33fd47357846ccb8095eb22cae790cf49278ba61c495",
   "n_games": 40,
   "game_seed": 0,
   "shuffle_seed": 1,

@@ -7,9 +7,9 @@ MaleCNS v1.0 (Berg et al., *Cell* 2026) is the published wiring of an adult male
 Two interfaces share the importer, the LIF kernel, the legal-move mask, and a degree-and-sign shuffle.
 
 - Ethology. Hanging enemy pieces raise a sugar-like current. Check and hanging own pieces raise a looming-like current. Capture is read from MN9, flee from DNp01 (giant fiber), quiet from BB/FG. Square identity lives on reserved locus cells; labellar GRNs get a global gain only.
-- Planes. Twelve piece occupancies, side to move, castling, and en passant inject into reserved `PLANE_SQ` cells. A linear head on a frozen readout pool maps rates to legal from-to moves.
+- Planes. Twelve reserved pools (one cell per square per piece type), plus STM, castling, and EP-file cells. A linear head on a frozen readout pool maps rates to legal from-to moves. Gate 1 is real accuracy minus shuffled accuracy on held-out FENs (`logs/planes_head.json`).
 
-Everyday tests use a 290-cell fixture. Circuit work uses a 475-cell MaleCNS slice (sugar GRNs, MN9, LPLC2, DNp01, and 39 disynaptic sugar→MN9 bridges). The full ~166k-cell table is not the default graph.
+Everyday tests use a 1,007-cell fixture. Circuit work uses a 475-cell MaleCNS slice (sugar GRNs, MN9, LPLC2, DNp01, and 39 disynaptic sugar→MN9 bridges). The full ~166k-cell table is not the default graph.
 
 ## Results
 
@@ -23,6 +23,16 @@ On the fixture, 40 games each color against a uniform random legal mover, time c
 | Planes    | 0.50   | 0.50 |
 
 The two arms of the ethology hanging-piece count are not the same test set (774 vs 668 chances). Check-escape is 1.0 on both wirings when the paint marks check and the mask keeps king-safe moves; those runs saw 41 vs 31 check positions.
+
+Held-out linear head on the typed plane encoder (`logs/planes_head.json`), 30 train FENs and 10 eval FENs, same degree-and-sign shuffle:
+
+| Arm | Accuracy | Mean target rank |
+|-----|--------:|-----------------:|
+| Real wiring | 0.5 | 3.9 |
+| Shuffled wiring | 0.7 | 1.9 |
+| Delta (real minus shuffled) | -0.2 |  |
+
+Piece type is recoverable from the 12 plane pools (identity 1.0 on both arms). Hidden-vector cosine for knight vs empty is 0 on real wiring and 0.71 after shuffle. The linear head does not beat shuffle on these 10 held-out FENs. That delta is the Gate 1 figure. Gate 2 n=40 was not rerun.
 
 On the 475-cell MaleCNS slice, synapses are current-based (`malecns_current` in `config/lif.json`: 8.0 current-units per contact, leak through tau_m). 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. A sugar pulse raises MN9 and leaves DNp01 at rest. An LPLC2 pulse raises DNp01 and leaves MN9 at rest. The same pulses on a shuffled graph drive both readouts. Those hertz values track the injected pulse. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. Direct sugar→MN9 edges are absent; the path is the 39 bridges. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table.
 
@@ -63,6 +73,8 @@ MaleCNS feathers, then the slice checks:
 | `data/fixtures/graph.json` | 290-cell fixture |
 | `logs/ethology_gate.json` | Experiment 1 lock |
 | `logs/planes_gate.json` | Experiment 2 lock |
+| `logs/planes_head.json` | Held-out real_acc, shuffle_acc, delta |
+| `config/planes_split.json` | Train/eval FEN split |
 | `logs/malecns_identity.json` | 475-cell identity |
 | `logs/malecns_circuit.json` | 475-cell paint check |
 | `logs/malecns_hop_probe.json` | Capped LPLC2 neighborhood |

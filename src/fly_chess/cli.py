@@ -65,6 +65,11 @@ def main(argv: list[str] | None = None) -> int:
     play.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
 
     sub.add_parser("lock", help="write logs/ethology_gate.json and logs/planes_gate.json at locked n")
+    sub.add_parser("diagnose-planes", help="real vs shuffled readout diagnostics on the fixture")
+    tr = sub.add_parser("train-planes", help="train linear head on locked FEN split; write acc table")
+    tr.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
+    tr.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
+    tr.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
 
     sh = sub.add_parser("shuffle", help="ethology or planes shuffled-wiring control")
     sh.add_argument("--exp", choices=["ethology", "planes"], required=True)
@@ -114,6 +119,18 @@ def main(argv: list[str] | None = None) -> int:
         print(f"wrote {write_resolved}")
         if session.resolved.missing_optional:
             print("optional missing:", json.dumps(session.resolved.missing_optional))
+        return 0
+    if args.cmd == "diagnose-planes":
+        from fly_chess.diagnose_planes import write_diagnose
+
+        payload = write_diagnose()
+        print(json.dumps(payload, indent=2))
+        return 0
+    if args.cmd == "train-planes":
+        from fly_chess.train_planes import write_train
+
+        payload = write_train()
+        print(json.dumps(payload, indent=2))
         return 0
     if args.cmd == "lock":
         p1, p2 = write_locked_gates()

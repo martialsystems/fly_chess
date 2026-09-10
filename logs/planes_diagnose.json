@@ -1,0 +1,39 @@
+{
+  "experiment": "planes_diagnose",
+  "graph": "fixture, not MaleCNS v1.0",
+  "encoding": "12 reserved pools, one cell per square per piece type; STM, castling, EP-file are their own cells",
+  "mix_plies": 3,
+  "real": {
+    "accuracy": 0.5,
+    "mean_target_rank": 3.9,
+    "plane_identity_acc": 1.0,
+    "cosine_empty_vs_knight": 0.0,
+    "cosine_knight_vs_bishop": 0.0,
+    "mi_hottest_from": 1.7671334858609216,
+    "mi_hottest_to": 2.2296102518918293,
+    "mi_hottest_piece": 0.7139150562167544,
+    "mi_hottest_capture": 0.5103911783556141,
+    "n_train": 30,
+    "n_eval": 10
+  },
+  "shuffled": {
+    "accuracy": 0.7,
+    "mean_target_rank": 1.9,
+    "plane_identity_acc": 1.0,
+    "cosine_empty_vs_knight": 0.7071067811865475,
+    "cosine_knight_vs_bishop": 0.7071067811865475,
+    "mi_hottest_from": 1.167133485860922,
+    "mi_hottest_to": 1.7629435852251625,
+    "mi_hottest_piece": 0.6228550590214468,
+    "mi_hottest_capture": 0.43404137650717,
+    "n_train": 30,
+    "n_eval": 10
+  },
+  "delta_acc": -0.19999999999999996,
+  "plane_identity_real_gt_shuffled": false,
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "note": "If shuffled rates are as linearly separable as real rates, more gradient steps will not help. Fix the encoder first."
+}

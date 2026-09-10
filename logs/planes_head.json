@@ -1,0 +1,23 @@
+{
+  "experiment": "planes",
+  "graph": "fixture, not MaleCNS v1.0",
+  "encoding": "12 reserved pools, one cell per square per piece type; STM, castling, EP-file are their own cells",
+  "mix_plies": 3,
+  "epochs": 8,
+  "lr": 0.08,
+  "n_train": 30,
+  "n_eval": 10,
+  "real_acc": 0.5,
+  "shuffle_acc": 0.7,
+  "delta": -0.19999999999999996,
+  "real_mean_target_rank": 3.9,
+  "shuffle_mean_target_rank": 1.9,
+  "real_correct": 5,
+  "shuffle_correct": 7,
+  "head": "logs/planes_head.npz",
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "note": "Gate 1 figure is real_acc minus shuffle_acc on held-out FENs. Same head, same split, degree-and-sign shuffle of the same graph."
+}

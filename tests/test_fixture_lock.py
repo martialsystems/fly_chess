@@ -15,5 +15,5 @@ def test_checked_in_fixture_matches_lock() -> None:
     lock = json.loads((PROVENANCE / "fixture.lock.json").read_text(encoding="utf-8"))
     assert digest == lock["sha256"]
     raw = json.loads(FIXTURE.read_text(encoding="utf-8"))
-    assert len(raw["neurons"]) == lock["neurons"] == 290
-    assert len(raw["edges"]) == lock["edges"] == 1327
+    assert len(raw["neurons"]) == lock["neurons"] == 1007
+    assert len(raw["edges"]) == lock["edges"] == 5103
