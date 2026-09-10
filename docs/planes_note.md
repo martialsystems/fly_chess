@@ -108,7 +108,7 @@ MaleCNS circuit (optional, large feathers, not games):
 | `logs/planes_mix.json` | Pooled mix-depth × five seeds |
 | `logs/planes_head.json` | One-seed pointer; not a lock |
 | `logs/ethology_gate.json` | Paint controller, n=40 |
-| `logs/planes_gate.json` | Gate 0–2 history, n=40 |
+| `logs/planes_gate.json` | Gate 0 to 2 history, n=40 |
 | `config/planes_labels_split.json` | Label-family FEN split |
 | `config/planes_split.json` | Mix-sweep FEN split |
 | `config/planes.json` | Occupancy currents and mix_plies |

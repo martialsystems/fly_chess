@@ -84,7 +84,7 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | `logs/planes_mix.json` | Mix-depth × five seeds |
 | `logs/planes_head.json` | One-seed pointer |
 | `logs/ethology_gate.json` | Paint controller, n=40 |
-| `logs/planes_gate.json` | Gate 0–2 history, n=40 |
+| `logs/planes_gate.json` | Gate 0 to 2 history, n=40 |
 | `logs/malecns_identity.json` | 475-cell identity |
 | `logs/malecns_circuit.json` | 475-cell paint check |
 | `logs/malecns_hop_probe.json` | Capped LPLC2 neighborhood |
