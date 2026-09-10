@@ -7,6 +7,7 @@ Frozen connectome, legal-move mask, trained linear then factored head. Shuffle-c
 ## Revisions
 
 - 2026-09-10: first write-up from locked JSON. Planes/ML line closed.
+- 2026-09-10: wall sentence: 475-cell MaleCNS identity/circuit is a different object from the planes readout.
 
 ## Abstract
 
@@ -36,7 +37,7 @@ Two interfaces share the importer, the LIF kernel (`config/lif.json`), the legal
 
 **Fixture.** 1,007 cells, 5,103 edges, sha256 `1924ff3b0c6e23b286ea33fd47357846ccb8095eb22cae790cf49278ba61c495` (`data-provenance/fixture.lock.json`). Not the 166k-cell MaleCNS table. `play --source malecns` exits.
 
-**MaleCNS circuit (separate).** 475-cell sugar/loom slice, current-based synapses, 8.0 current-units per contact because 4.0 was silent. Identity and paint split hold; shuffle crosstalks. Named-cell Hz is the injected pulse. Games 0, elo null, gate2_quoted false. A capped 2-hop LPLC2 probe aborted (917 cells, saturate_frac 0.425, max_hz 425). See `docs/dynamics.md`.
+**MaleCNS circuit (separate).** 475-cell sugar/loom slice, current-based synapses, 8.0 current-units per contact because 4.0 was silent. Identity and paint split hold; shuffle crosstalks. Named-cell Hz is the injected pulse. Games 0, elo null, gate2_quoted false. A capped 2-hop LPLC2 probe aborted (917 cells, saturate_frac 0.425, max_hz 425). See `docs/dynamics.md`. The 475-cell MaleCNS identity/circuit work is a different object (sugar → MN9, loom → DNp01, shuffle crosstalk). It is a path check on a slice. It is not the planes readout and not a move class.
 
 ## 3. Results
 
@@ -65,7 +66,7 @@ Factored head at mix 0: 0.790 both arms, Δ 0. After mix it does not beat shuffl
 
 Check-escape is not a third occupancy or wiring family. flee_ok = 1.0 at every mix depth on both arms: the legal mask is the decoder. Do not quote 0.771 as a wiring or occupancy result. Exact-match check-escape numbers live in the JSON for completeness only.
 
-`logs/planes_head.json` is a one-seed pointer (n_eval=10, rank 3.9 vs 1.9, acc 0.5 vs 0.7). Two puzzles. Leave it. Do not treat −0.2 as a lock.
+`logs/planes_head.json` is a one-seed pointer (n_eval=10, rank 3.9 vs 1.9, acc 0.5 vs 0.7). Two puzzles. Leave it. Do not treat -0.2 as a lock.
 
 **Pre-register vs this table.** Teacher factored is high at mix 0 (occupancy still readable). It drops on both arms after one ply. Mix 3 teacher Δ includes 0: wiring is not carrying a small chess dictionary. Frozen connectome plus linear or factored head plus legal mask is not a move picker that uses synapses. More FENs, more epochs, or a bigger W cannot recover a code the mix already erased.
 

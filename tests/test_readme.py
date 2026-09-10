@@ -26,6 +26,10 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert "One mix ply removes those labels" in text
     assert "the labeled move does not" in text
     assert "typed occupancy register" in text
+    assert "The 475-cell MaleCNS identity/circuit work is a different object" in text
+    assert "The 475-cell MaleCNS identity/circuit work is a different object" in note
+    assert "not the planes readout" in text
+    assert "not the planes readout" in note
     assert f"{eth['real']['score']}" in text
     assert f"{eth['shuffled']['score']}" in text
     assert "0.50" in text

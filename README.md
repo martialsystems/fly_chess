@@ -46,7 +46,7 @@ Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a on
 
 `wiring_is_encoder` false. Hanging-capture 0.177 vs 0.159 is not a win (774 vs 668 chances). Check-escape 1.0 is the mask (41 vs 31 positions).
 
-**MaleCNS 475-cell circuit** (not games): sugar lights MN9, loom lights DNp01, shuffle crosstalks. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. `docs/dynamics.md`.
+**MaleCNS 475-cell circuit** (not games): sugar lights MN9, loom lights DNp01, shuffle crosstalks. The 475-cell MaleCNS identity/circuit work is a different object (sugar → MN9, loom → DNp01, shuffle crosstalk). It is a path check on a slice. It is not the planes readout and not a move class. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. `docs/dynamics.md`.
 
 ## Reproduce
 
