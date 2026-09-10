@@ -1,69 +1,69 @@
 # fly_chess
 
-A connectome-constrained network pointed at chess.
+Closed. A shuffle-controlled measurement on a fly-shaped LIF graph, not a chess engine.
 
-MaleCNS v1.0 (Berg et al., *Cell* 2026) is the published wiring of an adult male *Drosophila* central nervous system. This repo asks a narrow question: if that graph is run as a leaky integrate-and-fire network, with a chessboard written into a few sensory channels and a legal-move mask on the way out, what can be measured.
+**Question.** If this graph is run as LIF, the board is written into reserved channels, and a legal-move mask sits on the way out, does the wiring make the labeled move linearly easier than a degree-and-sign shuffle?
 
-Two interfaces share the importer, the LIF kernel, the legal-move mask, and a degree-and-sign shuffle.
+**Answer.** No. Mix 0 is a typed occupancy register (factored head reads hanging / teacher). Mix ≥ 1 erases those labels on both arms. At mix 3, teacher Δ includes 0. Cosine still splits real from shuffle. The wires do something; they do not do this.
 
-- Ethology. Hanging enemy pieces raise a sugar-like current. Check and hanging own pieces raise a looming-like current. Capture is read from MN9, flee from DNp01 (giant fiber), quiet from BB/FG. Square identity lives on reserved locus cells; labellar GRNs get a global gain only.
-- Planes. Twelve reserved pools (one cell per square per piece type), plus STM, castling, and EP-file cells. A linear head on a frozen readout pool maps rates to legal from-to moves. Gate 1 is real accuracy minus shuffled accuracy on held-out FENs (`logs/planes_head.json`).
+Write-up: [docs/planes_note.md](docs/planes_note.md). Three sentences:
 
-Everyday tests use a 1,007-cell fixture. Circuit work uses a 475-cell MaleCNS slice (sugar GRNs, MN9, LPLC2, DNp01, and 39 disynaptic sugar→MN9 bridges). The full ~166k-cell table is not the default graph.
+1. Reserved pools reconstruct occupancy; a factored from-to head reads a hanging/teacher label from that register.
+2. One mix ply removes those labels on real and shuffled wiring.
+3. Hidden geometry differs after three plys; the labeled move does not.
 
-## Results
+Do not start another linear head on this object. Occupancy is readable before a ply. One mix ply deletes the labels. More FENs will not restore that code.
 
-Copied from the lock files under `logs/`.
+## Locked numbers
 
-On the fixture, 40 games each color against a uniform random legal mover, time control 1+0.1:
+Copied from `logs/`. Do not restamp ethology 0.4875 / 0.4875 or Gate 2 n=40 onto the occupancy register.
 
-| Interface | Score | Shuffled wiring |
-|-----------|------:|----------------:|
-| Ethology  | 0.4875 | 0.4875 |
-| Planes    | 0.50   | 0.50 |
+**Planes labels** (`logs/planes_labels.json`), five shuffle seeds, encoder frozen, no engine:
 
-The two arms of the ethology hanging-piece count are not the same test set (774 vs 668 chances). Check-escape is 1.0 on both wirings when the paint marks check and the mask keeps king-safe moves; those runs saw 41 vs 31 check positions.
-
-`logs/planes_head.json` is a pointer, not a lock: one shuffle seed, n_eval=10, eight epochs, lr 0.08. Accuracy 0.5 vs 0.7 is two puzzles. Mean target rank 3.9 vs 1.9 is the stronger row. Piece identity 1.0 on both arms only proves the injection. Hidden cosine 0 vs 0.71 is the first synapse-using contrast.
-
-Mix-depth × five shuffle seeds on the same LinearHead (`logs/planes_mix.json`), 130 train FENs and 62 eval FENs, no FEN overlap. Caption: Wiring changes the hidden geometry; it has not made the labeled move the top linear class.
-
-| Mix plys | Real acc / rank | Shuffle acc / rank | Δ acc (mean, 95% interval) |
-|----------|----------------:|-------------------:|---------------------------:|
-| 0 (reserved pools) | 0.226 / 6.39 | 0.226 / 6.39 | 0.00 [0.00, 0.00] |
-| 1 | 0.177 / 3.98 | 0.174 / 4.34 | 0.003 [-0.003, 0.010] |
-| 3 | 0.177 / 4.76 | 0.174 / 5.47 | 0.003 [-0.018, 0.024] |
-
-Δ is ~0 at 0 plys (synapses unused). It stays flat at 1 and 3 plys (interval includes 0). Knight-vs-empty hidden cosine at 3 plys is 0 real vs 0.34 shuffle. A factored 64+64 head reads occupancy at 0.79 acc with Δ 0; after mix it does not beat shuffle either. Ethology 0.4875 / 0.4875 and Gate 2 n=40 stay the old objects. Gate 2 was not restamped onto this encoder.
-
-Label families on the frozen encoder (`logs/planes_labels.json`), same mix depths and five shuffles. Targets are hanging capture, check-escape, and a deterministic teacher of those two facts. No engine.
-
-| Family | Mix 0 factored acc | Mix 1 factored acc | Mix 3 Δ acc (linear) |
-|--------|-------------------:|-------------------:|---------------------:|
+| Family | Mix 0 factored real / shuffle | Mix 1 factored real / shuffle | Mix 3 linear Δ [95%] |
+|--------|------------------------------:|------------------------------:|---------------------:|
 | Hanging | 0.887 / 0.887 | 0.208 / 0.204 | 0.011 [-0.003, 0.026] |
-| Check-escape | 0.771 / 0.771 | 0.714 / 0.709 | -0.057 [-0.093, -0.022] |
 | Teacher | 0.693 / 0.693 | 0.261 / 0.273 | -0.016 [-0.050, 0.018] |
 
-Teacher factored is high at mix 0 and drops on both arms after a ply. Mix 3 teacher Δ includes 0. Hanging at mix 0 was most of the occupancy read (0.89), not the whole of it (check-escape 0.77). Check-escape flee_ok is 1.0 on both arms at every depth: those positions have almost only escape moves. This graph-plus-mix is not a linear chess encoder. It is a typed occupancy register plus a geometry change.
+Check-escape flee_ok = 1.0 at every depth on both arms: the legal mask is the decoder. Do not quote a check-escape exact-match as wiring or occupancy.
 
-On the 475-cell MaleCNS slice, synapses are current-based (`malecns_current` in `config/lif.json`: 8.0 current-units per contact, leak through tau_m). 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. A sugar pulse raises MN9 and leaves DNp01 at rest. An LPLC2 pulse raises DNp01 and leaves MN9 at rest. The same pulses on a shuffled graph drive both readouts. Those hertz values track the injected pulse. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. Direct sugar→MN9 edges are absent; the path is the 39 bridges. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table.
+**Mix-depth** (`logs/planes_mix.json`), 130 train / 62 eval FENs:
 
-A capped two-hop neighborhood of LPLC2 (917 cells under an 8,000-cell cap; hop 1 is already larger than the cap) reached saturate_frac 0.425 and max_hz 425. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. That probe was aborted. It is not the circuit graph. Notes on why LPLC2 fans out, and why voltage-jump PSPs seize, are in [docs/dynamics.md](docs/dynamics.md).
+| Mix plys | Real acc | Shuffle acc | Δ acc mean [95%] | Knight-empty cosine |
+|----------|--------:|------------:|------------------:|--------------------:|
+| 0 | 0.226 | 0.226 | 0.00 [0.00, 0.00] | 0.824 / 0.824 |
+| 1 | 0.177 | 0.174 | 0.003 [-0.003, 0.010] | 0 / 0 |
+| 3 | 0.177 | 0.174 | 0.003 [-0.018, 0.024] | 0 / 0.341 |
 
-## Data
+Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a one-seed pointer (n_eval=10, rank 3.9 vs 1.9). Leave it.
 
-MaleCNS v1.0 is CC BY 4.0 (FlyEM / Janelia, Cambridge, MRC LMB, Google Research). File URLs and sha256 locks live in `config/datasets.json` and `data-provenance/malecns_v1/source.lock.json`. The 1 GB edge table is not in git. Fetch it locally if you want the circuit commands.
+**Ethology and Gate 2 (historical game locks, n=40, random legal opponent):**
 
-## Run
+| Interface | Score | Shuffled |
+|-----------|------:|---------:|
+| Ethology | 0.4875 | 0.4875 |
+| Planes Gate 2 | 0.50 | 0.50 |
+
+`wiring_is_encoder` false. Hanging-capture 0.177 vs 0.159 is not a win (774 vs 668 chances). Check-escape 1.0 is the mask (41 vs 31 positions).
+
+**MaleCNS 475-cell circuit** (not games): sugar lights MN9, loom lights DNp01, shuffle crosstalks. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. `docs/dynamics.md`.
+
+## Reproduce
 
 ```bash
 /opt/homebrew/bin/python3.12 -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
-.venv/bin/python -m fly_chess
 .venv/bin/python -m pytest
 ```
 
-MaleCNS feathers, then the slice checks:
+Optional: rerun the closed planes tables (does not change ethology or Gate 2):
+
+```bash
+.venv/bin/python -m fly_chess mix-sweep
+.venv/bin/python -m fly_chess labels-sweep
+```
+
+MaleCNS identity/circuit only. No ply loop on 166k cells:
 
 ```bash
 .venv/bin/python -m pip install -e ".[malecns]"
@@ -72,27 +72,27 @@ MaleCNS feathers, then the slice checks:
 .venv/bin/python -m fly_chess circuit --source malecns
 ```
 
-`play` uses the fixture. `play --source malecns` exits; the slice has no game loop.
-
-`python -m fly_chess lock` rewrites `logs/ethology_gate.json` and `logs/planes_gate.json`. Restamp the table above from those files if the numbers move.
+`play --source malecns` exits. No Lichess. No Elo. Fixture: 1,007 cells. MaleCNS slice: 475 cells.
 
 ## Layout
 
 | Path | Role |
 |------|------|
-| `config/type_aliases.json` | Paper names → types |
-| `config/lif.json` | `fixture_voltage_jump` and `malecns_current` |
-| `data/fixtures/graph.json` | 290-cell fixture |
-| `logs/ethology_gate.json` | Experiment 1 lock |
-| `logs/planes_gate.json` | Experiment 2 lock |
-| `logs/planes_head.json` | Pointer: one seed, n_eval=10 |
-| `logs/planes_mix.json` | Mix-depth × shuffle-seed table |
-| `logs/planes_labels.json` | Hanging / check-escape / teacher families |
-| `config/planes_split.json` | Train/eval FEN split |
+| `docs/planes_note.md` | Methods + negative-result note |
+| `docs/dynamics.md` | MaleCNS kernel and 2-hop abort |
+| `logs/planes_labels.json` | Label-family mix table |
+| `logs/planes_mix.json` | Mix-depth × five seeds |
+| `logs/planes_head.json` | One-seed pointer |
+| `logs/ethology_gate.json` | Paint controller, n=40 |
+| `logs/planes_gate.json` | Gate 0–2 history, n=40 |
 | `logs/malecns_identity.json` | 475-cell identity |
 | `logs/malecns_circuit.json` | 475-cell paint check |
 | `logs/malecns_hop_probe.json` | Capped LPLC2 neighborhood |
-| `logs/malecns_signs.json` | Required-role transmitter census |
-| `docs/dynamics.md` | PSP and fan-out notes |
+| `config/lif.json` | `fixture_voltage_jump`, `malecns_current` |
+| `config/planes.json` | Typed pools and mix_plies |
+| `data/fixtures/graph.json` | Fixture graph |
+| `src/fly_chess/labels.py` | Teacher: hanging else escape else exclude |
+| `src/fly_chess/head.py` | LinearHead, FactoredHead |
+| `description.txt` | GitHub hook |
 
-Code is MIT. MaleCNS remains CC BY 4.0.
+Sequel work needs a new question. Code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).

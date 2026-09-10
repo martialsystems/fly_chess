@@ -10,7 +10,7 @@ Named-cell Hz is the injected pulse on an intact path, not a firing-rate discove
 
 | Mode | PSP | Who uses it |
 |------|-----|-------------|
-| `fixture_voltage_jump` | instant millivolt jump equal to `weight` | 290-cell pytest and fixture games |
+| `fixture_voltage_jump` | instant millivolt jump equal to `weight` | 1,007-cell fixture games |
 | `malecns_current` | current `mV_per_contact` per synaptic contact, then leak through `tau_m` | MaleCNS identity and circuit only |
 
 Shared membrane: `dt_ms` 0.5, `tau_m_ms` 20.0, `v_rest_mV` -52, `v_thresh_mV` -45, `refractory_ms` 2.0.
