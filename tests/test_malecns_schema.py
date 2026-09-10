@@ -16,6 +16,9 @@ def test_malecns_locks_share_required_keys() -> None:
         assert raw["elo"] is None
         assert raw["gate2_quoted"] is False
         assert "not a firing-rate discovery" in raw["hz_note"]
+        assert "readout_notes" in raw
+        if raw.get("source") == "malecns":
+            assert raw["readout_notes"]
 
 
 def test_fixture_locks_still_reject_hanging_same_n() -> None:

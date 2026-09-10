@@ -13,6 +13,23 @@ HZ_NOTE = (
     "Named-cell Hz is the injected paint pulse on an intact path, "
     "not a firing-rate discovery. Contrast is shuffle crosstalk."
 )
+MN9_MEAN_NOTE = (
+    "12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, "
+    "and MN9 is a two-cell mean."
+)
+GAIN_PICK_NOTE = (
+    "8.0 current-units is a grid pick because 4.0 was silent, "
+    "not a fly biophysics constant."
+)
+SIGNS_MIX_NOTE = (
+    "Required-role signs all +1 is the 475-cell mix, "
+    "not a whole-brain transmitter table."
+)
+HOP_BUDGET_NOTE = (
+    "Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, "
+    "not the true 2-hop map."
+)
+READOUT_NOTES = (MN9_MEAN_NOTE, GAIN_PICK_NOTE, SIGNS_MIX_NOTE, HOP_BUDGET_NOTE)
 NEAR_REST_HZ = 1.0
 
 

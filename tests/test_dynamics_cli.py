@@ -44,6 +44,7 @@ def test_hop_probe_aborted_and_is_not_the_circuit_graph() -> None:
     assert raw["games"] == 0
     assert raw["gate2_quoted"] is False
     assert raw["n_neurons"] == 917
+    assert any("budgeted probe" in n for n in raw.get("readout_notes", []))
 
 
 def test_signs_do_not_flip_unclear() -> None:
@@ -55,3 +56,4 @@ def test_signs_do_not_flip_unclear() -> None:
     assert "not flipped" in raw["unclear_and_monoamine"]
     assert raw["games"] == 0
     assert raw["n_neurons"] == 475
+    assert any("475-cell mix" in n for n in raw.get("readout_notes", []))

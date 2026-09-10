@@ -9,7 +9,7 @@ import numpy as np
 
 from fly_chess.fetch import malecns_present
 from fly_chess.import_malecns import load_nt_signs, nt_sign
-from fly_chess.lif import HZ_NOTE
+from fly_chess.lif import HZ_NOTE, SIGNS_MIX_NOTE
 from fly_chess.paths import LOGS
 from fly_chess.resolve import IDENTITY_ROLES, resolve_graph
 
@@ -91,6 +91,7 @@ def run_signs() -> dict:
         "n_required_role_edges_minus": n_minus,
         "fallback_sign": fallback,
         "unclear_and_monoamine": "fallback +1, not flipped per synapse",
+        "readout_notes": [SIGNS_MIX_NOTE],
         "games": 0,
         "elo": None,
         "gate2_quoted": False,

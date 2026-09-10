@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 
 from fly_chess.fetch import malecns_present
-from fly_chess.lif import HZ_NOTE, near_rest
+from fly_chess.lif import GAIN_PICK_NOTE, HZ_NOTE, MN9_MEAN_NOTE, near_rest
 from fly_chess.match import identity_stim
 from fly_chess.paths import LOGS
 from fly_chess.session import open_session
@@ -53,6 +53,9 @@ def run_identity(*, source: str, shuffle_seed: int = 1) -> dict:
         "elo": None,
         "games": 0,
         "hz_note": HZ_NOTE,
+        "readout_notes": (
+            [MN9_MEAN_NOTE, GAIN_PICK_NOTE] if source == "malecns" else []
+        ),
         "kernel": real.net.cfg.payload(),
     }
     rs, ss = out["real"], out["shuffled"]

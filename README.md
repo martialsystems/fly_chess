@@ -1,48 +1,38 @@
 # fly_chess
 
-Can you point a fruit-fly wiring diagram at a chessboard and get legal moves out?
+A connectome-constrained network pointed at chess.
 
-Short answer: we can get legal moves. We cannot honestly say the wiring is playing chess.
+MaleCNS v1.0 (Berg et al., *Cell* 2026) is the published wiring of an adult male *Drosophila* central nervous system. This repo asks a narrow question: if that graph is run as a leaky integrate-and-fire network, with a chessboard written into a few sensory channels and a legal-move mask on the way out, what can be measured.
 
-## What this is
+Two interfaces share the importer, the LIF kernel, the legal-move mask, and a degree-and-sign shuffle.
 
-A fly's brain map says which cells talk to which. We run a small stand-in of that map (290 cells for everyday tests; a 475-cell slice of the real MaleCNS map for one circuit check). Chess never falls out of a fly looking for food. We built two translators:
+- Ethology. Hanging enemy pieces raise a sugar-like current. Check and hanging own pieces raise a looming-like current. Capture is read from MN9, flee from DNp01 (giant fiber), quiet from BB/FG. Square identity lives on reserved locus cells; labellar GRNs get a global gain only.
+- Planes. Twelve piece occupancies, side to move, castling, and en passant inject into reserved `PLANE_SQ` cells. A linear head on a frozen readout pool maps rates to legal from-to moves.
 
-- Food and danger: hanging enemy pieces count as food. Check counts as something looming. Named fly cells vote capture, flee, or sit still. Illegal votes are thrown away.
-- Spreadsheet board: each square and piece type turns on reserved input cells. A tiny extra layer picks a legal move. The fly wiring stays frozen.
+Everyday tests use a 290-cell fixture. Circuit work uses a 475-cell MaleCNS slice (sugar GRNs, MN9, LPLC2, DNp01, and 39 disynaptic sugar→MN9 bridges). The full ~166k-cell table is not the default graph.
 
-Both play only against a random legal opponent, on this computer. Not chess.com. Not Lichess.
+## Results
 
-## What happened
+Copied from the lock files under `logs/`.
 
-On the small test map, both translators score like coin flips (0.4875 and 0.50 in 40 games). If we scramble the wires and keep the same translator, the score does not drop. So on that map the wiring is not doing the chess work. The rulebook mask and the extra layer are.
+On the fixture, 40 games each color against a uniform random legal mover, time control 1+0.1:
 
-One number looks like a win if you squint (taking hanging pieces 0.177 vs 0.159). It is not a win. The two tests did not even see the same chances (774 vs 668). We do not advertise it.
+| Interface | Score | Shuffled wiring |
+|-----------|------:|----------------:|
+| Ethology  | 0.4875 | 0.4875 |
+| Planes    | 0.50   | 0.50 |
 
-Getting out of check every time is also not a win. The paint says you are in check and the rulebook only allows safe king moves. A scrambled map does the same thing.
+The two arms of the ethology hanging-piece count are not the same test set (774 vs 668 chances). Check-escape is 1.0 on both wirings when the paint marks check and the mask keeps king-safe moves; those runs saw 41 vs 31 check positions.
 
-## What the real fly map showed
+On the 475-cell MaleCNS slice, synapses are current-based (`malecns_current` in `config/lif.json`: 8.0 current-units per contact, leak through tau_m). 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. A sugar pulse raises MN9 and leaves DNp01 at rest. An LPLC2 pulse raises DNp01 and leaves MN9 at rest. The same pulses on a shuffled graph drive both readouts. Those hertz values track the injected pulse. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. Direct sugar→MN9 edges are absent; the path is the 39 bridges. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table.
 
-We poked sugar and looming cells on a small piece of the real fly map. The right motor cells answered. Scrambled wires did not stay specific. That is not a chess rating.
+A capped two-hop neighborhood of LPLC2 (917 cells under an 8,000-cell cap; hop 1 is already larger than the cap) reached saturate_frac 0.425 and max_hz 425. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. That probe was aborted. It is not the circuit graph. Notes on why LPLC2 fans out, and why voltage-jump PSPs seize, are in [docs/dynamics.md](docs/dynamics.md).
 
-We downloaded MaleCNS v1.0 (the published male fly wiring, used here under CC BY). We did not run chess on all 166,000 cells. The 475-cell slice is sugar sensors, the feeding motor cell MN9, looming cells, and the giant-fiber escape cell. Synapses there are current-based: 8.0 current-units per contact, then leak (`docs/dynamics.md`). Touch sugar, only MN9 lights. Touch looming, only DNp01 lights. That is the paint pulse on the named cell, not a new firing-rate finding. Scramble the wires, both cells light up for both touches. Chess stays on the 290-cell fixture.
+## Data
 
-A capped two-hop-from-looming probe saturated (917 cells, 0.425 of them at the Hz cap). We aborted it. It is not the circuit graph.
+MaleCNS v1.0 is CC BY 4.0 (FlyEM / Janelia, Cambridge, MRC LMB, Google Research). File URLs and sha256 locks live in `config/datasets.json` and `data-provenance/malecns_v1/source.lock.json`. The 1 GB edge table is not in git. Fetch it locally if you want the circuit commands.
 
-## Numbers
-
-Copied from locked files. Scores are the JSON `score` fields. MaleCNS Hz values are the injected pulse, not a firing-rate discovery.
-
-| Test | Games | Score vs random | Same test after scrambling wires |
-|------|------:|----------------:|---------------------------------:|
-| Food/danger | 40 | 0.4875 | 0.4875 |
-| Spreadsheet board | 40 | 0.50 | 0.50 |
-
-MaleCNS 475-cell circuit (`logs/malecns_circuit.json`): games 0, elo null. Real sugar: MN9 37.5 Hz, DNp01 0. Real loom: DNp01 125 Hz, MN9 0. Shuffle crosstalks.
-
-Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_identity.json`, `logs/malecns_circuit.json`.
-
-## Run it
+## Run
 
 ```bash
 /opt/homebrew/bin/python3.12 -m venv .venv
@@ -51,7 +41,7 @@ Full dumps: `logs/ethology_gate.json`, `logs/planes_gate.json`, `logs/malecns_id
 .venv/bin/python -m pytest
 ```
 
-Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom on the 475-cell slice). No chess games on that graph:
+MaleCNS feathers, then the slice checks:
 
 ```bash
 .venv/bin/python -m pip install -e ".[malecns]"
@@ -60,6 +50,23 @@ Real MaleCNS files are optional and large. Circuit check only (paint sugar/loom 
 .venv/bin/python -m fly_chess circuit --source malecns
 ```
 
-Why voltage jumps seize, and why a 2-hop LPLC2 probe still saturates under current-based synapses: [docs/dynamics.md](docs/dynamics.md). That is a kernel note, not a chess gate.
+`play` uses the fixture. `play --source malecns` exits; the slice has no game loop.
 
-Original code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).
+`python -m fly_chess lock` rewrites `logs/ethology_gate.json` and `logs/planes_gate.json`. Restamp the table above from those files if the numbers move.
+
+## Layout
+
+| Path | Role |
+|------|------|
+| `config/type_aliases.json` | Paper names → types |
+| `config/lif.json` | `fixture_voltage_jump` and `malecns_current` |
+| `data/fixtures/graph.json` | 290-cell fixture |
+| `logs/ethology_gate.json` | Experiment 1 lock |
+| `logs/planes_gate.json` | Experiment 2 lock |
+| `logs/malecns_identity.json` | 475-cell identity |
+| `logs/malecns_circuit.json` | 475-cell paint check |
+| `logs/malecns_hop_probe.json` | Capped LPLC2 neighborhood |
+| `logs/malecns_signs.json` | Required-role transmitter census |
+| `docs/dynamics.md` | PSP and fan-out notes |
+
+Code is MIT. MaleCNS remains CC BY 4.0.

@@ -6,7 +6,9 @@ from __future__ import annotations
 __version__ = "0.1.0"
 
 QUESTION = (
-    "Can you point a fruit-fly wiring diagram at a chessboard and get legal moves out?"
+    "If that graph is run as a leaky integrate-and-fire network, "
+    "with a chessboard written into a few sensory channels and a legal-move mask "
+    "on the way out, what can be measured."
 )
 
 ALLOWED_ETHOLOGY = (

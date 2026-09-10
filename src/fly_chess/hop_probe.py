@@ -8,7 +8,7 @@ import json
 import numpy as np
 
 from fly_chess.fetch import malecns_present
-from fly_chess.lif import HZ_NOTE, LifConfig, LifNet
+from fly_chess.lif import HOP_BUDGET_NOTE, HZ_NOTE, LifConfig, LifNet
 from fly_chess.paths import LOGS
 
 N_CAP = 2000
@@ -67,8 +67,10 @@ def run_hop_probe(*, hops: int = HOPS, n_cap: int = N_CAP) -> dict:
         "kernel": cfg.payload(),
         "note": (
             "Abort means a high fraction of cells hit the Hz cap. "
-            "This graph is not the circuit graph and not a player."
+            "This graph is not the circuit graph and not a player. "
+            + HOP_BUDGET_NOTE
         ),
+        "readout_notes": [HOP_BUDGET_NOTE],
     }
 
 

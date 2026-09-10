@@ -389,5 +389,8 @@
   "games": 0,
   "elo": null,
   "gate2_quoted": false,
-  "note": "Winning Hz is the injected pulse on an intact path, not a biological firing rate."
+  "note": "Winning Hz is the injected pulse on an intact path, not a biological firing rate. 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant.",
+  "readout_notes": [
+    "8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant."
+  ]
 }

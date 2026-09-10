@@ -54,6 +54,10 @@
   "elo": null,
   "games": 0,
   "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "readout_notes": [
+    "12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean.",
+    "8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant."
+  ],
   "kernel": {
     "dt_ms": 0.5,
     "tau_m_ms": 20.0,

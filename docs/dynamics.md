@@ -15,7 +15,7 @@ Named-cell Hz is the injected pulse on an intact path, not a firing-rate discove
 
 Shared membrane: `dt_ms` 0.5, `tau_m_ms` 20.0, `v_rest_mV` -52, `v_thresh_mV` -45, `refractory_ms` 2.0.
 
-`malecns_current` after the gain sweep (`logs/malecns_gain_sweep.json`): `mV_per_contact` 8.0, `steps_per_ply` 80 (40 ms). One spike delivers `8.0 * dt / tau_m` = 0.20 mV per contact, then leak. 4.0 did not reach MN9. 8.0 is the smallest grid value that kept the sugar/loom split with `max_hz` under 150. Those Hz values are the injected pulse on the path, not a biological firing rate.
+`malecns_current` after the gain sweep (`logs/malecns_gain_sweep.json`): `mV_per_contact` 8.0, `steps_per_ply` 80 (40 ms). One spike delivers `8.0 * dt / tau_m` = 0.20 mV per contact, then leak. 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. Those Hz values are the injected pulse on the path, not a biological firing rate.
 
 ## Why voltage_jump seizes
 
@@ -32,17 +32,17 @@ Locked identity graph: sugar GRNs (247) + MN9 (2) + LPLC2 (185) + DNp01 (2) + 39
 - Degree-and-sign shuffle: crosstalk
 - games 0, elo null, gate2_quoted false
 
-Identity pulse 18: named sensory cells 75 Hz, MN9 12.5 Hz on sugar, DNp01 75 Hz on loom. Circuit pulse 26: sensory 125 Hz, MN9 37.5 Hz on sugar, DNp01 125 Hz on loom. Those numbers are the paint pulse on an intact path.
+Identity pulse 18: named sensory cells 75 Hz, MN9 12.5 Hz on sugar, DNp01 75 Hz on loom. Circuit pulse 26: sensory 125 Hz, MN9 37.5 Hz on sugar, DNp01 125 Hz on loom. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean.
 
 ## 2-hop LPLC2 probe (aborted)
 
-Default circuit graph stays 475. A capped outgoing 2-hop from LPLC2 (`n_cap` 2000) built 917 retained cells, 59,606 edges, `saturate_frac` 0.425, `max_hz` 425. Aborted. `logs/malecns_hop_probe.json`. That graph is not the circuit graph and not a player.
+Default circuit graph stays 475. A capped outgoing 2-hop from LPLC2 (`n_cap` 2000) built 917 retained cells, 59,606 edges, `saturate_frac` 0.425, `max_hz` 425. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. Aborted. `logs/malecns_hop_probe.json`. That graph is not the circuit graph and not a player.
 
 Do not expand the graph while a capped loom neighborhood saturates.
 
 Outgoing hop counts (`logs/malecns_neighborhood.json`, `n_cap` 8000): LPLC2 hop 1 already hits the cap. MN9 hop 1 is 1,196 cells, 20,282 edges, max incoming |weight| 5,107, which would seize under voltage_jump. Default circuit graph stays 475.
 
-Transmitter audit on the 475-cell slice (`logs/malecns_signs.json`): 16,370 edges with a required-role presynaptic cell, 0 missing NT, 0 unknown, 0 monoamine. Fallback +1 was not used. Unclear and monoamine stay at fallback; they are not flipped per synapse.
+Transmitter audit on the 475-cell slice (`logs/malecns_signs.json`): 16,370 edges with a required-role presynaptic cell, 0 missing NT, 0 unknown, 0 monoamine. Fallback +1 was not used. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table. Unclear and monoamine stay at fallback; they are not flipped per synapse.
 
 ## Until a larger graph is allowed
 

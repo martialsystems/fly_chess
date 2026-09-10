@@ -38,5 +38,8 @@
     "mode": "malecns_current",
     "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
   },
-  "note": "Abort means a high fraction of cells hit the Hz cap. This graph is not the circuit graph and not a player."
+  "note": "Abort means a high fraction of cells hit the Hz cap. This graph is not the circuit graph and not a player. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map.",
+  "readout_notes": [
+    "Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map."
+  ]
 }

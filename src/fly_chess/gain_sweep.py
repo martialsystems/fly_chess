@@ -8,7 +8,7 @@ import json
 import numpy as np
 
 from fly_chess.fetch import malecns_present
-from fly_chess.lif import HZ_NOTE, LifConfig, LifNet, near_rest
+from fly_chess.lif import GAIN_PICK_NOTE, HZ_NOTE, LifConfig, LifNet, near_rest
 from fly_chess.paint import circuit_gains, load_paint_cfg
 from fly_chess.paths import LOGS
 from fly_chess.rates import mean_hz
@@ -128,8 +128,9 @@ def run_gain_sweep(*, shuffle_seed: int = 1) -> dict:
         "gate2_quoted": False,
         "note": (
             "Winning Hz is the injected pulse on an intact path, "
-            "not a biological firing rate."
+            "not a biological firing rate. " + GAIN_PICK_NOTE
         ),
+        "readout_notes": [GAIN_PICK_NOTE],
     }
 
 

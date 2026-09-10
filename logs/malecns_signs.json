@@ -19,5 +19,8 @@
   "games": 0,
   "elo": null,
   "gate2_quoted": false,
-  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "readout_notes": [
+    "Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table."
+  ]
 }
