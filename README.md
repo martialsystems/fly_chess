@@ -36,6 +36,16 @@ Mix-depth × five shuffle seeds on the same LinearHead (`logs/planes_mix.json`),
 
 Δ is ~0 at 0 plys (synapses unused). It stays flat at 1 and 3 plys (interval includes 0). Knight-vs-empty hidden cosine at 3 plys is 0 real vs 0.34 shuffle. A factored 64+64 head reads occupancy at 0.79 acc with Δ 0; after mix it does not beat shuffle either. Ethology 0.4875 / 0.4875 and Gate 2 n=40 stay the old objects. Gate 2 was not restamped onto this encoder.
 
+Label families on the frozen encoder (`logs/planes_labels.json`), same mix depths and five shuffles. Targets are hanging capture, check-escape, and a deterministic teacher of those two facts. No engine.
+
+| Family | Mix 0 factored acc | Mix 1 factored acc | Mix 3 Δ acc (linear) |
+|--------|-------------------:|-------------------:|---------------------:|
+| Hanging | 0.887 / 0.887 | 0.208 / 0.204 | 0.011 [-0.003, 0.026] |
+| Check-escape | 0.771 / 0.771 | 0.714 / 0.709 | -0.057 [-0.093, -0.022] |
+| Teacher | 0.693 / 0.693 | 0.261 / 0.273 | -0.016 [-0.050, 0.018] |
+
+Teacher factored is high at mix 0 and drops on both arms after a ply. Mix 3 teacher Δ includes 0. Hanging at mix 0 was most of the occupancy read (0.89), not the whole of it (check-escape 0.77). Check-escape flee_ok is 1.0 on both arms at every depth: those positions have almost only escape moves. This graph-plus-mix is not a linear chess encoder. It is a typed occupancy register plus a geometry change.
+
 On the 475-cell MaleCNS slice, synapses are current-based (`malecns_current` in `config/lif.json`: 8.0 current-units per contact, leak through tau_m). 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. A sugar pulse raises MN9 and leaves DNp01 at rest. An LPLC2 pulse raises DNp01 and leaves MN9 at rest. The same pulses on a shuffled graph drive both readouts. Those hertz values track the injected pulse. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. Direct sugar→MN9 edges are absent; the path is the 39 bridges. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table.
 
 A capped two-hop neighborhood of LPLC2 (917 cells under an 8,000-cell cap; hop 1 is already larger than the cap) reached saturate_frac 0.425 and max_hz 425. Hop 1 already hits the 8,000 cap, so 917 cells is a budgeted probe, not the true 2-hop map. That probe was aborted. It is not the circuit graph. Notes on why LPLC2 fans out, and why voltage-jump PSPs seize, are in [docs/dynamics.md](docs/dynamics.md).
@@ -77,6 +87,7 @@ MaleCNS feathers, then the slice checks:
 | `logs/planes_gate.json` | Experiment 2 lock |
 | `logs/planes_head.json` | Pointer: one seed, n_eval=10 |
 | `logs/planes_mix.json` | Mix-depth × shuffle-seed table |
+| `logs/planes_labels.json` | Hanging / check-escape / teacher families |
 | `config/planes_split.json` | Train/eval FEN split |
 | `logs/malecns_identity.json` | 475-cell identity |
 | `logs/malecns_circuit.json` | 475-cell paint check |

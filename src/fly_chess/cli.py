@@ -68,6 +68,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("diagnose-planes", help="real vs shuffled readout diagnostics on the fixture")
     tr = sub.add_parser("train-planes", help="train linear head on locked FEN split; write acc table")
     sub.add_parser("mix-sweep", help="mix-depth × shuffle-seed table; not Gate 2")
+    sub.add_parser("labels-sweep", help="hanging / check-escape / teacher labels; encoder frozen")
     tr.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
@@ -137,6 +138,12 @@ def main(argv: list[str] | None = None) -> int:
         from fly_chess.mix_sweep import write_mix_sweep
 
         payload = write_mix_sweep()
+        print(json.dumps(payload, indent=2))
+        return 0
+    if args.cmd == "labels-sweep":
+        from fly_chess.labels_sweep import write_labels_sweep
+
+        payload = write_labels_sweep()
         print(json.dumps(payload, indent=2))
         return 0
     if args.cmd == "lock":

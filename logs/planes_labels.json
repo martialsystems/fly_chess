@@ -1,0 +1,468 @@
+{
+  "experiment": "planes_labels",
+  "graph": "fixture, not MaleCNS v1.0",
+  "encoding": "12 reserved pools, one cell per square per piece type; STM, castling, EP-file are their own cells",
+  "encoder_frozen": true,
+  "linear_head": "4096-way from-to, train_step unchanged",
+  "factored_head": "64 from-logits + 64 to-logits",
+  "mix_depths": [
+    0,
+    1,
+    3
+  ],
+  "shuffle_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "epochs": 8,
+  "lr": 0.08,
+  "n_hanging": 165,
+  "n_check_escape": 109,
+  "n_teacher": 274,
+  "rows": [
+    {
+      "mix_plies": 0,
+      "readout": "reserved_pools",
+      "synapses_used": false,
+      "families": {
+        "hanging": {
+          "n_train": 112,
+          "linear": {
+            "n_eval": 53,
+            "real_acc": 0.16981132075471697,
+            "real_mean_target_rank": 6.452830188679245,
+            "shuffle_acc_mean": 0.16981132075471697,
+            "shuffle_mean_target_rank_mean": 6.452830188679245,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.16981132075471697,
+              0.16981132075471697,
+              0.16981132075471697,
+              0.16981132075471697,
+              0.16981132075471697
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 53,
+            "real_acc": 0.8867924528301887,
+            "real_mean_target_rank": 1.3396226415094339,
+            "shuffle_acc_mean": 0.8867924528301888,
+            "shuffle_mean_target_rank_mean": 1.3396226415094339,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.8867924528301887,
+              0.8867924528301887,
+              0.8867924528301887,
+              0.8867924528301887,
+              0.8867924528301887
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          }
+        },
+        "check_escape": {
+          "n_train": 74,
+          "linear": {
+            "n_eval": 35,
+            "real_acc": 0.34285714285714286,
+            "real_mean_target_rank": 2.5142857142857142,
+            "shuffle_acc_mean": 0.34285714285714286,
+            "shuffle_mean_target_rank_mean": 2.5142857142857142,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.34285714285714286,
+              0.34285714285714286,
+              0.34285714285714286,
+              0.34285714285714286,
+              0.34285714285714286
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          },
+          "factored": {
+            "n_eval": 35,
+            "real_acc": 0.7714285714285715,
+            "real_mean_target_rank": 1.2285714285714286,
+            "shuffle_acc_mean": 0.7714285714285715,
+            "shuffle_mean_target_rank_mean": 1.2285714285714286,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.7714285714285715,
+              0.7714285714285715,
+              0.7714285714285715,
+              0.7714285714285715,
+              0.7714285714285715
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          }
+        },
+        "teacher": {
+          "n_train": 186,
+          "linear": {
+            "n_eval": 88,
+            "real_acc": 0.23863636363636365,
+            "real_mean_target_rank": 5.386363636363637,
+            "shuffle_acc_mean": 0.23863636363636367,
+            "shuffle_mean_target_rank_mean": 5.386363636363637,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.23863636363636365,
+              0.23863636363636365,
+              0.23863636363636365,
+              0.23863636363636365,
+              0.23863636363636365
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 88,
+            "real_acc": 0.6931818181818182,
+            "real_mean_target_rank": 1.75,
+            "shuffle_acc_mean": 0.6931818181818182,
+            "shuffle_mean_target_rank_mean": 1.75,
+            "delta_acc_mean": 0.0,
+            "delta_acc_lo": 0.0,
+            "delta_acc_hi": 0.0,
+            "delta_rank_mean": 0.0,
+            "shuffle_acc": [
+              0.6931818181818182,
+              0.6931818181818182,
+              0.6931818181818182,
+              0.6931818181818182,
+              0.6931818181818182
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          }
+        }
+      }
+    },
+    {
+      "mix_plies": 1,
+      "readout": "hidden_mix",
+      "synapses_used": true,
+      "families": {
+        "hanging": {
+          "n_train": 112,
+          "linear": {
+            "n_eval": 53,
+            "real_acc": 0.1509433962264151,
+            "real_mean_target_rank": 3.981132075471698,
+            "shuffle_acc_mean": 0.1471698113207547,
+            "shuffle_mean_target_rank_mean": 4.392452830188679,
+            "delta_acc_mean": 0.0037735849056603765,
+            "delta_acc_lo": -0.0036226415094339597,
+            "delta_acc_hi": 0.011169811320754713,
+            "delta_rank_mean": -0.41132075471698143,
+            "shuffle_acc": [
+              0.1509433962264151,
+              0.1509433962264151,
+              0.1509433962264151,
+              0.1320754716981132,
+              0.1509433962264151
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 53,
+            "real_acc": 0.20754716981132076,
+            "real_mean_target_rank": 3.5660377358490565,
+            "shuffle_acc_mean": 0.2037735849056604,
+            "shuffle_mean_target_rank_mean": 3.6301886792452835,
+            "delta_acc_mean": 0.003773584905660388,
+            "delta_acc_lo": -0.03571145919619125,
+            "delta_acc_hi": 0.04325862900751203,
+            "delta_rank_mean": -0.06415094339622654,
+            "shuffle_acc": [
+              0.16981132075471697,
+              0.22641509433962265,
+              0.2641509433962264,
+              0.1509433962264151,
+              0.20754716981132076
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          }
+        },
+        "check_escape": {
+          "n_train": 74,
+          "linear": {
+            "n_eval": 35,
+            "real_acc": 0.8857142857142857,
+            "real_mean_target_rank": 4.6,
+            "shuffle_acc_mean": 0.8571428571428571,
+            "shuffle_mean_target_rank_mean": 4.588571428571429,
+            "delta_acc_mean": 0.02857142857142856,
+            "delta_acc_lo": 0.010862673674485665,
+            "delta_acc_hi": 0.046280183468371455,
+            "delta_rank_mean": 0.011428571428571389,
+            "shuffle_acc": [
+              0.8571428571428571,
+              0.8571428571428571,
+              0.8571428571428571,
+              0.8285714285714286,
+              0.8857142857142857
+            ],
+            "interval_excludes_zero": true,
+            "delta_positive": true,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          },
+          "factored": {
+            "n_eval": 35,
+            "real_acc": 0.7142857142857143,
+            "real_mean_target_rank": 1.3428571428571427,
+            "shuffle_acc_mean": 0.7085714285714285,
+            "shuffle_mean_target_rank_mean": 1.3657142857142857,
+            "delta_acc_mean": 0.005714285714285716,
+            "delta_acc_lo": -0.005485714285714287,
+            "delta_acc_hi": 0.01691428571428572,
+            "delta_rank_mean": -0.02285714285714291,
+            "shuffle_acc": [
+              0.7142857142857143,
+              0.7142857142857143,
+              0.7142857142857143,
+              0.6857142857142857,
+              0.7142857142857143
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          }
+        },
+        "teacher": {
+          "n_train": 186,
+          "linear": {
+            "n_eval": 88,
+            "real_acc": 0.4090909090909091,
+            "real_mean_target_rank": 4.2272727272727275,
+            "shuffle_acc_mean": 0.4022727272727272,
+            "shuffle_mean_target_rank_mean": 4.488636363636363,
+            "delta_acc_mean": 0.006818181818181834,
+            "delta_acc_lo": -0.008287916780597178,
+            "delta_acc_hi": 0.021924280416960845,
+            "delta_rank_mean": -0.26136363636363613,
+            "shuffle_acc": [
+              0.4090909090909091,
+              0.42045454545454547,
+              0.3977272727272727,
+              0.375,
+              0.4090909090909091
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 88,
+            "real_acc": 0.26136363636363635,
+            "real_mean_target_rank": 2.9886363636363638,
+            "shuffle_acc_mean": 0.2727272727272727,
+            "shuffle_mean_target_rank_mean": 2.981818181818182,
+            "delta_acc_mean": -0.011363636363636364,
+            "delta_acc_lo": -0.04206447222056458,
+            "delta_acc_hi": 0.01933719949329185,
+            "delta_rank_mean": 0.006818181818181923,
+            "shuffle_acc": [
+              0.23863636363636365,
+              0.2727272727272727,
+              0.25,
+              0.32954545454545453,
+              0.2727272727272727
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          }
+        }
+      }
+    },
+    {
+      "mix_plies": 3,
+      "readout": "hidden_mix",
+      "synapses_used": true,
+      "families": {
+        "hanging": {
+          "n_train": 112,
+          "linear": {
+            "n_eval": 53,
+            "real_acc": 0.1509433962264151,
+            "real_mean_target_rank": 5.132075471698113,
+            "shuffle_acc_mean": 0.13962264150943396,
+            "shuffle_mean_target_rank_mean": 5.860377358490565,
+            "delta_acc_mean": 0.01132075471698113,
+            "delta_acc_lo": -0.0034716981132075463,
+            "delta_acc_hi": 0.026113207547169805,
+            "delta_rank_mean": -0.7283018867924531,
+            "shuffle_acc": [
+              0.1509433962264151,
+              0.1509433962264151,
+              0.1509433962264151,
+              0.1320754716981132,
+              0.11320754716981132
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 53,
+            "real_acc": 0.1509433962264151,
+            "real_mean_target_rank": 3.2452830188679247,
+            "shuffle_acc_mean": 0.3169811320754717,
+            "shuffle_mean_target_rank_mean": 3.7132075471698114,
+            "delta_acc_mean": -0.1660377358490566,
+            "delta_acc_lo": -0.21754649249675637,
+            "delta_acc_hi": -0.11452897920135682,
+            "delta_rank_mean": -0.4679245283018867,
+            "shuffle_acc": [
+              0.3018867924528302,
+              0.41509433962264153,
+              0.32075471698113206,
+              0.2641509433962264,
+              0.2830188679245283
+            ],
+            "interval_excludes_zero": true,
+            "delta_positive": false
+          }
+        },
+        "check_escape": {
+          "n_train": 74,
+          "linear": {
+            "n_eval": 35,
+            "real_acc": 0.7142857142857143,
+            "real_mean_target_rank": 4.542857142857143,
+            "shuffle_acc_mean": 0.7714285714285716,
+            "shuffle_mean_target_rank_mean": 4.468571428571428,
+            "delta_acc_mean": -0.05714285714285716,
+            "delta_acc_lo": -0.09256036693674302,
+            "delta_acc_hi": -0.021725347348971302,
+            "delta_rank_mean": 0.0742857142857142,
+            "shuffle_acc": [
+              0.8285714285714286,
+              0.7428571428571429,
+              0.8,
+              0.7428571428571429,
+              0.7428571428571429
+            ],
+            "interval_excludes_zero": true,
+            "delta_positive": false,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          },
+          "factored": {
+            "n_eval": 35,
+            "real_acc": 0.6857142857142857,
+            "real_mean_target_rank": 1.5142857142857142,
+            "shuffle_acc_mean": 0.6799999999999999,
+            "shuffle_mean_target_rank_mean": 1.7142857142857142,
+            "delta_acc_mean": 0.005714285714285739,
+            "delta_acc_lo": -0.10258456007827106,
+            "delta_acc_hi": 0.11401313150684254,
+            "delta_rank_mean": -0.2000000000000001,
+            "shuffle_acc": [
+              0.8571428571428571,
+              0.5142857142857142,
+              0.7142857142857143,
+              0.6571428571428571,
+              0.6571428571428571
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false,
+            "real_flee_ok": 1.0,
+            "shuffle_flee_ok_mean": 1.0
+          }
+        },
+        "teacher": {
+          "n_train": 186,
+          "linear": {
+            "n_eval": 88,
+            "real_acc": 0.3409090909090909,
+            "real_mean_target_rank": 5.261363636363637,
+            "shuffle_acc_mean": 0.3568181818181818,
+            "shuffle_mean_target_rank_mean": 5.3545454545454545,
+            "delta_acc_mean": -0.01590909090909093,
+            "delta_acc_lo": -0.05012510378596019,
+            "delta_acc_hi": 0.018306921967778333,
+            "delta_rank_mean": -0.09318181818181781,
+            "shuffle_acc": [
+              0.42045454545454547,
+              0.36363636363636365,
+              0.3409090909090909,
+              0.3409090909090909,
+              0.3181818181818182
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          },
+          "factored": {
+            "n_eval": 88,
+            "real_acc": 0.4318181818181818,
+            "real_mean_target_rank": 2.477272727272727,
+            "shuffle_acc_mean": 0.40227272727272734,
+            "shuffle_mean_target_rank_mean": 3.2568181818181814,
+            "delta_acc_mean": 0.029545454545454552,
+            "delta_acc_lo": -0.04486012375781935,
+            "delta_acc_hi": 0.10395103284872846,
+            "delta_rank_mean": -0.7795454545454547,
+            "shuffle_acc": [
+              0.5454545454545454,
+              0.32954545454545453,
+              0.36363636363636365,
+              0.36363636363636365,
+              0.4090909090909091
+            ],
+            "interval_excludes_zero": false,
+            "delta_positive": false
+          }
+        }
+      }
+    }
+  ],
+  "pass_fail": {
+    "teacher_linear_high_at_mix0": false,
+    "teacher_factored_high_at_mix0": true,
+    "teacher_collapses_after_mix_both_arms": false,
+    "teacher_holds_at_mix3_delta_excludes_zero": false,
+    "verdict": "this graph-plus-mix is not a linear chess encoder; it is a typed occupancy register plus a geometry change",
+    "note": "Factored teacher is 0.69 at mix 0 and 0.26 on both arms at mix 1. Mix 3 teacher delta includes 0. Check-escape flee_ok is 1.0 on both arms at every depth (few legal moves). Hanging factored 0.89 at mix 0 is occupancy."
+  },
+  "pre_register": {
+    "teacher_high_at_0": "occupancy still readable",
+    "teacher_collapses_at_1_and_3_both_arms": "mix erases the board facts; more FENs will not help; read out at 0 plys or stop mixing",
+    "teacher_holds_at_3_delta_gt_0": "wiring is carrying a small chess dictionary",
+    "hanging_vs_check_escape": "whether hanging dominance was the whole 0.79 occupancy read"
+  },
+  "caption": "Labels are hanging capture, check-escape, and a deterministic teacher of those two facts. No engine.",
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "ethology_rerun": false,
+  "planes_head_untouched": true,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk."
+}
