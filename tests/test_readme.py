@@ -43,10 +43,15 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert "Mix 0 (occupancy)" in labels_fn
     assert "check_escape" not in labels_fn
     assert 'mix_plies"] == 3' not in labels_fn
+    assert "_label_bars" in labels_fn
+    assert "_acc_label" in labels_fn
     games_fn = fig_src.split("def fig_games")[1].split("def main")[0]
     assert "n={n}" in games_fn
     assert "not restamped" in games_fn
+    assert "_label_bars" in games_fn
     assert "def _score_label" in fig_src
+    assert "def _acc_label" in fig_src
+    assert "def _label_bars" in fig_src
     assert "hanging n_eval=53" in text
     assert "teacher n_eval=88" in text
     assert "n_eval=62, five seeds" in text

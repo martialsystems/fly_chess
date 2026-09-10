@@ -34,6 +34,28 @@ def _style(ax) -> None:
     ax.tick_params(labelsize=9)
 
 
+def _acc_label(value: float) -> str:
+    return f"{value:.3f}"
+
+
+def _score_label(value: float) -> str:
+    if abs(value - 0.5) < 1e-12:
+        return "0.50"
+    return f"{value:.4f}"
+
+
+def _label_bars(ax, bars, values, fmt, dy: float) -> None:
+    for bar, val in zip(bars, values):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            bar.get_height() + dy,
+            fmt(val),
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
+
+
 def fig_labels() -> None:
     """Factored hanging and teacher. Mix 0 register vs mix 1 collapse. No mix 3."""
     raw = _load("planes_labels.json")
@@ -51,15 +73,21 @@ def fig_labels() -> None:
     n_teach = teach0["n_eval"]
     x = np.arange(2, dtype=float)
     w = 0.24
-    fig, ax = plt.subplots(figsize=(6.4, 3.6), dpi=160)
-    ax.bar(x - w, [hang0["real_acc"], teach0["real_acc"]], w, label="Mix 0 (occupancy)", color=OCC)
-    ax.bar(x, [hang1["real_acc"], teach1["real_acc"]], w, label="Mix 1 real", color=REAL)
-    ax.bar(x + w, [hang1["shuffle_acc_mean"], teach1["shuffle_acc_mean"]], w, label="Mix 1 shuffle", color=SHUFFLE)
+    occ = [hang0["real_acc"], teach0["real_acc"]]
+    m1_real = [hang1["real_acc"], teach1["real_acc"]]
+    m1_sh = [hang1["shuffle_acc_mean"], teach1["shuffle_acc_mean"]]
+    fig, ax = plt.subplots(figsize=(6.8, 3.8), dpi=160)
+    b0 = ax.bar(x - w, occ, w, label="Mix 0 (occupancy)", color=OCC)
+    b1 = ax.bar(x, m1_real, w, label="Mix 1 real", color=REAL)
+    b2 = ax.bar(x + w, m1_sh, w, label="Mix 1 shuffle", color=SHUFFLE)
+    _label_bars(ax, b0, occ, _acc_label, 0.02)
+    _label_bars(ax, b1, m1_real, _acc_label, 0.02)
+    _label_bars(ax, b2, m1_sh, _acc_label, 0.02)
     ax.set_xticks(x, [f"Hanging\n(n={n_hang})", f"Teacher\n(n={n_teach})"])
     ax.set_ylabel("Held-out accuracy (factored head)")
     ax.set_ylim(0, 1.05)
     ax.set_title("Occupancy is readable; one mix ply deletes the labels")
-    ax.legend(frameon=False, fontsize=8)
+    ax.legend(frameon=False, fontsize=8, loc="upper right")
     _style(ax)
     fig.tight_layout()
     fig.savefig(DOCS / "fig_labels.png")
@@ -121,12 +149,6 @@ def fig_cosine() -> None:
     plt.close(fig)
 
 
-def _score_label(value: float) -> str:
-    if abs(value - 0.5) < 1e-12:
-        return "0.50"
-    return f"{value:.4f}"
-
-
 def fig_games() -> None:
     eth = _load("ethology_gate.json")
     planes = _load("planes_gate.json")
@@ -142,15 +164,8 @@ def fig_games() -> None:
     ax.axhline(0.5, color=ZERO, linewidth=1.0, linestyle="--", label="Chance vs random")
     bars_real = ax.bar(x - w / 2, real, w, label="Real wiring", color=REAL)
     bars_shuf = ax.bar(x + w / 2, shuf, w, label="Shuffled wiring", color=SHUFFLE)
-    for bar, val in zip(list(bars_real) + list(bars_shuf), real + shuf):
-        ax.text(
-            bar.get_x() + bar.get_width() / 2.0,
-            bar.get_height() + 0.06,
-            _score_label(val),
-            ha="center",
-            va="bottom",
-            fontsize=8,
-        )
+    _label_bars(ax, bars_real, real, _score_label, 0.06)
+    _label_bars(ax, bars_shuf, shuf, _score_label, 0.06)
     ax.set_xticks(x, labels)
     ax.set_ylabel("Score vs random legal")
     ax.set_ylim(0, 1.05)
