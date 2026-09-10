@@ -125,3 +125,5 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | `description.txt` | GitHub hook |
 
 Sequel work needs a new question. Code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).
+
+[Fly research index](https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178)

@@ -21,6 +21,7 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     labels = json.loads((REPO / "logs" / "planes_labels.json").read_text(encoding="utf-8"))
     mix = json.loads((REPO / "logs" / "planes_mix.json").read_text(encoding="utf-8"))
     assert text.lower().startswith("# fly_chess\n\nclosed")
+    assert "[Fly research index](https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178)" in text
     assert "docs/planes_note.md" in text
     assert "Reserved pools reconstruct occupancy" in text
     assert "One mix ply removes those labels" in text
