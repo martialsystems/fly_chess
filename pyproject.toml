@@ -18,6 +18,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]
 malecns = ["pandas>=2.0", "pyarrow>=14"]
+figures = ["matplotlib>=3.8"]
 
 [project.scripts]
 fly-chess = "fly_chess.cli:main"

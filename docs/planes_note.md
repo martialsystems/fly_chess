@@ -41,11 +41,13 @@ Two interfaces share the importer, the LIF kernel (`config/lif.json`), the legal
 
 ## 3. Results
 
-Caption:
+Caption (figures on the README: `docs/fig_labels.png`, `docs/fig_delta.png`, `docs/fig_cosine.png`):
 
 1. Reserved pools reconstruct occupancy; a factored from-to head reads a hanging/teacher label from that register.
 2. One mix ply removes those labels on real and shuffled wiring.
 3. Hidden geometry differs after three plys; the labeled move does not.
+
+Rebuild figures from locks: `.venv/bin/python -m pip install -e ".[figures]"` then `.venv/bin/python scripts/make_readme_figures.py`.
 
 **Mix-depth table** (`logs/planes_mix.json`), pooled hanging-heavy catalog, 130 train / 62 eval, five seeds. 4096-way head unless noted.
 

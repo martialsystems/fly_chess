@@ -6,11 +6,25 @@ Closed. A shuffle-controlled measurement on a fly-shaped LIF graph, not a chess 
 
 **Answer.** No. Mix 0 is a typed occupancy register (factored head reads hanging / teacher). Mix ≥ 1 erases those labels on both arms. At mix 3, teacher Δ includes 0. Cosine still splits real from shuffle. The wires do something; they do not do this.
 
-Write-up: [docs/planes_note.md](docs/planes_note.md). Three sentences:
+Write-up: [docs/planes_note.md](docs/planes_note.md). Three sentences. The plots are the argument.
 
 1. Reserved pools reconstruct occupancy; a factored from-to head reads a hanging/teacher label from that register.
+
+![Occupancy then collapse](docs/fig_labels.png)
+
+`logs/planes_labels.json`, hanging n_eval=53, teacher n_eval=88, five seeds.
+
 2. One mix ply removes those labels on real and shuffled wiring.
+
+![Shuffle-controlled delta](docs/fig_delta.png)
+
+`logs/planes_mix.json`, n_eval=62, five seeds. Caption: wiring does not make the labeled move linearly easier.
+
 3. Hidden geometry differs after three plys; the labeled move does not.
+
+![Geometry contrast](docs/fig_cosine.png)
+
+`logs/planes_mix.json`, n_eval=62, five seeds.
 
 Do not start another linear head on this object. Occupancy is readable before a ply. One mix ply deletes the labels. More FENs will not restore that code.
 
@@ -39,6 +53,10 @@ Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a on
 
 **Ethology and Gate 2 (historical game locks, n=40, random legal opponent):**
 
+![Historical game locks, not restamped](docs/fig_games.png)
+
+`logs/ethology_gate.json` and `logs/planes_gate.json`, n=40. Historical. Not restamped. Chance line is score vs random, not Elo.
+
 | Interface | Score | Shuffled |
 |-----------|------:|---------:|
 | Ethology | 0.4875 | 0.4875 |
@@ -54,6 +72,8 @@ Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a on
 /opt/homebrew/bin/python3.12 -m venv .venv
 .venv/bin/python -m pip install -e ".[dev]"
 .venv/bin/python -m pytest
+.venv/bin/python -m pip install -e ".[figures]"
+.venv/bin/python scripts/make_readme_figures.py
 ```
 
 Optional: rerun the closed planes tables (does not change ethology or Gate 2):
@@ -79,6 +99,11 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | Path | Role |
 |------|------|
 | `docs/planes_note.md` | Methods + negative-result note |
+| `docs/fig_labels.png` | Occupancy then collapse |
+| `docs/fig_delta.png` | Shuffle-controlled delta |
+| `docs/fig_cosine.png` | Knight vs empty cosine |
+| `docs/fig_games.png` | Historical game locks |
+| `scripts/make_readme_figures.py` | Rebuild figures from lock JSON |
 | `docs/dynamics.md` | MaleCNS kernel and 2-hop abort |
 | `logs/planes_labels.json` | Label-family mix table |
 | `logs/planes_mix.json` | Mix-depth × five seeds |

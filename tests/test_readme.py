@@ -25,6 +25,17 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert "Reserved pools reconstruct occupancy" in text
     assert "One mix ply removes those labels" in text
     assert "the labeled move does not" in text
+    for name in ("fig_labels.png", "fig_delta.png", "fig_cosine.png"):
+        path = REPO / "docs" / name
+        assert path.is_file()
+        assert path.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
+        assert f"docs/{name}" in text
+    assert "hanging n_eval=53" in text
+    assert "teacher n_eval=88" in text
+    assert "n_eval=62, five seeds" in text
+    assert "fig_games.png" in text
+    assert "Historical" in text
+    assert "not restamped" in text.lower() or "Not restamped" in text
     assert "typed occupancy register" in text
     assert "The 475-cell MaleCNS identity/circuit work is a different object" in text
     assert "The 475-cell MaleCNS identity/circuit work is a different object" in note
