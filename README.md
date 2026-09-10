@@ -10,7 +10,7 @@ Write-up: [docs/planes_note.md](docs/planes_note.md). Three sentences. The plots
 
 1. Reserved pools reconstruct occupancy; a factored from-to head reads a hanging/teacher label from that register.
 
-![Occupancy then collapse](docs/fig_labels.png)
+![Occupancy is readable; one mix ply deletes the labels](docs/fig_labels.png)
 
 `logs/planes_labels.json`, hanging n_eval=53, teacher n_eval=88, five seeds.
 
@@ -53,7 +53,7 @@ Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a on
 
 **Ethology and Gate 2 (historical game locks, n=40, random legal opponent):**
 
-![Historical game locks, not restamped](docs/fig_games.png)
+![Historical game locks, n=40, not restamped](docs/fig_games.png)
 
 `logs/ethology_gate.json` and `logs/planes_gate.json`, n=40. Historical. Not restamped. Chance line is score vs random, not Elo.
 
@@ -99,10 +99,10 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | Path | Role |
 |------|------|
 | `docs/planes_note.md` | Methods + negative-result note |
-| `docs/fig_labels.png` | Occupancy then collapse |
+| `docs/fig_labels.png` | Occupancy mix 0 vs mix 1 |
 | `docs/fig_delta.png` | Shuffle-controlled delta |
 | `docs/fig_cosine.png` | Knight vs empty cosine |
-| `docs/fig_games.png` | Historical game locks |
+| `docs/fig_games.png` | Historical game locks, n=40 |
 | `scripts/make_readme_figures.py` | Rebuild figures from lock JSON |
 | `docs/dynamics.md` | MaleCNS kernel and 2-hop abort |
 | `logs/planes_labels.json` | Label-family mix table |

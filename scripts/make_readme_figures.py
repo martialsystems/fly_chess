@@ -12,12 +12,15 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+plt.rcParams["axes.unicode_minus"] = False
+
 REPO = Path(__file__).resolve().parents[1]
 DOCS = REPO / "docs"
 LOGS = REPO / "logs"
 
 REAL = "#1f4e79"
 SHUFFLE = "#c47b2b"
+OCC = "#2e7d32"
 ZERO = "#444444"
 
 
@@ -32,39 +35,35 @@ def _style(ax) -> None:
 
 
 def fig_labels() -> None:
-    """Factored hanging and teacher only. Mix 0 register; mix 1 collapse."""
+    """Factored hanging and teacher. Mix 0 register vs mix 1 collapse. No mix 3."""
     raw = _load("planes_labels.json")
-    mixes = [0, 1, 3]
-    hanging_real, hanging_sh, teacher_real, teacher_sh = [], [], [], []
-    n_hang = n_teach = None
-    for mix in mixes:
-        row = next(r for r in raw["rows"] if r["mix_plies"] == mix)
-        h = row["families"]["hanging"]["factored"]
-        t = row["families"]["teacher"]["factored"]
-        hanging_real.append(h["real_acc"])
-        hanging_sh.append(h["shuffle_acc_mean"])
-        teacher_real.append(t["real_acc"])
-        teacher_sh.append(t["shuffle_acc_mean"])
-        n_hang = h["n_eval"]
-        n_teach = t["n_eval"]
-    x = np.arange(len(mixes), dtype=float)
-    w = 0.18
+    row0 = next(r for r in raw["rows"] if r["mix_plies"] == 0)
+    row1 = next(r for r in raw["rows"] if r["mix_plies"] == 1)
+    hang0 = row0["families"]["hanging"]["factored"]
+    teach0 = row0["families"]["teacher"]["factored"]
+    hang1 = row1["families"]["hanging"]["factored"]
+    teach1 = row1["families"]["teacher"]["factored"]
+    if abs(hang0["real_acc"] - hang0["shuffle_acc_mean"]) > 1e-12:
+        raise SystemExit("mix 0 hanging real != shuffle; occupancy bar would hide an arm")
+    if abs(teach0["real_acc"] - teach0["shuffle_acc_mean"]) > 1e-12:
+        raise SystemExit("mix 0 teacher real != shuffle; occupancy bar would hide an arm")
+    n_hang = hang0["n_eval"]
+    n_teach = teach0["n_eval"]
+    x = np.arange(2, dtype=float)
+    w = 0.24
     fig, ax = plt.subplots(figsize=(6.4, 3.6), dpi=160)
-    ax.bar(x - 1.5 * w, hanging_real, w, label="Hanging real", color=REAL)
-    ax.bar(x - 0.5 * w, hanging_sh, w, label="Hanging shuffle", color=SHUFFLE)
-    ax.bar(x + 0.5 * w, teacher_real, w, label="Teacher real", color=REAL, alpha=0.45)
-    ax.bar(x + 1.5 * w, teacher_sh, w, label="Teacher shuffle", color=SHUFFLE, alpha=0.45)
-    ax.set_xticks(x, ["0 (register)", "1", "3"])
-    ax.set_ylabel("Factored accuracy")
+    ax.bar(x - w, [hang0["real_acc"], teach0["real_acc"]], w, label="Mix 0 (occupancy)", color=OCC)
+    ax.bar(x, [hang1["real_acc"], teach1["real_acc"]], w, label="Mix 1 real", color=REAL)
+    ax.bar(x + w, [hang1["shuffle_acc_mean"], teach1["shuffle_acc_mean"]], w, label="Mix 1 shuffle", color=SHUFFLE)
+    ax.set_xticks(x, [f"Hanging\n(n={n_hang})", f"Teacher\n(n={n_teach})"])
+    ax.set_ylabel("Held-out accuracy (factored head)")
     ax.set_ylim(0, 1.05)
-    ax.set_xlabel("Mix plys")
-    ax.set_title("Occupancy then collapse")
-    ax.legend(frameon=False, fontsize=8, ncol=2)
+    ax.set_title("Occupancy is readable; one mix ply deletes the labels")
+    ax.legend(frameon=False, fontsize=8)
     _style(ax)
     fig.tight_layout()
     fig.savefig(DOCS / "fig_labels.png")
     plt.close(fig)
-    _ = (n_hang, n_teach)
 
 
 def fig_delta() -> None:
@@ -76,24 +75,24 @@ def fig_delta() -> None:
         lo.append(row["delta_acc_lo"])
         hi.append(row["delta_acc_hi"])
     yerr = np.vstack([np.array(mean) - np.array(lo), np.array(hi) - np.array(mean)])
-    fig, ax = plt.subplots(figsize=(6.4, 3.6), dpi=160)
-    ax.axhline(0.0, color=ZERO, linewidth=1.0, linestyle="--")
+    fig, ax = plt.subplots(figsize=(6.8, 3.8), dpi=160)
+    ax.axhline(0.0, color="#888888", linewidth=1.0)
     ax.errorbar(
         xs,
         mean,
         yerr=yerr,
-        fmt="o",
+        fmt="o-",
         color=REAL,
-        capsize=4,
-        markersize=7,
-        label="Linear head Δ (real minus shuffle)",
+        capsize=5,
+        markersize=8,
+        linewidth=1.6,
+        ecolor=REAL,
     )
     ax.set_xticks([0, 1, 3])
     ax.set_xlabel("Mix plys")
-    ax.set_ylabel("Delta accuracy")
-    ax.set_ylim(-0.08, 0.08)
-    ax.set_title("Shuffle-controlled delta\nWiring does not make the labeled move linearly easier")
-    ax.legend(frameon=False, fontsize=8, loc="upper right")
+    ax.set_ylabel("Delta acc (real minus shuffle mean)")
+    ax.set_ylim(-0.04, 0.04)
+    ax.set_title("Wiring does not make the labeled move linearly easier")
     _style(ax)
     fig.tight_layout()
     fig.savefig(DOCS / "fig_delta.png")
@@ -122,22 +121,40 @@ def fig_cosine() -> None:
     plt.close(fig)
 
 
+def _score_label(value: float) -> str:
+    if abs(value - 0.5) < 1e-12:
+        return "0.50"
+    return f"{value:.4f}"
+
+
 def fig_games() -> None:
     eth = _load("ethology_gate.json")
     planes = _load("planes_gate.json")
-    labels = ["Ethology", "Planes Gate 2"]
+    n = eth["n_games"]
+    if planes["n_games"] != n or planes["real"]["gate2"]["n_games"] != n:
+        raise SystemExit("ethology and Gate 2 n_games disagree")
+    labels = [f"Ethology\n(n={n})", f"Planes Gate 2\n(n={n})"]
     real = [eth["real"]["score"], planes["real"]["gate2"]["score"]]
     shuf = [eth["shuffled"]["score"], planes["shuffled"]["gate2"]["score"]]
     x = np.arange(2, dtype=float)
     w = 0.32
-    fig, ax = plt.subplots(figsize=(5.2, 3.2), dpi=160)
+    fig, ax = plt.subplots(figsize=(5.6, 3.4), dpi=160)
     ax.axhline(0.5, color=ZERO, linewidth=1.0, linestyle="--", label="Chance vs random")
-    ax.bar(x - w / 2, real, w, label="Real wiring", color=REAL)
-    ax.bar(x + w / 2, shuf, w, label="Shuffled wiring", color=SHUFFLE)
+    bars_real = ax.bar(x - w / 2, real, w, label="Real wiring", color=REAL)
+    bars_shuf = ax.bar(x + w / 2, shuf, w, label="Shuffled wiring", color=SHUFFLE)
+    for bar, val in zip(list(bars_real) + list(bars_shuf), real + shuf):
+        ax.text(
+            bar.get_x() + bar.get_width() / 2.0,
+            bar.get_height() + 0.06,
+            _score_label(val),
+            ha="center",
+            va="bottom",
+            fontsize=8,
+        )
     ax.set_xticks(x, labels)
     ax.set_ylabel("Score vs random legal")
     ax.set_ylim(0, 1.05)
-    ax.set_title("Historical game locks (not restamped)")
+    ax.set_title(f"Historical game locks (n={n}, not restamped)")
     ax.legend(frameon=False, fontsize=8)
     _style(ax)
     fig.tight_layout()

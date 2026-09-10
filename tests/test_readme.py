@@ -30,6 +30,23 @@ def test_readme_is_closed_and_quotes_locks() -> None:
         assert path.is_file()
         assert path.read_bytes()[:8] == b"\x89PNG\r\n\x1a\n"
         assert f"docs/{name}" in text
+    fig_src = (REPO / "scripts" / "make_readme_figures.py").read_text(encoding="utf-8")
+    delta_fn = fig_src.split("def fig_delta")[1].split("def fig_cosine")[0]
+    assert 'fmt="o-"' in delta_fn
+    assert "set_ylim(-0.04, 0.04)" in delta_fn
+    assert "Wiring does not make the labeled move linearly easier" in delta_fn
+    assert "Shuffle-controlled delta" not in delta_fn
+    assert "legend" not in delta_fn
+    assert "axes.unicode_minus" in fig_src
+    labels_fn = fig_src.split("def fig_labels")[1].split("def fig_delta")[0]
+    assert "Occupancy is readable; one mix ply deletes the labels" in labels_fn
+    assert "Mix 0 (occupancy)" in labels_fn
+    assert "check_escape" not in labels_fn
+    assert 'mix_plies"] == 3' not in labels_fn
+    games_fn = fig_src.split("def fig_games")[1].split("def main")[0]
+    assert "n={n}" in games_fn
+    assert "not restamped" in games_fn
+    assert "def _score_label" in fig_src
     assert "hanging n_eval=53" in text
     assert "teacher n_eval=88" in text
     assert "n_eval=62, five seeds" in text
