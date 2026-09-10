@@ -24,15 +24,17 @@ On the fixture, 40 games each color against a uniform random legal mover, time c
 
 The two arms of the ethology hanging-piece count are not the same test set (774 vs 668 chances). Check-escape is 1.0 on both wirings when the paint marks check and the mask keeps king-safe moves; those runs saw 41 vs 31 check positions.
 
-Held-out linear head on the typed plane encoder (`logs/planes_head.json`), 30 train FENs and 10 eval FENs, same degree-and-sign shuffle:
+`logs/planes_head.json` is a pointer, not a lock: one shuffle seed, n_eval=10, eight epochs, lr 0.08. Accuracy 0.5 vs 0.7 is two puzzles. Mean target rank 3.9 vs 1.9 is the stronger row. Piece identity 1.0 on both arms only proves the injection. Hidden cosine 0 vs 0.71 is the first synapse-using contrast.
 
-| Arm | Accuracy | Mean target rank |
-|-----|--------:|-----------------:|
-| Real wiring | 0.5 | 3.9 |
-| Shuffled wiring | 0.7 | 1.9 |
-| Delta (real minus shuffled) | -0.2 |  |
+Mix-depth × five shuffle seeds on the same LinearHead (`logs/planes_mix.json`), 130 train FENs and 62 eval FENs, no FEN overlap. Caption: Wiring changes the hidden geometry; it has not made the labeled move the top linear class.
 
-Piece type is recoverable from the 12 plane pools (identity 1.0 on both arms). Hidden-vector cosine for knight vs empty is 0 on real wiring and 0.71 after shuffle. The linear head does not beat shuffle on these 10 held-out FENs. That delta is the Gate 1 figure. Gate 2 n=40 was not rerun.
+| Mix plys | Real acc / rank | Shuffle acc / rank | Δ acc (mean, 95% interval) |
+|----------|----------------:|-------------------:|---------------------------:|
+| 0 (reserved pools) | 0.226 / 6.39 | 0.226 / 6.39 | 0.00 [0.00, 0.00] |
+| 1 | 0.177 / 3.98 | 0.174 / 4.34 | 0.003 [-0.003, 0.010] |
+| 3 | 0.177 / 4.76 | 0.174 / 5.47 | 0.003 [-0.018, 0.024] |
+
+Δ is ~0 at 0 plys (synapses unused). It stays flat at 1 and 3 plys (interval includes 0). Knight-vs-empty hidden cosine at 3 plys is 0 real vs 0.34 shuffle. A factored 64+64 head reads occupancy at 0.79 acc with Δ 0; after mix it does not beat shuffle either. Ethology 0.4875 / 0.4875 and Gate 2 n=40 stay the old objects. Gate 2 was not restamped onto this encoder.
 
 On the 475-cell MaleCNS slice, synapses are current-based (`malecns_current` in `config/lif.json`: 8.0 current-units per contact, leak through tau_m). 8.0 current-units is a grid pick because 4.0 was silent, not a fly biophysics constant. A sugar pulse raises MN9 and leaves DNp01 at rest. An LPLC2 pulse raises DNp01 and leaves MN9 at rest. The same pulses on a shuffled graph drive both readouts. Those hertz values track the injected pulse. 12.5 Hz and 37.5 Hz are injected-pulse responses on an intact path, and MN9 is a two-cell mean. Direct sugar→MN9 edges are absent; the path is the 39 bridges. Required-role signs all +1 is the 475-cell mix, not a whole-brain transmitter table.
 
@@ -73,7 +75,8 @@ MaleCNS feathers, then the slice checks:
 | `data/fixtures/graph.json` | 290-cell fixture |
 | `logs/ethology_gate.json` | Experiment 1 lock |
 | `logs/planes_gate.json` | Experiment 2 lock |
-| `logs/planes_head.json` | Held-out real_acc, shuffle_acc, delta |
+| `logs/planes_head.json` | Pointer: one seed, n_eval=10 |
+| `logs/planes_mix.json` | Mix-depth × shuffle-seed table |
 | `config/planes_split.json` | Train/eval FEN split |
 | `logs/malecns_identity.json` | 475-cell identity |
 | `logs/malecns_circuit.json` | 475-cell paint check |

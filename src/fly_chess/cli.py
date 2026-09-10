@@ -67,6 +67,7 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("lock", help="write logs/ethology_gate.json and logs/planes_gate.json at locked n")
     sub.add_parser("diagnose-planes", help="real vs shuffled readout diagnostics on the fixture")
     tr = sub.add_parser("train-planes", help="train linear head on locked FEN split; write acc table")
+    sub.add_parser("mix-sweep", help="mix-depth × shuffle-seed table; not Gate 2")
     tr.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
@@ -130,6 +131,12 @@ def main(argv: list[str] | None = None) -> int:
         from fly_chess.train_planes import write_train
 
         payload = write_train()
+        print(json.dumps(payload, indent=2))
+        return 0
+    if args.cmd == "mix-sweep":
+        from fly_chess.mix_sweep import write_mix_sweep
+
+        payload = write_mix_sweep()
         print(json.dumps(payload, indent=2))
         return 0
     if args.cmd == "lock":

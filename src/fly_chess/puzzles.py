@@ -67,6 +67,112 @@ DONT_HANG_QUEEN = [
 ]
 
 
+def _gen_hanging() -> list[tuple[str, str, str]]:
+    """Queen takes an undefended black piece. Unique FEN per target square."""
+    rows: list[tuple[str, str, str]] = []
+    victims = (chess.KNIGHT, chess.BISHOP, chess.ROOK)
+    for qf in range(8):
+        qsq = chess.square(qf, 0)
+        if qsq == chess.E1:
+            continue
+        for vf in range(8):
+            for vr in (3, 4, 5, 6):
+                vsq = chess.square(vf, vr)
+                if vsq in (qsq, chess.E1, chess.E8):
+                    continue
+                for ptype in victims:
+                    board = chess.Board()
+                    board.clear()
+                    board.set_piece_at(chess.E1, chess.Piece.from_symbol("K"))
+                    board.set_piece_at(chess.E8, chess.Piece.from_symbol("k"))
+                    board.set_piece_at(qsq, chess.Piece.from_symbol("Q"))
+                    board.set_piece_at(vsq, chess.Piece(ptype, chess.BLACK))
+                    board.turn = chess.WHITE
+                    move = chess.Move(qsq, vsq)
+                    if move not in board.legal_moves or not board.is_capture(move):
+                        continue
+                    if board.attackers(chess.BLACK, vsq):
+                        continue
+                    rows.append((board.fen(), move.uci(), "hanging"))
+    return rows
+
+
+def _gen_mates() -> list[tuple[str, str, str]]:
+    rows: list[tuple[str, str, str]] = []
+    for rf in range(8):
+        if rf == 6:
+            continue
+        rook = chess.square(rf, 0)
+        board = chess.Board("6k1/5ppp/8/8/8/8/5PPP/6K1 w - - 0 1")
+        board.set_piece_at(rook, chess.Piece.from_symbol("R"))
+        move = chess.Move(rook, chess.square(rf, 7))
+        if move in board.legal_moves:
+            b2 = board.copy()
+            b2.push(move)
+            if b2.is_checkmate():
+                rows.append((board.fen(), move.uci(), "mate"))
+    for qf, kf, bkf in ((4, 5, 5), (3, 4, 4), (5, 6, 6), (2, 3, 3), (4, 6, 7), (3, 5, 7)):
+        qsq = chess.square(qf, 6)
+        ksq = chess.square(kf, 5)
+        bksq = chess.square(bkf, 7)
+        if len({qsq, ksq, bksq}) < 3:
+            continue
+        board = chess.Board()
+        board.clear()
+        board.set_piece_at(ksq, chess.Piece.from_symbol("K"))
+        board.set_piece_at(bksq, chess.Piece.from_symbol("k"))
+        board.set_piece_at(qsq, chess.Piece.from_symbol("Q"))
+        board.turn = chess.WHITE
+        for to in board.attacks(qsq):
+            move = chess.Move(qsq, to)
+            if move not in board.legal_moves:
+                continue
+            b2 = board.copy()
+            b2.push(move)
+            if b2.is_checkmate():
+                rows.append((board.fen(), move.uci(), "mate"))
+                break
+    return rows
+
+
+def _gen_escapes() -> list[tuple[str, str, str]]:
+    rows: list[tuple[str, str, str]] = []
+    for rf in range(8):
+        if rf == 4:
+            continue
+        rook = chess.square(rf, 1)
+        board = chess.Board()
+        board.clear()
+        board.set_piece_at(chess.E1, chess.Piece.from_symbol("K"))
+        board.set_piece_at(chess.E8, chess.Piece.from_symbol("k"))
+        board.set_piece_at(rook, chess.Piece.from_symbol("r"))
+        board.turn = chess.WHITE
+        if not board.is_check():
+            continue
+        for mv in board.legal_moves:
+            b2 = board.copy()
+            b2.push(mv)
+            if not b2.is_check():
+                rows.append((board.fen(), mv.uci(), "check_escape"))
+                break
+    for file_ in range(8):
+        pawn_from = chess.square(file_, 3)
+        pawn_to = chess.square(file_, 4)
+        if file_ == 4:
+            continue
+        board = chess.Board()
+        board.clear()
+        board.set_piece_at(chess.E1, chess.Piece.from_symbol("K"))
+        board.set_piece_at(chess.E8, chess.Piece.from_symbol("k"))
+        board.set_piece_at(pawn_from, chess.Piece.from_symbol("P"))
+        board.set_piece_at(chess.square(file_, 4), chess.Piece.from_symbol("n"))
+        board.turn = chess.WHITE
+        move = chess.Move(pawn_from, chess.square(file_, 4))
+        if move in board.legal_moves and board.is_capture(move):
+            rows.append((board.fen(), move.uci(), "recapture"))
+    return rows
+
+
 def _all_raw() -> list[tuple[str, str, str]]:
     rows: list[tuple[str, str, str]] = []
     for fen, uci in HANGING:
@@ -81,6 +187,9 @@ def _all_raw() -> list[tuple[str, str, str]]:
         rows.append((fen, uci, "fork"))
     for fen, uci in DONT_HANG_QUEEN:
         rows.append((fen, uci, "hanging"))
+    rows.extend(_gen_hanging())
+    rows.extend(_gen_mates())
+    rows.extend(_gen_escapes())
     return rows
 
 

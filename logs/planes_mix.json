@@ -1,0 +1,173 @@
+{
+  "experiment": "planes_mix",
+  "graph": "fixture, not MaleCNS v1.0",
+  "encoding": "12 reserved pools, one cell per square per piece type; STM, castling, EP-file are their own cells",
+  "n_train": 130,
+  "n_eval": 62,
+  "epochs": 8,
+  "lr": 0.08,
+  "linear_head": "4096-way from-to, train_step unchanged",
+  "factored_head": "64 from-logits + 64 to-logits, legal mask on the pair",
+  "mix_depths": [
+    0,
+    1,
+    3
+  ],
+  "shuffle_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "rows": [
+    {
+      "mix_plies": 0,
+      "readout": "reserved_pools",
+      "synapses_used": false,
+      "real_acc": 0.22580645161290322,
+      "real_mean_target_rank": 6.387096774193548,
+      "shuffle_acc_mean": 0.2258064516129032,
+      "shuffle_mean_target_rank_mean": 6.387096774193548,
+      "delta_acc_mean": 0.0,
+      "delta_acc_lo": 0.0,
+      "delta_acc_hi": 0.0,
+      "delta_rank_mean": 0.0,
+      "shuffle_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "shuffle_acc": [
+        0.22580645161290322,
+        0.22580645161290322,
+        0.22580645161290322,
+        0.22580645161290322,
+        0.22580645161290322
+      ],
+      "shuffle_mean_target_rank": [
+        6.387096774193548,
+        6.387096774193548,
+        6.387096774193548,
+        6.387096774193548,
+        6.387096774193548
+      ],
+      "cosine_knight_vs_empty_real": 0.8237544710479138,
+      "cosine_knight_vs_empty_shuffle_mean": 0.8237544710479139,
+      "factored": {
+        "real_acc": 0.7903225806451613,
+        "real_mean_target_rank": 1.8870967741935485,
+        "shuffle_acc_mean": 0.7903225806451613,
+        "shuffle_mean_target_rank_mean": 1.8870967741935485,
+        "delta_acc_mean": 0.0,
+        "delta_acc_lo": 0.0,
+        "delta_acc_hi": 0.0
+      }
+    },
+    {
+      "mix_plies": 1,
+      "readout": "hidden_mix",
+      "synapses_used": true,
+      "real_acc": 0.1774193548387097,
+      "real_mean_target_rank": 3.9838709677419355,
+      "shuffle_acc_mean": 0.17419354838709675,
+      "shuffle_mean_target_rank_mean": 4.338709677419355,
+      "delta_acc_mean": 0.003225806451612906,
+      "delta_acc_lo": -0.0030967741935483887,
+      "delta_acc_hi": 0.0095483870967742,
+      "delta_rank_mean": -0.3548387096774192,
+      "shuffle_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "shuffle_acc": [
+        0.1774193548387097,
+        0.1774193548387097,
+        0.1774193548387097,
+        0.16129032258064516,
+        0.1774193548387097
+      ],
+      "shuffle_mean_target_rank": [
+        3.9838709677419355,
+        4.064516129032258,
+        5.419354838709677,
+        4.032258064516129,
+        4.193548387096774
+      ],
+      "cosine_knight_vs_empty_real": 0.0,
+      "cosine_knight_vs_empty_shuffle_mean": 0.0,
+      "factored": {
+        "real_acc": 0.1774193548387097,
+        "real_mean_target_rank": 3.9516129032258065,
+        "shuffle_acc_mean": 0.2,
+        "shuffle_mean_target_rank_mean": 4.016129032258064,
+        "delta_acc_mean": -0.022580645161290314,
+        "delta_acc_lo": -0.038700126204261054,
+        "delta_acc_hi": -0.006461164118319578
+      }
+    },
+    {
+      "mix_plies": 3,
+      "readout": "hidden_mix",
+      "synapses_used": true,
+      "real_acc": 0.1774193548387097,
+      "real_mean_target_rank": 4.758064516129032,
+      "shuffle_acc_mean": 0.17419354838709675,
+      "shuffle_mean_target_rank_mean": 5.467741935483872,
+      "delta_acc_mean": 0.003225806451612906,
+      "delta_acc_lo": -0.017743821255150265,
+      "delta_acc_hi": 0.024195434158376074,
+      "delta_rank_mean": -0.709677419354839,
+      "shuffle_seeds": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "shuffle_acc": [
+        0.1774193548387097,
+        0.20967741935483872,
+        0.1774193548387097,
+        0.16129032258064516,
+        0.14516129032258066
+      ],
+      "shuffle_mean_target_rank": [
+        6.451612903225806,
+        6.016129032258065,
+        5.354838709677419,
+        4.806451612903226,
+        4.709677419354839
+      ],
+      "cosine_knight_vs_empty_real": 0.0,
+      "cosine_knight_vs_empty_shuffle_mean": 0.3414213562373095,
+      "factored": {
+        "real_acc": 0.25806451612903225,
+        "real_mean_target_rank": 3.596774193548387,
+        "shuffle_acc_mean": 0.3064516129032258,
+        "shuffle_mean_target_rank_mean": 4.264516129032258,
+        "delta_acc_mean": -0.04838709677419355,
+        "delta_acc_lo": -0.09736159586171958,
+        "delta_acc_hi": 0.0005874023133324927
+      }
+    }
+  ],
+  "caption": "Wiring changes the hidden geometry; it has not made the labeled move the top linear class.",
+  "pre_register": {
+    "delta_near_zero_at_0_ply": "connectome unused; occupancy code only",
+    "delta_negative_as_mix_increases": "connectome destroys the linear occupancy code",
+    "delta_flat": "curriculum is the bottleneck",
+    "delta_positive_at_1_dies_at_3": "mix depth is the knob, not pool count"
+  },
+  "games": 0,
+  "elo": null,
+  "gate2_quoted": false,
+  "ethology_rerun": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "note": "Wiring changes the hidden geometry; it has not made the labeled move the top linear class."
+}

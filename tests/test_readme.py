@@ -38,7 +38,9 @@ def test_readme_is_a_methods_page_with_locked_numbers() -> None:
     assert "logs/malecns_identity.json" in text
     assert "logs/malecns_circuit.json" in text
     assert "logs/planes_head.json" in text
+    assert "logs/planes_mix.json" in text
     assert "0.7" in text
+    assert "Wiring changes the hidden geometry" in text
     assert "logs/malecns_hop_probe.json" in text
     assert "docs/dynamics.md" in text
     assert circuit["games"] == 0

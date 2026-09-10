@@ -21,5 +21,6 @@ logs/*.json
 !logs/fixture_circuit.json
 !logs/planes_head.json
 !logs/planes_diagnose.json
+!logs/planes_mix.json
 logs/planes_head.npz
 .DS_Store

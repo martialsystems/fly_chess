@@ -95,3 +95,66 @@ class LinearHead:
     def load(cls, path: Path) -> "LinearHead":
         blob = np.load(path)
         return cls(w=np.asarray(blob["w"], dtype=np.float64), b=np.asarray(blob["b"], dtype=np.float64))
+
+
+@dataclass
+class FactoredHead:
+    """64 from-logits plus 64 to-logits. Legal mask on the pair. Not a bigger W."""
+
+    w_from: np.ndarray
+    w_to: np.ndarray
+    b_from: np.ndarray
+    b_to: np.ndarray
+
+    @classmethod
+    def zeros(cls, n_feat: int) -> "FactoredHead":
+        rng = np.random.default_rng(0)
+        return cls(
+            w_from=rng.normal(0.0, 0.01, size=(64, n_feat)),
+            w_to=rng.normal(0.0, 0.01, size=(64, n_feat)),
+            b_from=np.zeros(64, dtype=np.float64),
+            b_to=np.zeros(64, dtype=np.float64),
+        )
+
+    def score(self, feat: np.ndarray, move: chess.Move) -> float:
+        lf = self.w_from @ feat + self.b_from
+        lt = self.w_to @ feat + self.b_to
+        return float(lf[move.from_square] + lt[move.to_square])
+
+    def pick(self, board: chess.Board, feat: np.ndarray) -> chess.Move:
+        legal = legal_moves(board)
+        scored = [(self.score(feat, m), m) for m in legal]
+        return never_null(max(scored, key=lambda t: t[0])[1], legal)
+
+    def train_step(
+        self,
+        feat: np.ndarray,
+        target: chess.Move,
+        board: chess.Board,
+        *,
+        lr: float = 0.05,
+    ) -> None:
+        legal = legal_moves(board)
+        scores = np.array([self.score(feat, m) for m in legal], dtype=np.float64)
+        scores = scores - np.max(scores)
+        p = np.exp(scores)
+        p = p / np.sum(p)
+        g_from = np.zeros(64, dtype=np.float64)
+        g_to = np.zeros(64, dtype=np.float64)
+        for prob, m in zip(p.tolist(), legal):
+            g_from[m.from_square] += prob
+            g_to[m.to_square] += prob
+        g_from[target.from_square] -= 1.0
+        g_to[target.to_square] -= 1.0
+        self.w_from -= lr * np.outer(g_from, feat)
+        self.w_to -= lr * np.outer(g_to, feat)
+        self.b_from -= lr * g_from
+        self.b_to -= lr * g_to
+
+    def rank(self, board: chess.Board, feat: np.ndarray, target: chess.Move) -> int:
+        legal = legal_moves(board)
+        scored = sorted(legal, key=lambda m: self.score(feat, m), reverse=True)
+        try:
+            return scored.index(target) + 1
+        except ValueError:
+            return len(scored) + 1
