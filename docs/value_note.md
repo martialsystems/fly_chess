@@ -9,6 +9,7 @@ Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 oc
 - 2026-09-12: first write-up. New object: child-position value. Planes hanging/teacher policy stays closed.
 - 2026-09-12: public methods PDF `docs/method_note.pdf` pinned on the README.
 - 2026-09-12: lock table. A 0.91 vs random n=200. B-real 0.4825. B-shuffle 0.5665. wiring_helped false.
+- 2026-09-12: mix-0 self-play. 0.6075 vs random n=200. 0.25 vs A. Graph frozen.
 
 ## Abstract
 
@@ -51,6 +52,15 @@ Copied from `logs/value_lock.json`. Catalog: 4,096 train / 1,024 eval positions,
 A Pearson vs hand eval is 0.9997. Mix-1 real hidden rates are silent (`train_rate_max` 0). Shuffle spikes a few cells. Games delta real minus shuffle -0.084 [-0.110, -0.058]. `wiring_helped` false. `unfreeze_allowed` false.
 
 C, two-layer MLP: real pairwise 0.00685, shuffle 0.260. Pairwise delta -0.253 [-0.266, -0.239]. The interval excludes 0 and the sign is negative. The mix-1 value line stops. The player is the mix-0 ranker.
+
+**Mix-0 self-play** (`logs/value_selfplay.json`). 400 games from the frozen A ranker, half vs random, half vs itself. 22,003 train / 5,365 eval positions, hold out by game. +1 / 0 / -1 for White plus 0.05 tanh(hand_eval/10) on truncation. 155 mates, 245 truncations. Held-out Pearson 0.786.
+
+| Player | vs random n=200 | vs A n=200 |
+|--------|----------------:|-----------:|
+| A hand-eval mix-0 | 0.91 [0.870, 0.950] | same player |
+| Self-play mix-0 | 0.6075 [0.540, 0.675] | 0.25 [0.190, 0.310] |
+
+Self-play beats random. It does not beat A. Outcome labels are weaker than dense child hand-eval for this occupancy ranker.
 
 ## 4. Files
 

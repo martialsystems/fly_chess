@@ -198,6 +198,8 @@ def build() -> Path:
     labels = _json("planes_labels.json")
     mix = _json("planes_mix.json")
     value = _json("value_lock.json")
+    selfplay_path = LOGS / "value_selfplay.json"
+    selfplay = json.loads(selfplay_path.read_text(encoding="utf-8")) if selfplay_path.is_file() else None
     hang = labels["rows"][0]["families"]["hanging"]["factored"]
     teach = labels["rows"][0]["families"]["teacher"]["factored"]
     hang1 = labels["rows"][1]["families"]["hanging"]["factored"]
@@ -233,6 +235,14 @@ def build() -> Path:
             "2026-09-12: child-value table locked. A 0.91 vs random (n=200). "
             "B-real 0.4825, B-shuffle 0.5665. wiring_helped false. Mix-1 real "
             "hidden rates silent.",
+            styles["rev"],
+        )
+    )
+    story.append(
+        _p(
+            "2026-09-12: mix-0 self-play value. Outcome +1 / 0 / -1 plus a "
+            "small material term. 0.6075 vs random n=200. Loses to the "
+            "hand-eval mix-0 ranker (0.25 head-to-head).",
             styles["rev"],
         )
     )
@@ -682,17 +692,67 @@ def build() -> Path:
             )
         )
 
+    if selfplay:
+        spr = selfplay["selfplay_vs_random"]
+        spa = selfplay["hand_eval_A_vs_random"]
+        vs = selfplay["selfplay_vs_A"]
+        story.append(_p("7b. Mix-0 self-play value (2026-09-12)", styles["h1"]))
+        story.append(
+            _p(
+                "After mix-1 stopped, training stayed on mix-0 occupancy. "
+                f"{selfplay['n_games_generated']} games generated with the frozen "
+                "hand-eval ranker (half vs random, half vs itself). Hold out by "
+                f"game. Train {selfplay['n_train_positions']:,} positions, eval "
+                f"{selfplay['n_eval_positions']:,}. Targets: +1 if White mates, "
+                "-1 if Black mates, 0 on draw, and 0.05 tanh(hand_eval/10) on "
+                f"truncation. Terminals: {selfplay['terminals']['mate']} mates, "
+                f"{selfplay['terminals']['trunc']} truncations. Held-out Pearson "
+                f"{selfplay['held_out']['pearson']:.3f}.",
+                styles["body"],
+            )
+        )
+        story.append(
+            _table(
+                [
+                    ["Player", "vs random n=200", "vs hand-eval A n=200"],
+                    [
+                        "Hand-eval mix-0 (A)",
+                        f"{spa['score']:.2f} [{spa['score_lo']:.3f}, {spa['score_hi']:.3f}]",
+                        "same player",
+                    ],
+                    [
+                        "Self-play mix-0",
+                        f"{spr['score']:.4f} [{spr['score_lo']:.3f}, {spr['score_hi']:.3f}]",
+                        f"{vs['score']:.2f} [{vs['score_lo']:.3f}, {vs['score_hi']:.3f}]",
+                    ],
+                ],
+                [2.0 * inch, 2.5 * inch, 2.0 * inch],
+                styles,
+            )
+        )
+        story.append(
+            _p(
+                "Self-play beats random (CI above 0.5) and loses to A. Outcome "
+                "labels are a weaker trainer than dense child hand-eval for this "
+                "1-ply occupancy ranker. Graph frozen. Mix-1 unfreeze still "
+                "closed. logs/value_selfplay.json.",
+                styles["cap"],
+            )
+        )
+
     story.append(_p("8. What holds (2026-09-12)", styles["h1"]))
     story.append(
         _p(
-            "The mix-0 occupancy ranker is the player. Mix-1 real hidden rates "
-            "do not spike, so linear and MLP value heads on those rates cannot "
-            "rank chess. Shuffle wiring produces a few hidden spikes and a "
-            "weak ranker that still loses to mix-0 by a wide margin. "
-            "wiring_helped is false. unfreeze_allowed is false. The mix-1 "
-            "value line stops. Cosine remains a geometry fact. Ethology 0.4875 "
-            "and Gate 2 n=40 stay historical. Do not drop a shuffle seed. Do "
-            "not grind hanging labels at mix 3.",
+            "The mix-0 occupancy ranker trained on child hand-eval is the player "
+            "(0.91 vs random). Mix-0 self-play outcome value beats random "
+            "(0.6075) and loses to that ranker (0.25 head-to-head). Mix-1 real "
+            "hidden rates do not spike, so linear and MLP value heads on those "
+            "rates cannot rank chess. Shuffle wiring produces a few hidden "
+            "spikes and a weak ranker that still loses to mix-0 by a wide "
+            "margin. wiring_helped is false. unfreeze_allowed is false. The "
+            "mix-1 value line stops. Cosine remains a geometry fact. Ethology "
+            "0.4875 and Gate 2 n=40 stay historical. Do not drop a shuffle "
+            "seed. Do not grind hanging labels at mix 3.",
             styles["body"],
         )
     )
@@ -717,7 +777,8 @@ def build() -> Path:
                 ["logs/planes_labels.json", "Label-family mix table"],
                 ["logs/planes_mix.json", "Mix-depth by five seeds"],
                 ["logs/ethology_gate.json", "Paint controller, n=40"],
-                ["logs/value_lock.json", "Child-value table"],
+                ["logs/value_lock.json", "Child-value table A/B/C"],
+                ["logs/value_selfplay.json", "Mix-0 self-play outcome value"],
                 ["config/value.json", "Split, freeze, shuffle seeds"],
                 ["src/fly_chess/train_value.py", "A, B, C"],
                 ["data/fixtures/graph.json", "1,007-cell fixture"],

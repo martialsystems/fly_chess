@@ -1,0 +1,68 @@
+{
+  "experiment": "mix0_selfplay_value",
+  "player": "mix0_child_ranker_selfplay",
+  "graph": "fixture, not MaleCNS v1.0",
+  "graph_frozen": true,
+  "synapses_trainable": false,
+  "synapses_used": false,
+  "mix_plies": 0,
+  "target": "white_centric_outcome_plus_material_truncation",
+  "material_coef": 0.05,
+  "n_games_generated": 400,
+  "n_train_positions": 22003,
+  "n_eval_positions": 5365,
+  "holdout": "game_id",
+  "terminals": {
+    "mate": 155,
+    "draw": 0,
+    "trunc": 245
+  },
+  "held_out": {
+    "mse": 0.12015458219658655,
+    "pearson": 0.7859586335836307,
+    "n_positions": 5365
+  },
+  "selfplay_vs_random": {
+    "n_games": 200,
+    "score": 0.6075,
+    "score_lo": 0.5398240991932874,
+    "score_hi": 0.6751759008067126,
+    "illegal": 0,
+    "ply": 14799,
+    "opponent": "random",
+    "elo": null
+  },
+  "hand_eval_A_vs_random": {
+    "n_games": 200,
+    "score": 0.91,
+    "score_lo": 0.8703372315640978,
+    "score_hi": 0.9496627684359022,
+    "illegal": 0,
+    "ply": 10858,
+    "opponent": "random",
+    "elo": null
+  },
+  "selfplay_vs_A": {
+    "n_games": 200,
+    "score": 0.25,
+    "score_lo": 0.18998750130181213,
+    "score_hi": 0.31001249869818787,
+    "illegal": 0,
+    "ply": 13900,
+    "opponent": "mix0_hand_eval",
+    "elo": null
+  },
+  "beats_random": true,
+  "A_beats_random": true,
+  "beats_A": false,
+  "wiring_helped": false,
+  "unfreeze_allowed": false,
+  "elo": null,
+  "gate2_quoted": false,
+  "ethology_rerun": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "tiny": false,
+  "claim": "Mix-0 self-play value on occupancy child scoring. Graph frozen. Mix-1 line closed.",
+  "note": "Targets are +1 checkmate, 0 draw, -1 loss for White, plus a small material term on truncation. Report vs random-legal and vs the frozen hand-eval mix-0 ranker.",
+  "fingerprint": "6c820116f437773e9d9b9a3fb2e46a6aeb0023af17acdf38bba21e9086235efb"
+}

@@ -28,6 +28,17 @@ Lock: `logs/value_lock.json`. Same eval set, games n=200 vs random legal, five s
 
 A beats random. Mix-1 real hidden rates are silent (0 Hz); shuffle spikes a few cells. `wiring_helped` false. Synapses stay frozen. MLP on the same rates matches the silent linear head (pairwise 0.00685); shuffle MLP 0.260. The mix-1 value line stops.
 
+Mix-0 self-play (outcome +1 / 0 / -1 plus a small material term on truncation), 400 games, hold out by game:
+
+| Player | vs random n=200 | vs A n=200 |
+|--------|----------------:|-----------:|
+| A hand-eval mix-0 | 0.91 [0.870, 0.950] | same player |
+| Self-play mix-0 | 0.6075 [0.540, 0.675] | 0.25 [0.190, 0.310] |
+
+Self-play beats random and loses to A. Lock: `logs/value_selfplay.json`. `.venv/bin/python -m fly_chess value --stage selfplay`
+
+
+
 ## Planes policy (closed)
 
 Closed. A shuffle-controlled measurement on a fly-shaped LIF graph, not a chess engine.

@@ -18,6 +18,14 @@
     "positions_per_game": 16,
     "seed": 0
   },
+  "selfplay": {
+    "n_games": 400,
+    "max_ply": 80,
+    "material_coef": 0.05,
+    "vs_random_frac": 0.5,
+    "games_n": 200,
+    "seed": 1
+  },
   "games_n": 200,
   "game_seed": 0,
   "graph_frozen": true,

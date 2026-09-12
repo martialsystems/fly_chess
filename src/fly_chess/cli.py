@@ -73,7 +73,7 @@ def main(argv: list[str] | None = None) -> int:
         "value",
         help="child-position value: mix-0 occupancy ranker, mix-1 shuffle probe, mix-1 MLP",
     )
-    val.add_argument("--stage", choices=["A", "B", "C", "all"], default="all")
+    val.add_argument("--stage", choices=["A", "B", "C", "all", "selfplay"], default="all")
     val.add_argument("--tiny", action="store_true")
     val.add_argument("--n", type=int, default=None, help="games vs random-legal")
     val.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
@@ -163,12 +163,22 @@ def main(argv: list[str] | None = None) -> int:
                 "MaleCNS is identity/circuit only. "
                 "Chess value stays on the 1,007-cell fixture."
             )
-        from fly_chess.train_value import write_value
+        if args.stage == "selfplay":
+            from fly_chess.selfplay_value import write_selfplay
 
-        payload = write_value(stage=args.stage, tiny=bool(args.tiny), n_play=args.n)
+            payload = write_selfplay(tiny=bool(args.tiny), n_play=args.n)
+        else:
+            from fly_chess.train_value import write_value
+
+            payload = write_value(stage=args.stage, tiny=bool(args.tiny), n_play=args.n)
         require_clean(payload.get("claim") or "", source="value-claim")
         print(json.dumps(payload, indent=2))
-        return 0 if payload.get("A", {}).get("games", {}).get("illegal", 0) == 0 else 2
+        illegal = 0
+        if args.stage == "selfplay":
+            illegal = int((payload.get("selfplay_vs_random") or {}).get("illegal") or 0)
+        else:
+            illegal = int((payload.get("A") or {}).get("games", {}).get("illegal") or 0)
+        return 0 if illegal == 0 else 2
     if args.cmd == "lock":
         p1, p2 = write_locked_gates()
         for path in (p1, p2):
