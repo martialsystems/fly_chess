@@ -69,6 +69,17 @@ def main(argv: list[str] | None = None) -> int:
     tr = sub.add_parser("train-planes", help="train linear head on locked FEN split; write acc table")
     sub.add_parser("mix-sweep", help="mix-depth × shuffle-seed table; not Gate 2")
     sub.add_parser("labels-sweep", help="hanging / check-escape / teacher labels; encoder frozen")
+    val = sub.add_parser(
+        "value",
+        help="child-position value: mix-0 occupancy ranker, mix-1 shuffle probe, mix-1 MLP",
+    )
+    val.add_argument("--stage", choices=["A", "B", "C", "all"], default="all")
+    val.add_argument("--tiny", action="store_true")
+    val.add_argument("--n", type=int, default=None, help="games vs random-legal")
+    val.add_argument("--source", choices=["fixture", "malecns"], default="fixture")
+    val.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
+    val.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
+    val.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--lichess", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--chesscom", action="store_true", help=argparse.SUPPRESS)
     tr.add_argument("--online", action="store_true", help=argparse.SUPPRESS)
@@ -146,6 +157,18 @@ def main(argv: list[str] | None = None) -> int:
         payload = write_labels_sweep()
         print(json.dumps(payload, indent=2))
         return 0
+    if args.cmd == "value":
+        if getattr(args, "source", "fixture") == "malecns":
+            raise SystemExit(
+                "MaleCNS is identity/circuit only. "
+                "Chess value stays on the 1,007-cell fixture."
+            )
+        from fly_chess.train_value import write_value
+
+        payload = write_value(stage=args.stage, tiny=bool(args.tiny), n_play=args.n)
+        require_clean(payload.get("claim") or "", source="value-claim")
+        print(json.dumps(payload, indent=2))
+        return 0 if payload.get("A", {}).get("games", {}).get("illegal", 0) == 0 else 2
     if args.cmd == "lock":
         p1, p2 = write_locked_gates()
         for path in (p1, p2):

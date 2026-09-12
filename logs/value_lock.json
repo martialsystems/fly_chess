@@ -1,0 +1,77 @@
+{
+  "experiment": "child_value",
+  "question": "On dense game positions, does a mix-0 occupancy value head that scores legal children beat random-legal, and do mix-1 hidden rates on real wiring beat a degree-and-sign shuffle at the same value task?",
+  "graph": "fixture, not MaleCNS v1.0",
+  "player": "mix0_child_ranker",
+  "science": "mix1_hidden_value_real_vs_shuffle",
+  "target": "white_centric_hand_eval_pawn_units",
+  "shuffle_seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "n_train": 4096,
+  "n_eval": 1024,
+  "games_n": 200,
+  "graph_frozen": true,
+  "synapses_trainable": false,
+  "elo": null,
+  "gate2_quoted": false,
+  "ethology_rerun": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "tiny": false,
+  "catalog": {
+    "source": "selfplay_games",
+    "holdout": "game_id",
+    "not_hanging_catalog": true,
+    "n_train": 4096,
+    "n_eval": 1024,
+    "n_train_games": 256,
+    "n_eval_games": 64,
+    "train_phases": {
+      "opening": 1068,
+      "middlegame": 1998,
+      "simple": 1030
+    },
+    "eval_phases": {
+      "opening": 277,
+      "middlegame": 517,
+      "simple": 230
+    },
+    "policies": [
+      "capture",
+      "material",
+      "random"
+    ]
+  },
+  "A": {
+    "arm": "A",
+    "mix_plies": 0,
+    "synapses_used": false,
+    "head": "linear_value",
+    "features": "occupancy_12x64_stm_castle_ep",
+    "held_out": {
+      "n_positions": 1024,
+      "mse": 0.026476588639968074,
+      "pearson": 0.9997353909304769,
+      "child_pairwise": 0.9590273723160676,
+      "best_child_match": 0.7984344422700587,
+      "n_ranked": 1022
+    },
+    "games": {
+      "n_games": 200,
+      "score": 0.91,
+      "score_lo": 0.8703372315640978,
+      "score_hi": 0.9496627684359022,
+      "illegal": 0,
+      "ply": 10858,
+      "opponent": "random",
+      "elo": null
+    },
+    "beats_random": true,
+    "weights": "logs/value_mix0.npz"
+  },
+  "fingerprint": "6c820116f437773e9d9b9a3fb2e46a6aeb0023af17acdf38bba21e9086235efb"
+}

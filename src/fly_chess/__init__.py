@@ -17,7 +17,12 @@ ALLOWED_ETHOLOGY = (
 ALLOWED_PLANES = (
     "Piece-plane encoding plus a trained legal-move readout, Gate {gate}, shuffled control."
 )
+ALLOWED_VALUE = (
+    "Child-position value ranker on mix-0 occupancy; "
+    "mix-1 hidden-rate probes vs shuffle."
+)
 BANNER = (
     "Approach/avoid controller: paint food and loom, read named DNs, legal mask.\n"
-    "Piece-plane encoding plus a trained legal-move readout. Graph frozen."
+    "Piece-plane encoding plus a trained legal-move readout. Graph frozen.\n"
+    "Child-position value ranker on mix-0 occupancy; mix-1 hidden-rate probes vs shuffle."
 )

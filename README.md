@@ -1,5 +1,27 @@
 # fly_chess
 
+**Methods note (2026-09-12):** [docs/method_note.pdf](docs/method_note.pdf)
+
+Two measurements on a fly-shaped LIF graph. Graph frozen. Legal mask. Shuffle stays.
+
+## Child-position value
+
+**Question:** On dense game positions, does a mix-0 occupancy value head that scores every legal child beat random-legal, and do mix-1 hidden rates on real wiring beat a degree-and-sign shuffle at that same value task?
+
+Mix-0 is the player: a linear evaluator on the 12×64 occupancy register plus side-to-move, castling, and en passant. At test it enumerates legal moves, scores the child, and picks the max. Call it a ranker.
+
+Mix-1 is the science: the same targets on the 64 HIDDEN-cell rates after one ply, real wiring versus five shuffle seeds. A two-layer MLP is the nonlinear probe.
+
+Write-up: [docs/value_note.md](docs/value_note.md). Planes hanging/teacher policy stays closed below. Ethology 0.4875 / 0.4875 and Gate 2 n=40 are not restamped.
+
+```bash
+.venv/bin/python -m fly_chess value
+```
+
+Lock: `logs/value_lock.json`. `wiring_helped` only if mix-1 real beats both mix-0 and shuffle on held-out value and on games n≥200. Synapses stay frozen until that is true.
+
+## Planes policy (closed)
+
 Closed. A shuffle-controlled measurement on a fly-shaped LIF graph, not a chess engine.
 
 **Question:** If this graph is run as LIF, the board is written into reserved channels, and a legal-move mask sits on the way out, does the wiring make the labeled move linearly easier than a degree-and-sign shuffle?
@@ -78,6 +100,7 @@ Factored occupancy read at mix 0 is 0.790, Δ 0. `logs/planes_head.json` is a on
 .venv/bin/python -m pytest
 .venv/bin/python -m pip install -e ".[figures]"
 .venv/bin/python scripts/make_readme_figures.py
+.venv/bin/python scripts/make_method_note.py
 ```
 
 Optional: rerun the closed planes tables (does not change ethology or Gate 2):
@@ -108,6 +131,8 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | `docs/fig_cosine.png` | Knight vs empty cosine |
 | `docs/fig_games.png` | Historical game locks, n=40 |
 | `scripts/make_readme_figures.py` | Rebuild figures from lock JSON |
+| `docs/method_note.pdf` | Methods note: closed policy line, child-value sequel |
+| `scripts/make_method_note.py` | Rebuild the methods PDF from lock JSON |
 | `docs/dynamics.md` | MaleCNS kernel and 2-hop abort |
 | `logs/planes_labels.json` | Label-family mix table |
 | `logs/planes_mix.json` | Mix-depth × five seeds |
@@ -122,8 +147,11 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 | `data/fixtures/graph.json` | Fixture graph |
 | `src/fly_chess/labels.py` | Teacher: hanging else escape else exclude |
 | `src/fly_chess/head.py` | LinearHead, FactoredHead |
+| `docs/value_note.md` | Child-position value methods |
+| `config/value.json` | Value split, freeze, shuffle seeds |
+| `src/fly_chess/train_value.py` | Mix-0 player, mix-1 probes |
 | `description.txt` | GitHub hook |
 
-Sequel work needs a new question. Code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).
+The child-position value sequel is `docs/value_note.md`. Do not grind hanging labels or drop the shuffle. Code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).
 
 [Fly research index](https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178)

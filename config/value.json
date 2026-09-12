@@ -1,0 +1,27 @@
+{
+  "question": "On dense game positions, does a mix-0 occupancy value head that scores legal children beat random-legal, and do mix-1 hidden rates on real wiring beat a degree-and-sign shuffle at the same value task?",
+  "player": "mix0_child_ranker",
+  "science": "mix1_hidden_value_real_vs_shuffle",
+  "target": "white_centric_hand_eval_pawn_units",
+  "shuffle_seeds": [1, 2, 3, 4, 5],
+  "mix0_plies": 0,
+  "mix1_plies": 1,
+  "mlp_hidden": 32,
+  "mlp_epochs": 40,
+  "mlp_lr": 0.02,
+  "mlp_batch": 64,
+  "ridge_l2": 0.01,
+  "catalog": {
+    "n_games": 320,
+    "holdout_frac": 0.2,
+    "max_ply": 64,
+    "positions_per_game": 16,
+    "seed": 0
+  },
+  "games_n": 200,
+  "game_seed": 0,
+  "graph_frozen": true,
+  "synapses_trainable": false,
+  "opponent": "random",
+  "note": "Mix-0 child scoring is a ranker on a fly-shaped occupancy layout. Mix-1 is the wiring probe. Ethology 0.4875 stays historical. Planes hanging/teacher policy stays closed."
+}

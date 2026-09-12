@@ -20,9 +20,28 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     hop = json.loads((REPO / "logs" / "malecns_hop_probe.json").read_text(encoding="utf-8"))
     labels = json.loads((REPO / "logs" / "planes_labels.json").read_text(encoding="utf-8"))
     mix = json.loads((REPO / "logs" / "planes_mix.json").read_text(encoding="utf-8"))
-    assert text.lower().startswith("# fly_chess\n\nclosed")
+    assert text.lower().startswith("# fly_chess\n\n**methods note (2026-09-12):**")
+    assert "](docs/method_note.pdf)" in text
+    pdf = REPO / "docs" / "method_note.pdf"
+    assert pdf.is_file()
+    assert pdf.read_bytes()[:5] == b"%PDF-"
+    assert "Two measurements" in text
+    assert "Child-position value" in text
+    assert "docs/value_note.md" in text
+    assert "mix-0 occupancy" in text.lower() or "Mix-0 is the player" in text
+    assert "wiring_helped" in text
+    closed = text.lower().split("planes policy")[1]
+    assert closed.strip().startswith("(closed)")
+    assert "Closed. A shuffle-controlled measurement" in text
     assert "[Fly research index](https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178)" in text
     assert "docs/planes_note.md" in text
+    assert "docs/value_note.md" in text
+    assert "logs/value_lock.json" in text
+    note_v = (REPO / "docs" / "value_note.md").read_text(encoding="utf-8")
+    assert "What it is not" not in note_v
+    assert "—" not in note_v
+    assert "child-position value" in note_v.lower()
+    assert "shuffle seeds {1,2,3,4,5}" in note_v or "{1,2,3,4,5}" in note_v
     assert "Reserved pools reconstruct occupancy" in text
     assert "One mix ply removes those labels" in text
     assert "the labeled move does not" in text

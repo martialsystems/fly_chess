@@ -1,1 +1,1 @@
-Closed measurement: fly-shaped LIF plus a legal-move mask. Wiring changes hidden geometry. It does not make a labeled move linearly easier than a shuffle.
+Fly-shaped LIF plus a legal-move mask. Mix-0 child-value ranker on occupancy; mix-1 hidden rates vs shuffle. Hanging/teacher policy is closed.

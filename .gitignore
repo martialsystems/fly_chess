@@ -23,5 +23,10 @@ logs/*.json
 !logs/planes_diagnose.json
 !logs/planes_mix.json
 !logs/planes_labels.json
+!logs/value_lock.json
 logs/planes_head.npz
+logs/value_mix0.npz
+logs/value_mix1_real.npz
+logs/value_mix1_mlp.npz
+logs/value_cache*.npz
 .DS_Store

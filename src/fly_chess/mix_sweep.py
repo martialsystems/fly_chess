@@ -8,12 +8,11 @@ import json
 import chess
 import numpy as np
 
-from fly_chess.fixture import CASTLE_TYPES
 from fly_chess.head import FactoredHead, LinearHead
 from fly_chess.lif import HZ_NOTE
 from fly_chess.paths import LOGS
 from fly_chess.planes import currents as plane_currents
-from fly_chess.planes import load_planes_cfg, plane_types, readout_vector
+from fly_chess.planes import hidden_ids, load_planes_cfg, occupancy_vector, readout_vector
 from fly_chess.puzzles import split_positions
 from fly_chess.session import Session, mix_rates, open_session
 
@@ -28,29 +27,10 @@ CAPTION = (
 )
 
 
-def _pool_ids(graph) -> list[int]:
-    cfg = load_planes_cfg()
-    types = plane_types(cfg)
-    index = {}
-    for n in graph.neurons:
-        index[(n.type, n.square)] = n.id
-    ids: list[int] = []
-    for typ in types:
-        for sq in range(64):
-            ids.append(index[(typ, sq)])
-    ids.append(index[("STM", None)])
-    for typ in CASTLE_TYPES:
-        ids.append(index[(typ, None)])
-    for f in range(8):
-        ids.append(index[("EP_FILE", f)])
-    return ids
-
-
 def feat_for_depth(session: Session, board: chess.Board, *, mix_plies: int) -> np.ndarray:
-    i_ext = plane_currents(board, session.graph, session.resolved)
     if mix_plies <= 0:
-        ids = _pool_ids(session.graph)
-        return i_ext[np.array(ids, dtype=np.int32)]
+        return occupancy_vector(board, session.graph, session.resolved)
+    i_ext = plane_currents(board, session.graph, session.resolved)
     hz = mix_rates(session, i_ext, n_plies=mix_plies)
     return readout_vector(hz, session.resolved)
 
@@ -60,8 +40,7 @@ def hidden_vec(session: Session, board: chess.Board, *, mix_plies: int) -> np.nd
         return feat_for_depth(session, board, mix_plies=0)
     i_ext = plane_currents(board, session.graph, session.resolved)
     hz = mix_rates(session, i_ext, n_plies=mix_plies)
-    ids = [n.id for n in session.graph.neurons if n.type == "HIDDEN"]
-    return hz[np.array(ids, dtype=np.int32)]
+    return hz[hidden_ids(session.graph)]
 
 
 def cosine(a: np.ndarray, b: np.ndarray) -> float:

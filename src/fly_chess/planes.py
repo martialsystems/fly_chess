@@ -9,6 +9,7 @@ from pathlib import Path
 import chess
 import numpy as np
 
+from fly_chess.fixture import CASTLE_TYPES
 from fly_chess.graph import Graph
 from fly_chess.paths import CONFIG, PLANES_MAP
 from fly_chess.resolve import Resolved
@@ -130,3 +131,41 @@ def plane_cell_rates(
         if n.type in types:
             out[types.index(n.type), int(n.square)] = hz[n.id]
     return out
+
+
+def occupancy_ids(graph: Graph, cfg: dict | None = None) -> np.ndarray:
+    """Reserved occupancy register: 12×64 planes, STM, castling, EP-file."""
+    cfg = cfg or load_planes_cfg()
+    types = plane_types(cfg)
+    index: dict[tuple[str, int | None], int] = {}
+    for n in graph.neurons:
+        index[(n.type, n.square)] = n.id
+    ids: list[int] = []
+    for typ in types:
+        for sq in range(64):
+            ids.append(index[(typ, sq)])
+    ids.append(index[("STM", None)])
+    for typ in CASTLE_TYPES:
+        ids.append(index[(typ, None)])
+    for f in range(8):
+        ids.append(index[("EP_FILE", f)])
+    return np.array(ids, dtype=np.int32)
+
+
+def occupancy_vector(
+    board: chess.Board,
+    graph: Graph,
+    resolved: Resolved,
+    cfg: dict | None = None,
+) -> np.ndarray:
+    """Mix-0 features: injection currents on the occupancy register. No LIF."""
+    cfg = cfg or load_planes_cfg()
+    i_ext = currents(board, graph, resolved, cfg)
+    return i_ext[occupancy_ids(graph, cfg)]
+
+
+def hidden_ids(graph: Graph) -> np.ndarray:
+    """HIDDEN cells in square order. Mix-1 value probe, not the occupancy register."""
+    cells = [(int(n.square) if n.square is not None else n.id, n.id) for n in graph.neurons if n.type == "HIDDEN"]
+    cells.sort()
+    return np.array([nid for _sq, nid in cells], dtype=np.int32)
