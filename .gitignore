@@ -25,9 +25,12 @@ logs/*.json
 !logs/planes_labels.json
 !logs/value_lock.json
 !logs/value_selfplay.json
+!logs/value_distill.json
 logs/planes_head.npz
 logs/value_mix0.npz
 logs/value_mix0_selfplay.npz
+logs/value_mix0_distill.npz
+logs/value_mix0_distill_outcome.npz
 logs/value_mix1_real.npz
 logs/value_mix1_mlp.npz
 logs/value_cache*.npz

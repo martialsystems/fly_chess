@@ -10,6 +10,7 @@ Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 oc
 - 2026-09-12: public methods PDF `docs/method_note.pdf` pinned on the README.
 - 2026-09-12: lock table. A 0.91 vs random n=200. B-real 0.4825. B-shuffle 0.5665. wiring_helped false.
 - 2026-09-12: mix-0 self-play. 0.6075 vs random n=200. 0.25 vs A. Graph frozen.
+- 2026-09-12: truncated-return self-play closed. Distill A-vs-A children with hand-eval: 0.905 vs random. 2-ply residual 0.83 vs random, 0 vs searched A.
 
 ## Abstract
 
@@ -61,6 +62,15 @@ C, two-layer MLP: real pairwise 0.00685, shuffle 0.260. Pairwise delta -0.253 [-
 | Self-play mix-0 | 0.6075 [0.540, 0.675] | 0.25 [0.190, 0.310] |
 
 Self-play beats random. It does not beat A. Outcome labels are weaker than dense child hand-eval for this occupancy ranker.
+
+**Mix-0 distill** (`logs/value_distill.json`). 200 A-vs-A games after a short random opening. Every legal child labeled with hand-eval, not an 80-ply truncated return. 8,681 train / 2,335 eval parents, 50,812 eval children, hold out by game. Pearson 0.989. `matches_A` true.
+
+| Player | vs random n=200 | vs 1-ply A | vs 2-ply search |
+|--------|----------------:|-----------:|----------------:|
+| Distill mix-0 | 0.905 [0.864, 0.946] | 0.50 | 0.50 |
+| Distill + 0.2 residual toward 2-ply | 0.83 [0.778, 0.882] | 0.25 | 0.00 |
+
+Distill matches A and beats truncated self-play (0.6075). A small 2-ply residual, added only after that match, still loses to searched A. `value --stage selfplay` exits.
 
 ## 4. Files
 

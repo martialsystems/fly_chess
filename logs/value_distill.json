@@ -1,0 +1,111 @@
+{
+  "experiment": "mix0_distill",
+  "generator": "A_vs_A_after_random_opening",
+  "child_label": "hand_eval",
+  "not_truncated_return": true,
+  "n_games": 200,
+  "n_train_parents": 8681,
+  "n_eval_parents": 2335,
+  "holdout": "game_id",
+  "held_out": {
+    "n_parents": 2335,
+    "n_children": 50812,
+    "mse": 1.5104341696992662,
+    "pearson": 0.9887107601070991
+  },
+  "matches_A": true,
+  "match_pearson_min": 0.98,
+  "distill_vs_random": {
+    "n_games": 200,
+    "score": 0.905,
+    "score_lo": 0.864362482851434,
+    "score_hi": 0.945637517148566,
+    "illegal": 0,
+    "ply": 11189,
+    "opponent": "random",
+    "elo": null
+  },
+  "A_vs_random": {
+    "n_games": 200,
+    "score": 0.97,
+    "score_lo": 0.946357817359643,
+    "score_hi": 0.993642182640357,
+    "illegal": 0,
+    "ply": 10164,
+    "opponent": "random",
+    "elo": null
+  },
+  "distill_vs_A": {
+    "n_games": 200,
+    "score": 0.5,
+    "score_lo": 0.4307035354437183,
+    "score_hi": 0.5692964645562817,
+    "illegal": 0,
+    "ply": 16000,
+    "opponent": "hand_eval_1ply",
+    "elo": null
+  },
+  "distill_vs_2ply_search": {
+    "n_games": 200,
+    "score": 0.5,
+    "score_lo": 0.4307035354437183,
+    "score_hi": 0.5692964645562817,
+    "illegal": 0,
+    "ply": 16000,
+    "opponent": "search_depth_1",
+    "elo": null
+  },
+  "outcome": {
+    "outcome_coef": 0.2,
+    "teacher": "hand_eval plus residual toward 2-ply search",
+    "held_out_vs_hand_eval": {
+      "n_parents": 2335,
+      "n_children": 50812,
+      "mse": 1.7481095797665431,
+      "pearson": 0.9869758661301495
+    },
+    "vs_random": {
+      "n_games": 200,
+      "score": 0.83,
+      "score_lo": 0.7779399500576497,
+      "score_hi": 0.8820600499423502,
+      "illegal": 0,
+      "ply": 11497,
+      "opponent": "random",
+      "elo": null
+    },
+    "vs_A": {
+      "n_games": 200,
+      "score": 0.25,
+      "score_lo": 0.18998750130181213,
+      "score_hi": 0.31001249869818787,
+      "illegal": 0,
+      "ply": 12100,
+      "opponent": "hand_eval_1ply",
+      "elo": null
+    },
+    "vs_2ply_search": {
+      "n_games": 200,
+      "score": 0.0,
+      "score_lo": 0.0,
+      "score_hi": 0.0,
+      "illegal": 0,
+      "ply": 11900,
+      "opponent": "search_depth_1",
+      "elo": null
+    },
+    "weights": "logs/value_mix0_distill_outcome.npz"
+  },
+  "graph_frozen": true,
+  "synapses_used": false,
+  "unfreeze_allowed": false,
+  "wiring_helped": false,
+  "elo": null,
+  "gate2_quoted": false,
+  "ethology_rerun": false,
+  "hz_note": "Named-cell Hz is the injected paint pulse on an intact path, not a firing-rate discovery. Contrast is shuffle crosstalk.",
+  "tiny": false,
+  "claim": "Mix-0 distillation: A-vs-A children labeled with hand-eval. Graph frozen. Truncated-return self-play is closed.",
+  "note": "Every legal child is labeled with A's hand-eval. A small 2-ply residual is added only after the distilled head matches A.",
+  "fingerprint": "6c820116f437773e9d9b9a3fb2e46a6aeb0023af17acdf38bba21e9086235efb"
+}

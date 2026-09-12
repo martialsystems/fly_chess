@@ -34,8 +34,11 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert "0.4825" in text
     assert "0.5665" in text
     assert "0.6075" in text
+    assert "0.905" in text
     assert "logs/value_selfplay.json" in text
-    assert "value --stage selfplay" in text
+    assert "logs/value_distill.json" in text
+    assert "value --stage distill" in text
+    assert "Truncated-return self-play is closed" in text
     val = json.loads((REPO / "logs" / "value_lock.json").read_text(encoding="utf-8"))
     assert f"{val['A']['games']['score']}" in text
     assert f"{val['B_real']['games']['score']}" in text

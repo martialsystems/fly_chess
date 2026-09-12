@@ -200,6 +200,8 @@ def build() -> Path:
     value = _json("value_lock.json")
     selfplay_path = LOGS / "value_selfplay.json"
     selfplay = json.loads(selfplay_path.read_text(encoding="utf-8")) if selfplay_path.is_file() else None
+    distill_path = LOGS / "value_distill.json"
+    distill = json.loads(distill_path.read_text(encoding="utf-8")) if distill_path.is_file() else None
     hang = labels["rows"][0]["families"]["hanging"]["factored"]
     teach = labels["rows"][0]["families"]["teacher"]["factored"]
     hang1 = labels["rows"][1]["families"]["hanging"]["factored"]
@@ -243,6 +245,14 @@ def build() -> Path:
             "2026-09-12: mix-0 self-play value. Outcome +1 / 0 / -1 plus a "
             "small material term. 0.6075 vs random n=200. Loses to the "
             "hand-eval mix-0 ranker (0.25 head-to-head).",
+            styles["rev"],
+        )
+    )
+    story.append(
+        _p(
+            "2026-09-12: truncated-return self-play closed. Distill A-vs-A "
+            "children with hand-eval: 0.905 vs random n=200, Pearson 0.989. "
+            "2-ply residual 0.83 vs random, 0 vs searched A.",
             styles["rev"],
         )
     )
@@ -740,12 +750,69 @@ def build() -> Path:
             )
         )
 
+    if distill:
+        dr = distill["distill_vs_random"]
+        oc = distill.get("outcome") or {}
+        story.append(_p("7c. Mix-0 distillation (2026-09-12)", styles["h1"]))
+        story.append(
+            _p(
+                "Truncated 80-ply returns were a weak label, not a missing RL "
+                f"trick. Distill generates A-vs-A after a short opening "
+                f"({distill['n_games']} games), labels every legal child with "
+                "hand-eval, and fits mix-0 occupancy. "
+                f"{distill['held_out']['n_children']:,} held-out children, "
+                f"Pearson {distill['held_out']['pearson']:.3f}. matches_A is "
+                f"{str(distill['matches_A']).lower()}.",
+                styles["body"],
+            )
+        )
+        out_rand = oc.get("vs_random") or {}
+        story.append(
+            _table(
+                [
+                    ["Player", "vs random n=200", "vs 1-ply A", "vs 2-ply search"],
+                    [
+                        "Distill mix-0",
+                        f"{dr['score']:.3f} [{dr['score_lo']:.3f}, {dr['score_hi']:.3f}]",
+                        f"{distill['distill_vs_A']['score']:.2f}",
+                        f"{distill['distill_vs_2ply_search']['score']:.2f}",
+                    ],
+                    [
+                        "Distill + 2-ply residual",
+                        (
+                            f"{out_rand['score']:.2f} [{out_rand['score_lo']:.3f}, {out_rand['score_hi']:.3f}]"
+                            if out_rand.get("score") is not None
+                            else "skipped"
+                        ),
+                        f"{(oc.get('vs_A') or {}).get('score', 'skipped')}",
+                        f"{(oc.get('vs_2ply_search') or {}).get('score', 'skipped')}",
+                    ],
+                    [
+                        "Truncated self-play",
+                        "0.6075",
+                        "0.25",
+                        "",
+                    ],
+                ],
+                [1.8 * inch, 1.9 * inch, 1.3 * inch, 1.5 * inch],
+                styles,
+            )
+        )
+        story.append(
+            _p(
+                "Distill beats 0.61 vs random and matches A. The residual, "
+                "added only after that match, still loses to searched A. "
+                "value --stage selfplay exits. logs/value_distill.json.",
+                styles["cap"],
+            )
+        )
+
     story.append(_p("8. What holds (2026-09-12)", styles["h1"]))
     story.append(
         _p(
             "The mix-0 occupancy ranker trained on child hand-eval is the player "
-            "(0.91 vs random). Mix-0 self-play outcome value beats random "
-            "(0.6075) and loses to that ranker (0.25 head-to-head). Mix-1 real "
+            "(0.91 vs random; distill on A-vs-A children 0.905). Truncated "
+            "self-play (0.6075) is closed. Mix-1 real "
             "hidden rates do not spike, so linear and MLP value heads on those "
             "rates cannot rank chess. Shuffle wiring produces a few hidden "
             "spikes and a weak ranker that still loses to mix-0 by a wide "
@@ -778,7 +845,8 @@ def build() -> Path:
                 ["logs/planes_mix.json", "Mix-depth by five seeds"],
                 ["logs/ethology_gate.json", "Paint controller, n=40"],
                 ["logs/value_lock.json", "Child-value table A/B/C"],
-                ["logs/value_selfplay.json", "Mix-0 self-play outcome value"],
+                ["logs/value_selfplay.json", "Closed truncated-return self-play"],
+                ["logs/value_distill.json", "A-vs-A child distillation"],
                 ["config/value.json", "Split, freeze, shuffle seeds"],
                 ["src/fly_chess/train_value.py", "A, B, C"],
                 ["data/fixtures/graph.json", "1,007-cell fixture"],

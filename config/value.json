@@ -18,6 +18,14 @@
     "positions_per_game": 16,
     "seed": 0
   },
+  "distill": {
+    "n_games": 200,
+    "opening_plies": 6,
+    "max_ply": 64,
+    "games_n": 200,
+    "outcome_coef": 0.2,
+    "seed": 2
+  },
   "selfplay": {
     "n_games": 400,
     "max_ply": 80,

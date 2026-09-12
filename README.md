@@ -35,7 +35,15 @@ Mix-0 self-play (outcome +1 / 0 / -1 plus a small material term on truncation), 
 | A hand-eval mix-0 | 0.91 [0.870, 0.950] | same player |
 | Self-play mix-0 | 0.6075 [0.540, 0.675] | 0.25 [0.190, 0.310] |
 
-Self-play beats random and loses to A. Lock: `logs/value_selfplay.json`. `.venv/bin/python -m fly_chess value --stage selfplay`
+Truncated-return self-play is closed (`value --stage selfplay` exits). Distillation: A vs A after a short opening, every legal child labeled with hand-eval.
+
+| Player | vs random n=200 | vs 1-ply A | vs 2-ply search |
+|--------|----------------:|-----------:|----------------:|
+| Distill mix-0 | 0.905 [0.864, 0.946] | 0.50 | 0.50 |
+| Distill + 2-ply residual | 0.83 [0.778, 0.882] | 0.25 | 0.00 |
+| Truncated self-play (closed) | 0.6075 | 0.25 | |
+
+Distill Pearson vs hand-eval 0.989 on 50,812 held-out children. It matches A and beats 0.61. The residual still loses to searched A. Lock: `logs/value_distill.json`. Closed truncated-return lock: `logs/value_selfplay.json`. `.venv/bin/python -m fly_chess value --stage distill`
 
 
 
