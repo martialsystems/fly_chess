@@ -73,5 +73,262 @@
     "beats_random": true,
     "weights": "logs/value_mix0.npz"
   },
+  "B_real": {
+    "arm": "B_real",
+    "mix_plies": 1,
+    "synapses_used": true,
+    "head": "linear_value",
+    "features": "hidden_64_after_one_ply",
+    "hidden_rates_silent": true,
+    "train_rate_max": 0.0,
+    "held_out": {
+      "n_positions": 1024,
+      "mse": 48.69059400804197,
+      "pearson": 0.0,
+      "child_pairwise": 0.00684931506849315,
+      "best_child_match": 0.08512720156555773,
+      "n_ranked": 1022
+    },
+    "games": {
+      "n_games": 200,
+      "score": 0.4825,
+      "score_lo": 0.4132459925347276,
+      "score_hi": 0.5517540074652724,
+      "illegal": 0,
+      "ply": 15182,
+      "opponent": "random",
+      "elo": null
+    },
+    "beats_random": false,
+    "weights": "logs/value_mix1_real.npz"
+  },
+  "B_shuffle": {
+    "arm": "B_shuffle",
+    "mix_plies": 1,
+    "synapses_used": true,
+    "head": "linear_value",
+    "features": "hidden_64_after_one_ply",
+    "hidden_rates_silent_per_seed": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "shuffle_seeds": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "held_out": {
+      "mse": 50.48433791214059,
+      "child_pairwise": 0.26482883229360127,
+      "pearson": 0.038044008905044814,
+      "best_child_match": 0.09393346379647749,
+      "n_positions": 1024,
+      "per_seed": [
+        {
+          "n_positions": 1024,
+          "mse": 50.95812316024427,
+          "pearson": 0.007184946483211169,
+          "child_pairwise": 0.2667120782127815,
+          "best_child_match": 0.10469667318982387,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 51.19835010797172,
+          "pearson": 0.010122705996850194,
+          "child_pairwise": 0.2779608540408399,
+          "best_child_match": 0.10469667318982387,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 50.220789545211716,
+          "pearson": -0.00533031908292238,
+          "child_pairwise": 0.22001399864865098,
+          "best_child_match": 0.07436399217221135,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 47.301433899376434,
+          "pearson": 0.17855335330293276,
+          "child_pairwise": 0.2965350241322882,
+          "best_child_match": 0.0949119373776908,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 52.7429928478988,
+          "pearson": -0.00031064217484766995,
+          "child_pairwise": 0.26292220643344555,
+          "best_child_match": 0.09099804305283757,
+          "n_ranked": 1022
+        }
+      ]
+    },
+    "games": {
+      "n_games": 200,
+      "n_games_per_seed": 200,
+      "score": 0.5665,
+      "score_lo": 0.46839870659676475,
+      "score_hi": 0.6775986922950437,
+      "illegal": 0,
+      "elo": null,
+      "opponent": "random",
+      "skipped": false,
+      "per_seed": [
+        {
+          "n_games": 200,
+          "score": 0.5375,
+          "score_lo": 0.46839870659676475,
+          "score_hi": 0.6066012934032352,
+          "illegal": 0,
+          "ply": 15243,
+          "opponent": "random",
+          "elo": null
+        },
+        {
+          "n_games": 200,
+          "score": 0.555,
+          "score_lo": 0.48612405499740863,
+          "score_hi": 0.6238759450025915,
+          "illegal": 0,
+          "ply": 14934,
+          "opponent": "random",
+          "elo": null
+        },
+        {
+          "n_games": 200,
+          "score": 0.5475,
+          "score_lo": 0.4785169444718487,
+          "score_hi": 0.6164830555281512,
+          "illegal": 0,
+          "ply": 15237,
+          "opponent": "random",
+          "elo": null
+        },
+        {
+          "n_games": 200,
+          "score": 0.61,
+          "score_lo": 0.5424013077049563,
+          "score_hi": 0.6775986922950437,
+          "illegal": 0,
+          "ply": 13901,
+          "opponent": "random",
+          "elo": null
+        },
+        {
+          "n_games": 200,
+          "score": 0.5825,
+          "score_lo": 0.5141533428030309,
+          "score_hi": 0.6508466571969691,
+          "illegal": 0,
+          "ply": 14873,
+          "opponent": "random",
+          "elo": null
+        }
+      ]
+    },
+    "delta_pairwise_mean": -0.2579795172251081,
+    "delta_pairwise_lo": -0.2827457430645263,
+    "delta_pairwise_hi": -0.23321329138568986,
+    "delta_mse_mean": 1.7937439040986178,
+    "delta_mse_lo": 0.038687642783091114,
+    "delta_mse_hi": 3.5488001654141446,
+    "delta_games_mean": -0.08400000000000002,
+    "delta_games_lo": -0.10986346071197745,
+    "delta_games_hi": -0.05813653928802259
+  },
+  "C": {
+    "arm": "C",
+    "mix_plies": 1,
+    "synapses_used": true,
+    "head": "mlp_two_layer",
+    "mlp_hidden": 32,
+    "features": "hidden_64_after_one_ply",
+    "held_out": {
+      "n_positions": 1024,
+      "mse": 48.693801335678664,
+      "pearson": 0.0,
+      "child_pairwise": 0.00684931506849315,
+      "best_child_match": 0.08512720156555773,
+      "n_ranked": 1022
+    },
+    "shuffle_held_out": {
+      "mse": 54.59882390535654,
+      "child_pairwise": 0.2596552653200094,
+      "per_seed": [
+        {
+          "n_positions": 1024,
+          "mse": 56.49631014225954,
+          "pearson": 0.02128126104244236,
+          "child_pairwise": 0.2723767385542036,
+          "best_child_match": 0.09001956947162426,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 52.72197693187809,
+          "pearson": 0.07589750785764136,
+          "child_pairwise": 0.26132067192273617,
+          "best_child_match": 0.07045009784735812,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 52.09818639790541,
+          "pearson": 0.05649213752335111,
+          "child_pairwise": 0.23334553512596387,
+          "best_child_match": 0.0684931506849315,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 51.933964112118574,
+          "pearson": 0.10823859359255493,
+          "child_pairwise": 0.2703323871927651,
+          "best_child_match": 0.09197651663405088,
+          "n_ranked": 1022
+        },
+        {
+          "n_positions": 1024,
+          "mse": 59.7436819426211,
+          "pearson": -0.03183392659699332,
+          "child_pairwise": 0.26090099380437837,
+          "best_child_match": 0.07925636007827788,
+          "n_ranked": 1022
+        }
+      ]
+    },
+    "delta_pairwise_mean": -0.25280595025151625,
+    "delta_pairwise_lo": -0.26647239466483214,
+    "delta_pairwise_hi": -0.23913950583820034,
+    "delta_mse_mean": 5.905022569677878,
+    "delta_mse_lo": 2.9020864124233823,
+    "delta_mse_hi": 8.907958726932375,
+    "delta_includes_zero": false,
+    "weights": "logs/value_mix1_mlp.npz"
+  },
+  "table": {
+    "A_games": 0.91,
+    "B_real_games": 0.4825,
+    "B_shuffle_games": 0.5665,
+    "A_pairwise": 0.9590273723160676,
+    "B_real_pairwise": 0.00684931506849315,
+    "B_shuffle_pairwise": 0.26482883229360127,
+    "A_mse": 0.026476588639968074,
+    "B_real_mse": 48.69059400804197,
+    "B_shuffle_mse": 50.48433791214059
+  },
+  "A_beats_random": true,
+  "wiring_helped": false,
+  "unfreeze_allowed": false,
+  "claim": "Child-position value ranker on mix-0 occupancy; mix-1 hidden-rate probes vs five shuffle seeds. Graph frozen.",
+  "note": "Mix-0 occupancy ranker is the player. Mix-1 real did not beat both mix-0 and shuffle, so the synapses still are not playing.",
   "fingerprint": "6c820116f437773e9d9b9a3fb2e46a6aeb0023af17acdf38bba21e9086235efb"
 }

@@ -30,6 +30,13 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert "docs/value_note.md" in text
     assert "mix-0 occupancy" in text.lower() or "Mix-0 is the player" in text
     assert "wiring_helped" in text
+    assert "0.91" in text
+    assert "0.4825" in text
+    assert "0.5665" in text
+    val = json.loads((REPO / "logs" / "value_lock.json").read_text(encoding="utf-8"))
+    assert f"{val['A']['games']['score']}" in text
+    assert f"{val['B_real']['games']['score']}" in text
+    assert "`wiring_helped` false" in text
     closed = text.lower().split("planes policy")[1]
     assert closed.strip().startswith("(closed)")
     assert "Closed. A shuffle-controlled measurement" in text

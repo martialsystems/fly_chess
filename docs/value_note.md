@@ -8,6 +8,7 @@ Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 oc
 
 - 2026-09-12: first write-up. New object: child-position value. Planes hanging/teacher policy stays closed.
 - 2026-09-12: public methods PDF `docs/method_note.pdf` pinned on the README.
+- 2026-09-12: lock table. A 0.91 vs random n=200. B-real 0.4825. B-shuffle 0.5665. wiring_helped false.
 
 ## Abstract
 
@@ -37,9 +38,19 @@ Same fixture (1,007 cells), same LIF (`fixture_voltage_jump`), same legal mask, 
 
 **Play.** 1-ply: push each legal move, score the child, pick the max for the mover. Opponent is random legal. Report score vs that opponent, not Elo.
 
-## 3. Results
+## 3. Results (2026-09-12)
 
-Numbers live in `logs/value_lock.json` after `.venv/bin/python -m fly_chess value`. Pytest locks the protocol even before that file exists.
+Copied from `logs/value_lock.json`. Catalog: 4,096 train / 1,024 eval positions, hold out by game_id. Games n=200 vs random legal.
+
+| Arm | Held-out pairwise | Games vs random |
+|-----|------------------:|----------------:|
+| A mix-0 occupancy | 0.959 | 0.91 [0.870, 0.950] |
+| B-real mix-1 hidden | 0.00685 | 0.4825 |
+| B-shuffle mix-1 hidden | 0.265 | 0.5665 |
+
+A Pearson vs hand eval is 0.9997. Mix-1 real hidden rates are silent (`train_rate_max` 0). Shuffle spikes a few cells. Games delta real minus shuffle -0.084 [-0.110, -0.058]. `wiring_helped` false. `unfreeze_allowed` false.
+
+C, two-layer MLP: real pairwise 0.00685, shuffle 0.260. Pairwise delta -0.253 [-0.266, -0.239]. The interval excludes 0 and the sign is negative. The mix-1 value line stops. The player is the mix-0 ranker.
 
 ## 4. Files
 

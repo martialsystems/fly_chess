@@ -27,6 +27,9 @@ def test_method_pdf_exists_and_is_dated() -> None:
     assert "0.4875" in text
     assert "0.887" in text
     assert "0.91" in text
+    assert "0.4825" in text
+    assert "0.5665" in text
+    assert "wiring_helped is false" in text.lower() or "wiring_helped false" in text.lower()
     assert "child-position value" in text.lower()
     assert "wiring_helped" in text or "wiring helped" in text.lower() or "B-real" in text
     assert "What it is not" not in text

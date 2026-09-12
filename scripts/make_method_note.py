@@ -224,7 +224,15 @@ def build() -> Path:
         _p(
             "2026-09-12: first note. Records the closed hanging/teacher policy "
             "line, the decision to train child-position value, Stage A on mix-0 "
-            "occupancy, and the mix-1 shuffle protocol that remains open.",
+            "occupancy, and the mix-1 shuffle protocol.",
+            styles["rev"],
+        )
+    )
+    story.append(
+        _p(
+            "2026-09-12: child-value table locked. A 0.91 vs random (n=200). "
+            "B-real 0.4825, B-shuffle 0.5665. wiring_helped false. Mix-1 real "
+            "hidden rates silent.",
             styles["rev"],
         )
     )
@@ -599,14 +607,30 @@ def build() -> Path:
                 [
                     "B-real mix-1",
                     "HIDDEN 64 after one ply, real wiring",
-                    "see lock" if has_b else "running",
-                    "see lock" if has_b else "running",
+                    (
+                        f"{value['B_real']['held_out']['child_pairwise']:.3f}"
+                        if has_b
+                        else "running"
+                    ),
+                    (
+                        f"{value['B_real']['games']['score']:.4f}"
+                        if has_b
+                        else "running"
+                    ),
                 ],
                 [
                     "B-shuffle mix-1",
                     "same features, seeds 1 to 5",
-                    "see lock" if has_b else "running",
-                    "see lock" if has_b else "running",
+                    (
+                        f"{value['B_shuffle']['held_out']['child_pairwise']:.3f}"
+                        if has_b
+                        else "running"
+                    ),
+                    (
+                        f"{value['B_shuffle']['games']['score']:.4f}"
+                        if has_b
+                        else "running"
+                    ),
                 ],
             ],
             [1.2 * inch, 2.3 * inch, 1.5 * inch, 1.5 * inch],
@@ -615,15 +639,36 @@ def build() -> Path:
     )
     if has_b:
         br, bs = value["B_real"], value["B_shuffle"]
+        c = value.get("C") or {}
         story.append(
             _p(
-                f"B-real games {br['games']['score']}; B-shuffle games "
-                f"{bs['games']['score']}; wiring_helped="
-                f"{str(value.get('wiring_helped')).lower()}. "
+                f"B-real hidden rates are silent (train_rate_max "
+                f"{br.get('train_rate_max', 0):.1f} Hz). Child pairwise "
+                f"{br['held_out']['child_pairwise']:.3f}; games "
+                f"{br['games']['score']:.4f}. Shuffle spikes a few hidden "
+                f"cells: pairwise {bs['held_out']['child_pairwise']:.3f}, "
+                f"games {bs['games']['score']:.4f} (five seeds, n=200 each). "
+                f"Games delta real minus shuffle "
+                f"{bs['delta_games_mean']:.3f} "
+                f"[{bs['delta_games_lo']:.3f}, {bs['delta_games_hi']:.3f}]. "
+                f"wiring_helped is {str(value.get('wiring_helped')).lower()}. "
                 f"{value.get('note', '')}",
                 styles["body"],
             )
         )
+        if c:
+            story.append(
+                _p(
+                    f"C, two-layer MLP on the same mix-1 rates: real pairwise "
+                    f"{c['held_out']['child_pairwise']:.3f}, shuffle pairwise "
+                    f"{c['shuffle_held_out']['child_pairwise']:.3f}. "
+                    f"Pairwise delta {c['delta_pairwise_mean']:.3f} "
+                    f"[{c['delta_pairwise_lo']:.3f}, {c['delta_pairwise_hi']:.3f}]. "
+                    "The interval excludes 0 and the sign is negative: real is "
+                    "silent, shuffle leaks spikes. That is not a wiring win.",
+                    styles["body"],
+                )
+            )
     else:
         story.append(
             _p(
@@ -637,39 +682,27 @@ def build() -> Path:
             )
         )
 
-    story.append(_p("8. What we will do next", styles["h1"]))
+    story.append(_p("8. What holds (2026-09-12)", styles["h1"]))
     story.append(
         _p(
-            "Finish the mix-1 linear table (B-real vs five shuffles) and the "
-            "two-layer MLP (C) on the same game-id split. Games n at least 200 "
-            "for A, B-real, and B-shuffle. Do not unfreeze. Do not drop a "
-            "shuffle seed. Do not restamp ethology 0.4875 or Gate 2 n=40.",
+            "The mix-0 occupancy ranker is the player. Mix-1 real hidden rates "
+            "do not spike, so linear and MLP value heads on those rates cannot "
+            "rank chess. Shuffle wiring produces a few hidden spikes and a "
+            "weak ranker that still loses to mix-0 by a wide margin. "
+            "wiring_helped is false. unfreeze_allowed is false. The mix-1 "
+            "value line stops. Cosine remains a geometry fact. Ethology 0.4875 "
+            "and Gate 2 n=40 stay historical. Do not drop a shuffle seed. Do "
+            "not grind hanging labels at mix 3.",
             styles["body"],
         )
     )
     story.append(
         _p(
-            "If B-real does not beat both A and B-shuffle, the synapses are "
-            "not playing this value task. The cosine split remains a geometry "
-            "fact. The player remains the mix-0 ranker. That is a publishable "
-            "negative on the wiring-as-evaluator claim.",
-            styles["body"],
-        )
-    )
-    story.append(
-        _p(
-            "If C's shuffle delta includes 0 as well, stop the mix-1 value "
-            "line. A later arm, if any, is init: train sparse RNN weights from "
-            "fly wiring versus shuffle versus random sparse, and say so.",
-            styles["body"],
-        )
-    )
-    story.append(
-        _p(
-            "Self-play reward, if we get that far: +1 checkmate, 0 draw, "
-            "-1 loss, a small term for material after a few plies. A "
-            "fly-native sugar/loom current on hanging remains a separate "
-            "ethology arm. It already scored 0.4875.",
+            "A later arm, if any, is init: train sparse RNN weights from fly "
+            "wiring versus shuffle versus random sparse, and say so. Self-play "
+            "reward on the mix-0 ranker, if we get that far: +1 checkmate, "
+            "0 draw, -1 loss, a small term for material after a few plies. "
+            "Ethology sugar/loom stays a separate arm. It already scored 0.4875.",
             styles["body"],
         )
     )

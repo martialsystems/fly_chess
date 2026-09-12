@@ -18,7 +18,15 @@ Write-up: [docs/value_note.md](docs/value_note.md). Planes hanging/teacher polic
 .venv/bin/python -m fly_chess value
 ```
 
-Lock: `logs/value_lock.json`. `wiring_helped` only if mix-1 real beats both mix-0 and shuffle on held-out value and on games n≥200. Synapses stay frozen until that is true.
+Lock: `logs/value_lock.json`. Same eval set, games n=200 vs random legal, five shuffle seeds.
+
+| Arm | Held-out pairwise | Games vs random |
+|-----|------------------:|----------------:|
+| A mix-0 occupancy | 0.959 | 0.91 [0.870, 0.950] |
+| B-real mix-1 hidden | 0.00685 | 0.4825 |
+| B-shuffle mix-1 hidden | 0.265 | 0.5665 |
+
+A beats random. Mix-1 real hidden rates are silent (0 Hz); shuffle spikes a few cells. `wiring_helped` false. Synapses stay frozen. MLP on the same rates matches the silent linear head (pairwise 0.00685); shuffle MLP 0.260. The mix-1 value line stops.
 
 ## Planes policy (closed)
 
