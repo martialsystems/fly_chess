@@ -39,10 +39,11 @@ def test_ava_generator_plays_a_after_opening() -> None:
     assert len(rows) >= 3
 
 
-def test_cli_refuses_truncated_selfplay() -> None:
-    with pytest.raises(SystemExit) as err:
-        main(["value", "--stage", "selfplay"])
-    assert "distill" in str(err.value).lower()
+def test_cli_refuses_closed_chess_on_wiring_trainers() -> None:
+    for stage in ("selfplay", "distill", "mix1-distill", "followup", "A", "all"):
+        with pytest.raises(SystemExit) as err:
+            main(["value", "--stage", stage])
+        assert "closed" in str(err.value).lower()
 
 
 def test_tiny_distill_labels_children_and_freezes_graph() -> None:

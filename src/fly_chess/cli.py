@@ -167,48 +167,18 @@ def main(argv: list[str] | None = None) -> int:
                 "MaleCNS is identity/circuit only. "
                 "Chess value stays on the 1,007-cell fixture."
             )
-        if args.stage == "selfplay":
+        if args.stage != "search":
             raise SystemExit(
-                "Truncated-return self-play is closed. "
-                "Use value --stage distill: A-vs-A children labeled with hand-eval."
+                "Chess-on-wiring is closed. "
+                "2-ply search is inference on locked A. "
+                "Do not restamp. See README and logs/followup_lock.json."
             )
-        if args.stage == "distill":
-            from fly_chess.distill_value import write_distill
+        from fly_chess.search_table import write_search_table
 
-            payload = write_distill(tiny=bool(args.tiny), n_play=args.n)
-        elif args.stage == "search":
-            from fly_chess.search_table import write_search_table
-
-            payload = write_search_table(tiny=bool(args.tiny), n=args.n)
-        elif args.stage == "mix1-distill":
-            from fly_chess.mix1_distill import write_mix1_distill
-
-            payload = write_mix1_distill(tiny=bool(args.tiny), n_play=args.n)
-        elif args.stage == "followup":
-            from fly_chess.mix1_distill import write_mix1_distill
-            from fly_chess.search_table import write_search_table
-
-            payload = {
-                "experiment": "search_and_mix1_distill",
-                "search": write_search_table(tiny=bool(args.tiny), n=args.n),
-                "mix1_distill": write_mix1_distill(tiny=bool(args.tiny), n_play=args.n),
-                "claim": (
-                    "2-ply/3-ply search over mix-0 eval, and mix-1 child distill "
-                    "vs shuffle. Distill mix-0 is A. Residual not promoted."
-                ),
-            }
-        else:
-            from fly_chess.train_value import write_value
-
-            payload = write_value(stage=args.stage, tiny=bool(args.tiny), n_play=args.n)
+        payload = write_search_table(tiny=bool(args.tiny), n=args.n)
         require_clean(payload.get("claim") or "", source="value-claim")
         print(json.dumps(payload, indent=2))
-        illegal = 0
-        if args.stage in ("distill", "search", "mix1-distill", "followup"):
-            illegal = 0
-        else:
-            illegal = int((payload.get("A") or {}).get("games", {}).get("illegal") or 0)
-        return 0 if illegal == 0 else 2
+        return 0
     if args.cmd == "lock":
         p1, p2 = write_locked_gates()
         for path in (p1, p2):

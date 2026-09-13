@@ -1,5 +1,7 @@
 # Child-position value
 
+Closed 2026-09-12. Chess-on-wiring is done. Do not restamp. Tables stay in `docs/method_note.pdf` and the lock JSON.
+
 **fly_chess value readout.** Martial Systems LLC. 2026-09-12.
 
 Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 occupancy ranker that scores children. Mix-1 hidden rates are the wiring probe.
@@ -12,6 +14,7 @@ Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 oc
 - 2026-09-12: mix-0 self-play. 0.6075 vs random n=200. 0.25 vs A. Graph frozen.
 - 2026-09-12: truncated-return self-play closed. Distill A-vs-A children with hand-eval: 0.905 vs random. 2-ply residual 0.83 vs random, 0 vs searched A.
 - 2026-09-12: distill is A. Residual not promoted. 2-ply search 0.995 vs 1-ply A, n=200 decisive. Mix-1 child distill real silent, wiring_helped false.
+- 2026-09-12: chess-on-wiring closed. Do not restamp. Mix-1 chess distill stays off.
 
 ## Abstract
 

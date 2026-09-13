@@ -1,0 +1,33 @@
+{
+  "experiment": "chess_on_wiring",
+  "closed": true,
+  "closed_date": "2026-09-12",
+  "wiring_helped": false,
+  "player": "mix0_register_plus_2ply_search",
+  "mix1_chess_distill": "closed",
+  "search_2ply_vs_1ply": 0.995,
+  "search_n_games": 200,
+  "search_n_decisive": 200,
+  "search_n_same_policy": 0,
+  "canary_ply1": "e2e7",
+  "canary_ply2": "e2b5",
+  "mix1_real_hz": 0.0,
+  "mix1_real_pearson": 0.0,
+  "mix1_real_vs_A": 0.025,
+  "mix1_shuffle_pearson_mean": 0.147,
+  "three_ply_n": 40,
+  "three_ply_is_lock": false,
+  "promote_shuffle_seed_5": false,
+  "ethology_score": 0.4875,
+  "ethology_n": 40,
+  "restamp_abc": false,
+  "restamp_ethology": false,
+  "elo": null,
+  "claim": "Mix-0 occupancy plus search plays. One LIF ply on the real graph is silent. Shuffle does not save it. wiring_helped is false.",
+  "locks": [
+    "logs/search_lock.json",
+    "logs/mix1_distill.json",
+    "logs/value_lock.json",
+    "logs/ethology_gate.json"
+  ]
+}

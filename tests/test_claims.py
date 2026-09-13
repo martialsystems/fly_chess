@@ -20,9 +20,10 @@ def test_banner_is_clean() -> None:
 
 
 PLAIN_HOOK = (
-    "Fly-shaped LIF plus a legal-move mask. "
-    "Mix-0 child-value ranker on occupancy; mix-1 hidden rates vs shuffle. "
-    "Hanging/teacher policy is closed."
+    "Mix-0 occupancy plus search plays. "
+    "One LIF ply on the real graph is silent. "
+    "Shuffle does not save it. "
+    "wiring_helped is false."
 )
 
 

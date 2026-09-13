@@ -1,9 +1,7 @@
 # Copyright (c) 2026 Martial Systems LLC
 from __future__ import annotations
 
-import io
 import json
-from contextlib import redirect_stdout
 from pathlib import Path
 
 import pytest
@@ -74,9 +72,6 @@ def test_tiny_table_does_not_unfreeze() -> None:
     assert payload["unfreeze_allowed"] is False
     assert payload["wiring_helped"] is False
     assert payload["elo"] is None
-    buf = io.StringIO()
-    with redirect_stdout(buf):
-        rc = main(["value", "--stage", "A", "--tiny", "--n", "0"])
-    assert rc == 0
-    require = json.loads(buf.getvalue())
-    assert require["A"]["head"] == "linear_value"
+    with pytest.raises(SystemExit) as err:
+        main(["value", "--stage", "A", "--tiny", "--n", "0"])
+    assert "closed" in str(err.value).lower()

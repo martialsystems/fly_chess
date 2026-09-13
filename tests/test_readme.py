@@ -26,27 +26,26 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert pdf.is_file()
     assert pdf.read_bytes()[:5] == b"%PDF-"
     assert "Two measurements" in text
-    assert "Child-position value" in text
+    assert "Child-position value (closed)" in text
     assert "docs/value_note.md" in text
-    assert "mix-0 occupancy" in text.lower() or "Mix-0 is the player" in text
-    assert "wiring_helped" in text
-    assert "0.91" in text
-    assert "0.4825" in text
-    assert "0.5665" in text
-    assert "0.6075" in text
-    assert "0.905" in text
+    assert "chess-on-wiring line is done" in text.lower()
+    assert "Mix-0 occupancy plus a child ranker plays" in text
+    assert "2-ply search on that eval is a real bot" in text
+    assert "real graph is silent at 0 Hz" in text
+    assert "shuffled copy is not silent and still cannot play" in text
+    assert "The fly is the skin" in text
     assert "0.995" in text
-    assert "logs/value_selfplay.json" in text
-    assert "logs/value_distill.json" in text
+    assert "0.4875" in text
+    assert "logs/followup_lock.json" in text
     assert "logs/search_lock.json" in text
     assert "logs/mix1_distill.json" in text
-    assert "value --stage followup" in text
-    assert "Truncated-return self-play is closed" in text
-    assert "Residual toward 2-ply is not promoted" in text
+    assert "logs/value_lock.json" in text
+    assert "Mix-1 chess distill is closed" in text
     val = json.loads((REPO / "logs" / "value_lock.json").read_text(encoding="utf-8"))
-    assert f"{val['A']['games']['score']}" in text
-    assert f"{val['B_real']['games']['score']}" in text
-    assert "`wiring_helped` false" in text
+    assert val["A"]["games"]["score"] == 0.91
+    assert val["B_real"]["games"]["score"] == 0.4825
+    assert val["wiring_helped"] is False
+    assert "`wiring_helped` is false" in text
     closed = text.lower().split("planes policy")[1]
     assert closed.strip().startswith("(closed)")
     assert "Closed. A shuffle-controlled measurement" in text
