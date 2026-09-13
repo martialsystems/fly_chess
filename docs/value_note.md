@@ -11,6 +11,7 @@ Frozen connectome, legal-move mask, five shuffle seeds. The player is a mix-0 oc
 - 2026-09-12: lock table. A 0.91 vs random n=200. B-real 0.4825. B-shuffle 0.5665. wiring_helped false.
 - 2026-09-12: mix-0 self-play. 0.6075 vs random n=200. 0.25 vs A. Graph frozen.
 - 2026-09-12: truncated-return self-play closed. Distill A-vs-A children with hand-eval: 0.905 vs random. 2-ply residual 0.83 vs random, 0 vs searched A.
+- 2026-09-12: distill is A. Residual not promoted. 2-ply search 0.995 vs 1-ply A, n=200 decisive. Mix-1 child distill real silent, wiring_helped false.
 
 ## Abstract
 
@@ -70,7 +71,11 @@ Self-play beats random. It does not beat A. Outcome labels are weaker than dense
 | Distill mix-0 | 0.905 [0.864, 0.946] | 0.50 | 0.50 |
 | Distill + 0.2 residual toward 2-ply | 0.83 [0.778, 0.882] | 0.25 | 0.00 |
 
-Distill matches A and beats truncated self-play (0.6075). A small 2-ply residual, added only after that match, still loses to searched A. `value --stage selfplay` exits.
+Distill is A. Residual not promoted. `value --stage selfplay` exits.
+
+**Search at inference** (`logs/search_lock.json`). 2-ply and 3-ply loops over the mix-0 eval. Cap: mate, resign at an 8-pawn swing from the start eval, or 400 ply. 1-ply vs 1-ply is 200 same-policy games, not a 0.50 result. 2-ply vs 1-ply A: 0.995, 200 decisive, 0 same-policy, mean ply 19.7. 3-ply vs 1-ply A: 1.0, n=40 decisive. Canary FEN `4k3/4p3/8/8/8/8/4Q3/4K3 w - - 0 1`: 1-ply Qxe7, 2-ply Qb5.
+
+**Mix-1 child distill** (`logs/mix1_distill.json`). A's child hand-eval onto 64 HIDDEN rates after one ply. Real arm silent (0 Hz), Pearson 0.0, 0.025 vs A (n=200 decisive). Shuffle Pearson mean 0.147, vs A 0.01 to 0.225. `wiring_helped` false.
 
 ## 4. Files
 

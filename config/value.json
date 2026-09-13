@@ -18,6 +18,19 @@
     "positions_per_game": 16,
     "seed": 0
   },
+  "search": {
+    "games_n": 200,
+    "games_n_3ply": 40,
+    "max_ply": 400,
+    "seed": 3
+  },
+  "mix1_distill": {
+    "n_games": 200,
+    "opening_plies": 6,
+    "max_ply": 64,
+    "games_n": 200,
+    "seed": 4
+  },
   "distill": {
     "n_games": 200,
     "opening_plies": 6,

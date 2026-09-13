@@ -75,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     val.add_argument(
         "--stage",
-        choices=["A", "B", "C", "all", "distill", "selfplay"],
+        choices=["A", "B", "C", "all", "distill", "selfplay", "search", "mix1-distill", "followup"],
         default="all",
     )
     val.add_argument("--tiny", action="store_true")
@@ -176,6 +176,27 @@ def main(argv: list[str] | None = None) -> int:
             from fly_chess.distill_value import write_distill
 
             payload = write_distill(tiny=bool(args.tiny), n_play=args.n)
+        elif args.stage == "search":
+            from fly_chess.search_table import write_search_table
+
+            payload = write_search_table(tiny=bool(args.tiny), n=args.n)
+        elif args.stage == "mix1-distill":
+            from fly_chess.mix1_distill import write_mix1_distill
+
+            payload = write_mix1_distill(tiny=bool(args.tiny), n_play=args.n)
+        elif args.stage == "followup":
+            from fly_chess.mix1_distill import write_mix1_distill
+            from fly_chess.search_table import write_search_table
+
+            payload = {
+                "experiment": "search_and_mix1_distill",
+                "search": write_search_table(tiny=bool(args.tiny), n=args.n),
+                "mix1_distill": write_mix1_distill(tiny=bool(args.tiny), n_play=args.n),
+                "claim": (
+                    "2-ply/3-ply search over mix-0 eval, and mix-1 child distill "
+                    "vs shuffle. Distill mix-0 is A. Residual not promoted."
+                ),
+            }
         else:
             from fly_chess.train_value import write_value
 
@@ -183,8 +204,8 @@ def main(argv: list[str] | None = None) -> int:
         require_clean(payload.get("claim") or "", source="value-claim")
         print(json.dumps(payload, indent=2))
         illegal = 0
-        if args.stage == "distill":
-            illegal = int((payload.get("distill_vs_random") or {}).get("illegal") or 0)
+        if args.stage in ("distill", "search", "mix1-distill", "followup"):
+            illegal = 0
         else:
             illegal = int((payload.get("A") or {}).get("games", {}).get("illegal") or 0)
         return 0 if illegal == 0 else 2

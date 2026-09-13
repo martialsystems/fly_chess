@@ -28,22 +28,26 @@ Lock: `logs/value_lock.json`. Same eval set, games n=200 vs random legal, five s
 
 A beats random. Mix-1 real hidden rates are silent (0 Hz); shuffle spikes a few cells. `wiring_helped` false. Synapses stay frozen. MLP on the same rates matches the silent linear head (pairwise 0.00685); shuffle MLP 0.260. The mix-1 value line stops.
 
-Mix-0 self-play (outcome +1 / 0 / -1 plus a small material term on truncation), 400 games, hold out by game:
+Distill mix-0 is A (Pearson 0.989 on 50,812 children, 0.905 vs random). The old 0.50 vs A was identical greedy hitting an 80-ply wall, not a match. Residual toward 2-ply is not promoted. Truncated-return self-play is closed (`value --stage selfplay` exits).
 
-| Player | vs random n=200 | vs A n=200 |
-|--------|----------------:|-----------:|
-| A hand-eval mix-0 | 0.91 [0.870, 0.950] | same player |
-| Self-play mix-0 | 0.6075 [0.540, 0.675] | 0.25 [0.190, 0.310] |
+Search is a loop at test time over the mix-0 eval. Cap: mate, resign at 8 pawns from the start eval, or 400 ply. same-policy games are not 0.50.
 
-Truncated-return self-play is closed (`value --stage selfplay` exits). Distillation: A vs A after a short opening, every legal child labeled with hand-eval.
+| Policy | vs 1-ply A | n | decisive | same-policy | mean ply |
+|--------|-----------:|--:|---------:|------------:|---------:|
+| 2-ply search | 0.995 | 200 | 200 | 0 | 19.7 |
+| 3-ply search | 1.0 | 40 | 40 | 0 | 19.9 |
+| 1-ply A vs itself | | 200 | 0 | 200 | 25.4 |
 
-| Player | vs random n=200 | vs 1-ply A | vs 2-ply search |
-|--------|----------------:|-----------:|----------------:|
-| Distill mix-0 | 0.905 [0.864, 0.946] | 0.50 | 0.50 |
-| Distill + 2-ply residual | 0.83 [0.778, 0.882] | 0.25 | 0.00 |
-| Truncated self-play (closed) | 0.6075 | 0.25 | |
+Canary: 1-ply plays Qxe7 and hangs the queen; 2-ply plays Qb5. Lock: `logs/search_lock.json`.
 
-Distill Pearson vs hand-eval 0.989 on 50,812 held-out children. It matches A and beats 0.61. The residual still loses to searched A. Lock: `logs/value_distill.json`. Closed truncated-return lock: `logs/value_selfplay.json`. `.venv/bin/python -m fly_chess value --stage distill`
+Mix-1 child distill of A's hand-eval onto hidden rates after one ply, real vs five shuffles, games n=200:
+
+| Arm | Pearson | vs A (decisive) |
+|-----|--------:|----------------:|
+| mix-1 real | 0.0 (silent, 0 Hz) | 0.025 |
+| mix-1 shuffle mean | 0.147 | 0.01 to 0.225 |
+
+`wiring_helped` false. Synapses stay frozen. Locks: `logs/mix1_distill.json`, `logs/value_distill.json`, `logs/search_lock.json`. Closed truncated-return lock: `logs/value_selfplay.json` (0.6075). `.venv/bin/python -m fly_chess value --stage followup`
 
 
 

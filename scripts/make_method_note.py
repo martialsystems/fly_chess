@@ -202,6 +202,10 @@ def build() -> Path:
     selfplay = json.loads(selfplay_path.read_text(encoding="utf-8")) if selfplay_path.is_file() else None
     distill_path = LOGS / "value_distill.json"
     distill = json.loads(distill_path.read_text(encoding="utf-8")) if distill_path.is_file() else None
+    search_path = LOGS / "search_lock.json"
+    search = json.loads(search_path.read_text(encoding="utf-8")) if search_path.is_file() else None
+    mix1_path = LOGS / "mix1_distill.json"
+    mix1d = json.loads(mix1_path.read_text(encoding="utf-8")) if mix1_path.is_file() else None
     hang = labels["rows"][0]["families"]["hanging"]["factored"]
     teach = labels["rows"][0]["families"]["teacher"]["factored"]
     hang1 = labels["rows"][1]["families"]["hanging"]["factored"]
@@ -253,6 +257,14 @@ def build() -> Path:
             "2026-09-12: truncated-return self-play closed. Distill A-vs-A "
             "children with hand-eval: 0.905 vs random n=200, Pearson 0.989. "
             "2-ply residual 0.83 vs random, 0 vs searched A.",
+            styles["rev"],
+        )
+    )
+    story.append(
+        _p(
+            "2026-09-12: distill is A. Residual not promoted. 2-ply search "
+            "0.995 vs 1-ply A (n=200 decisive). Mix-1 child distill real silent. "
+            "wiring_helped false.",
             styles["rev"],
         )
     )
@@ -807,12 +819,80 @@ def build() -> Path:
             )
         )
 
+    if search:
+        t2 = search["two_vs_one"]
+        t3 = search["three_vs_one"]
+        t1 = search["one_vs_one_control"]
+        story.append(_p("7d. Search at inference (2026-09-12)", styles["h1"]))
+        story.append(
+            _p(
+                "Search is a loop at test time over the mix-0 eval, not a blend "
+                "in the loss. Distill mix-0 is A. Cap: mate, resign at an 8-pawn "
+                "swing from the start eval, or 400 ply. same-policy games are "
+                f"not a 0.50 result. Canary: 1-ply {search['canary']['ply1']}, "
+                f"2-ply {search['canary']['ply2']}.",
+                styles["body"],
+            )
+        )
+        story.append(
+            _table(
+                [
+                    ["Policy vs 1-ply A", "n", "decisive", "same-policy", "score"],
+                    [
+                        "2-ply search",
+                        str(t2["n_games"]),
+                        str(t2["n_decisive"]),
+                        str(t2["n_same_policy"]),
+                        f"{t2['score_decisive']:.3f}",
+                    ],
+                    [
+                        "3-ply search",
+                        str(t3["n_games"]),
+                        str(t3["n_decisive"]),
+                        str(t3["n_same_policy"]),
+                        f"{t3['score_decisive']:.2f}",
+                    ],
+                    [
+                        "1-ply vs 1-ply",
+                        str(t1["n_games"]),
+                        str(t1["n_decisive"]),
+                        str(t1["n_same_policy"]),
+                        "same player",
+                    ],
+                ],
+                [1.8 * inch, 0.8 * inch, 1.1 * inch, 1.3 * inch, 1.5 * inch],
+                styles,
+            )
+        )
+        story.append(
+            _p(
+                "2-ply beats 1-ply A. 1-ply vs itself is 200 same-policy games. "
+                "logs/search_lock.json.",
+                styles["cap"],
+            )
+        )
+    if mix1d:
+        rr = mix1d["real"]
+        sh = mix1d["shuffle"]
+        story.append(_p("7e. Mix-1 child distill (2026-09-12)", styles["h1"]))
+        story.append(
+            _p(
+                "A's child hand-eval distilled onto 64 HIDDEN rates after one "
+                f"ply. Real arm silent ({rr['train_rate_max']:.1f} Hz), Pearson "
+                f"{rr['held_out']['pearson']:.3f}, {rr['vs_A']['score_decisive']:.3f} "
+                f"vs A (n={rr['vs_A']['n_games']} decisive). Shuffle Pearson mean "
+                f"{sh['pearson_mean']:.3f}. wiring_helped is "
+                f"{str(mix1d['wiring_helped']).lower()}. logs/mix1_distill.json.",
+                styles["body"],
+            )
+        )
+
     story.append(_p("8. What holds (2026-09-12)", styles["h1"]))
     story.append(
         _p(
-            "The mix-0 occupancy ranker trained on child hand-eval is the player "
-            "(0.91 vs random; distill on A-vs-A children 0.905). Truncated "
-            "self-play (0.6075) is closed. Mix-1 real "
+            "The mix-0 occupancy ranker is the player (distill is A, 0.905 vs "
+            "random). 2-ply search over that eval scores 0.995 vs 1-ply A. "
+            "Truncated self-play is closed. Residual not promoted. Mix-1 real "
             "hidden rates do not spike, so linear and MLP value heads on those "
             "rates cannot rank chess. Shuffle wiring produces a few hidden "
             "spikes and a weak ranker that still loses to mix-0 by a wide "
@@ -846,7 +926,9 @@ def build() -> Path:
                 ["logs/ethology_gate.json", "Paint controller, n=40"],
                 ["logs/value_lock.json", "Child-value table A/B/C"],
                 ["logs/value_selfplay.json", "Closed truncated-return self-play"],
-                ["logs/value_distill.json", "A-vs-A child distillation"],
+                ["logs/value_distill.json", "A-vs-A child distillation (is A)"],
+                ["logs/search_lock.json", "2-ply/3-ply search at inference"],
+                ["logs/mix1_distill.json", "Mix-1 child distill vs shuffle"],
                 ["config/value.json", "Split, freeze, shuffle seeds"],
                 ["src/fly_chess/train_value.py", "A, B, C"],
                 ["data/fixtures/graph.json", "1,007-cell fixture"],
