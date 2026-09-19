@@ -165,3 +165,14 @@ def test_readme_is_closed_and_quotes_locks() -> None:
     assert GAIN_PICK_NOTE in dyn
     assert SIGNS_MIX_NOTE in dyn
     assert HOP_BUDGET_NOTE in dyn
+
+
+def test_methods_card_and_citation() -> None:
+    methods = (REPO / "METHODS.yaml").read_text(encoding="utf-8")
+    assert "science_lock:" in methods
+    assert "pre_specified: false" in methods
+    assert "—" not in methods
+    assert "What it is not" not in methods
+    cite = (REPO / "CITATION.cff").read_text(encoding="utf-8")
+    assert "cff-version: 1.2.0" in cite
+    assert "Martial Systems LLC" in cite

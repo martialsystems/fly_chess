@@ -150,4 +150,17 @@ MaleCNS identity/circuit only. No ply loop on 166k cells:
 
 The child-position value sequel is `docs/value_note.md`. Do not grind hanging labels or drop the shuffle. Code is MIT. MaleCNS data stays CC BY 4.0 (Berg et al., *Cell* 2026).
 
+## Methods card
+
+Copied from `METHODS.yaml`.
+
+| Field | Value |
+|-------|-------|
+| Object | remap / stitch |
+| Status | Closed |
+| Falsifier | wiring_helped true on mix-1, or the real graph not silent after one LIF ply |
+| n / seeds | mix-0 n=200 decisive; ethology n=40 |
+| Science lock | `b4c1875` |
+| Pre-specified | false |
+
 [Fly research index](https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178)
