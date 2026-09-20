@@ -45,3 +45,5 @@ def test_method_pdf_exists_and_is_dated() -> None:
     src = (REPO / "scripts" / "make_method_note.py").read_text(encoding="utf-8")
     assert "—" not in src
     assert "What it is not" not in src
+    assert "10.1016/j.cell.2026.08.015" in text
+    assert "2026-09-20" in text

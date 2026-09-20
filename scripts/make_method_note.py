@@ -268,6 +268,13 @@ def build() -> Path:
             styles["rev"],
         )
     )
+    story.append(
+        _p(
+            "2026-09-20: MaleCNS source (Berg et al., 2026, doi "
+            "10.1016/j.cell.2026.08.015). Fixture and lock numbers unchanged.",
+            styles["rev"],
+        )
+    )
 
     story.append(_p("Abstract", styles["h1"]))
     story.append(
@@ -938,6 +945,24 @@ def build() -> Path:
         )
     )
     story.append(Spacer(1, 10))
+    story.append(_p("Sources (2026-09-20)", styles["h1"]))
+    story.append(
+        _p(
+            "Records checked on Crossref, 2026-09-20. MaleCNS is the published "
+            "map named in the apparatus. Chess uses a 1,007-cell fixture, not "
+            "the 166,691-cell table.",
+            styles["body"],
+        )
+    )
+    story.append(
+        _p(
+            "Berg, S., Beckett, I. R., Costa, M., Schlegel, P., Januszewski, M., "
+            "Marin, E. C., Nern, A., et al. (2026). Sexual dimorphism in the "
+            "complete Drosophila male central nervous system connectome. Cell, "
+            "189(18), 5504-5526.e15. https://doi.org/10.1016/j.cell.2026.08.015",
+            styles["left"],
+        )
+    )
     story.append(
         _p(
             "Reproduce with .venv/bin/python -m pytest. "
