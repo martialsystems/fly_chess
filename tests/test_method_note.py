@@ -47,3 +47,7 @@ def test_method_pdf_exists_and_is_dated() -> None:
     assert "What it is not" not in src
     assert "10.1016/j.cell.2026.08.015" in text
     assert "2026-09-20" in text
+    assert "No AI tool is an author" in text
+    assert "10.5281" not in text
+    assert "b4c1875" in text
+    assert "swh:1:snp:24286532871ab538a678d750b1e91b7a9d8cc337" in text

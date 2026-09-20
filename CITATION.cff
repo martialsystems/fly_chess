@@ -1,13 +1,17 @@
 cff-version: 1.2.0
 title: fly_chess
-message: If you use this locked split, cite the science-lock commit.
+message: If you use this locked split, cite commit b4c1875. There is no DOI yet.
 type: software
 authors:
   - name: Martial Systems LLC
 license: MIT
 repository-code: https://github.com/martialsystems/fly_chess
-url: https://gist.github.com/martialsystems/12835f747d6360781f3cc7f91f243178
+url: https://github.com/martialsystems/fly_chess/tree/b4c1875
 abstract: >
   Mix 0 occupancy is readable. Mix 1 deletes those labels. wiring_helped is false.
-version: "0.1.0"
+version: "b4c1875"
 date-released: "2026-09-19"
+identifiers:
+  - type: swh
+    value: "swh:1:snp:24286532871ab538a678d750b1e91b7a9d8cc337"
+    description: Software Heritage snapshot of martialsystems/fly_chess
